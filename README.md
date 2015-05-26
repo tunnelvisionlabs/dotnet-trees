@@ -2,6 +2,8 @@
 
 Efficient implementations of standard .NET collection interfaces using tree data structures.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/wdrb3wg41lomsaxt/branch/master?svg=true)](https://ci.appveyor.com/project/sharwell/dotnet-trees/branch/master)
+
 ## Releases
 
 *Note:* The following will only be active following the first public preview release.
