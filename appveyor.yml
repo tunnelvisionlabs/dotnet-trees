@@ -1,0 +1,8 @@
+version: 1.0.{build}
+configuration: Debug
+init:
+- git config --global core.autocrlf true
+before_build:
+- nuget restore
+build:
+  verbosity: minimal
