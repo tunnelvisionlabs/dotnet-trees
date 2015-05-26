@@ -10,7 +10,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvl.Collections.Trees", "Tvl.Collections.Trees\Tvl.Collections.Trees.csproj", "{07F2676C-75F3-424C-A18C-ABD723B5BCD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvl.Collections.Trees.Test", "Tvl.Collections.Trees.Test\Tvl.Collections.Trees.Test.csproj", "{73541434-2511-441C-BBAF-05044BE33019}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07F2676C-75F3-424C-A18C-ABD723B5BCD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07F2676C-75F3-424C-A18C-ABD723B5BCD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07F2676C-75F3-424C-A18C-ABD723B5BCD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07F2676C-75F3-424C-A18C-ABD723B5BCD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73541434-2511-441C-BBAF-05044BE33019}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73541434-2511-441C-BBAF-05044BE33019}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73541434-2511-441C-BBAF-05044BE33019}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73541434-2511-441C-BBAF-05044BE33019}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
