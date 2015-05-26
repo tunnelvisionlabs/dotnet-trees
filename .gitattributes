@@ -1,0 +1,25 @@
+# Set the default behavior (used when a rule below doesn't match)
+* text=auto
+
+# Source code files
+*.cs text
+*.config text
+*.resx text
+*.nuspec text
+*.ps1 text
+*.cd text
+
+# Text files
+*.md text
+*.txt text
+LICENSE text
+
+# Projects and solutions
+*.sln text
+*.csproj text
+*.yml text
+*.StyleCop text
+*.ruleset
+
+# Known binary files
+*.snk binary

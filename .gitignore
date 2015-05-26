@@ -1,0 +1,12 @@
+# Build and test output
+.nuget/
+packages/
+bin/
+obj/
+TestResults/
+build/nuget/
+
+# Per-user files created by IDEs
+*.suo
+*.user
+*.vs/
