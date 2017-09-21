@@ -72,9 +72,12 @@
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1202" Action="None" />
     <Rule Id="SA1309" Action="None" />
     <Rule Id="SA1412" Action="Warning" />
+    <Rule Id="SA1503" Action="None" />
     <Rule Id="SA1600" Action="None" />
+    <Rule Id="SA1601" Action="None" />
     <Rule Id="SA1609" Action="Warning" />
     <Rule Id="SX1101" Action="Warning" />
     <Rule Id="SX1309S" Action="Warning" />
