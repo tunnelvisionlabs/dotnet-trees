@@ -3,25 +3,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45</TargetFrameworks>
-
-    <Product>Tvl.Collections.Trees</Product>
-    <Company>Tunnel Vision Laboratories, LLC</Company>
-    <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
-    <Description>Efficient implementations of standard .NET collection interfaces using tree data structures.</Description>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Version>1.0.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0-dev</InformationalVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\Tvl.Collections.Trees.Internal.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -36,12 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Tvl.Collections.Trees\Tvl.Collections.Trees.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\build\keys\UnitTestingKey.snk">
-      <Link>UnitTestingKey.snk</Link>
-    </None>
   </ItemGroup>
 
 </Project>
