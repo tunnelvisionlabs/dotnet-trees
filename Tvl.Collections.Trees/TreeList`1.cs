@@ -36,45 +36,15 @@ namespace Tvl.Collections.Trees
             }
         }
 
-        bool IList.IsFixedSize
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool IList.IsFixedSize => false;
 
-        bool ICollection<T>.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool ICollection<T>.IsReadOnly => false;
 
-        bool IList.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool IList.IsReadOnly => false;
 
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return false;
-            }
-        }
+        bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                throw new NotSupportedException();
-            }
-        }
+        object ICollection.SyncRoot => throw new NotSupportedException();
 
         public T this[int index]
         {
@@ -193,15 +163,9 @@ namespace Tvl.Collections.Trees
             return new Enumerator(this);
         }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<T>)this).GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public int IndexOf(T item)
         {

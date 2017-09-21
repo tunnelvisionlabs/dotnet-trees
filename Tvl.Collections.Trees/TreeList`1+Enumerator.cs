@@ -36,13 +36,7 @@ namespace Tvl.Collections.Trees
                 }
             }
 
-            object IEnumerator.Current
-            {
-                get
-                {
-                    return Current;
-                }
-            }
+            object IEnumerator.Current => Current;
 
             void IDisposable.Dispose()
             {
