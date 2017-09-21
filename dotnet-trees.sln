@@ -1,19 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.22823.1
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 15.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1A56671-AEC2-433C-9396-7EF9BE756463}"
 	ProjectSection(SolutionItems) = preProject
+		.codecov.yml = .codecov.yml
 		appveyor.yml = appveyor.yml
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvl.Collections.Trees", "Tvl.Collections.Trees\Tvl.Collections.Trees.csproj", "{07F2676C-75F3-424C-A18C-ABD723B5BCD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvl.Collections.Trees", "Tvl.Collections.Trees\Tvl.Collections.Trees.csproj", "{07F2676C-75F3-424C-A18C-ABD723B5BCD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tvl.Collections.Trees.Test", "Tvl.Collections.Trees.Test\Tvl.Collections.Trees.Test.csproj", "{73541434-2511-441C-BBAF-05044BE33019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvl.Collections.Trees.Test", "Tvl.Collections.Trees.Test\Tvl.Collections.Trees.Test.csproj", "{73541434-2511-441C-BBAF-05044BE33019}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5838E255-240E-441B-B3D9-259C3DE9E108}"
+	ProjectSection(SolutionItems) = preProject
+		.codecov.yml = .codecov.yml
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,5 +39,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5838E255-240E-441B-B3D9-259C3DE9E108} = {E1A56671-AEC2-433C-9396-7EF9BE756463}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {40194822-31E5-4F5A-9FE6-4205C6FBB6DD}
 	EndGlobalSection
 EndGlobal
