@@ -23,7 +23,7 @@ namespace Tvl.Collections.Trees
         public TreeList(int branchingFactor)
         {
             if (branchingFactor < 2)
-                throw new ArgumentOutOfRangeException("branchingFactor");
+                throw new ArgumentOutOfRangeException(nameof(branchingFactor));
 
             _branchingFactor = branchingFactor;
         }
@@ -81,9 +81,9 @@ namespace Tvl.Collections.Trees
             get
             {
                 if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", "index");
+                    throw new ArgumentException("index must be less than Count", nameof(index));
 
                 return _root[index];
             }
@@ -91,9 +91,9 @@ namespace Tvl.Collections.Trees
             set
             {
                 if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", "index");
+                    throw new ArgumentException("index must be less than Count", nameof(index));
 
                 _root[index] = value;
                 _version++;
@@ -173,11 +173,11 @@ namespace Tvl.Collections.Trees
         public void CopyTo(T[] array, int arrayIndex)
         {
             if (array == null)
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             if (arrayIndex < 0)
-                throw new ArgumentOutOfRangeException("arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             if (array.Length - arrayIndex < Count)
-                throw new ArgumentException("Not enough space is available in the destination array.", "arrayIndex");
+                throw new ArgumentException("Not enough space is available in the destination array.", nameof(arrayIndex));
 
             for (int i = 0; i < Count; i++)
                 array[arrayIndex + i] = this[i];

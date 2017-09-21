@@ -26,7 +26,7 @@ namespace Tvl.Collections.Trees
             internal static Node Insert(Node root, int branchingFactor, int index, T item)
             {
                 if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 if (index > root.Count)
                     throw new ArgumentException();
 
@@ -48,7 +48,7 @@ namespace Tvl.Collections.Trees
             internal static Node RemoveAt(Node root, int index)
             {
                 if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
+                    throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= root.Count)
                     throw new ArgumentException();
 
