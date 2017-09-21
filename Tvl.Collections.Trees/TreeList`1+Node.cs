@@ -1,13 +1,27 @@
-﻿namespace Tvl.Collections.Trees
+﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Tvl.Collections.Trees
 {
     using System;
     using System.Diagnostics;
 
-    partial class TreeList<T>
+    public partial class TreeList<T>
     {
         private abstract class Node
         {
             internal static readonly Node Empty = new EmptyNode();
+
+            internal abstract int Count
+            {
+                get;
+            }
+
+            internal abstract T this[int index]
+            {
+                get;
+                set;
+            }
 
             internal static Node Insert(Node root, int branchingFactor, int index, T item)
             {
@@ -39,17 +53,6 @@
                     throw new ArgumentException();
 
                 throw new NotImplementedException();
-            }
-
-            internal abstract int Count
-            {
-                get;
-            }
-
-            internal abstract T this[int index]
-            {
-                get;
-                set;
             }
 
             internal abstract int IndexOf(T item);
@@ -86,7 +89,7 @@
 
                 internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
                 {
-                    Debug.Assert(index == 0 && isAppend);
+                    Debug.Assert(index == 0 && isAppend, "index == 0 && isAppend");
                     LeafNode node = new LeafNode(branchingFactor);
                     node.Insert(branchingFactor, isAppend, index, item);
                     return node;

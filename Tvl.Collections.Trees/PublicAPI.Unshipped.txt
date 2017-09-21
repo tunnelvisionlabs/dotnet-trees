@@ -1,0 +1,20 @@
+Tvl.Collections.Trees.TreeList<T>
+Tvl.Collections.Trees.TreeList<T>.Add(T item) -> void
+Tvl.Collections.Trees.TreeList<T>.Clear() -> void
+Tvl.Collections.Trees.TreeList<T>.Contains(T item) -> bool
+Tvl.Collections.Trees.TreeList<T>.CopyTo(T[] array, int arrayIndex) -> void
+Tvl.Collections.Trees.TreeList<T>.Count.get -> int
+Tvl.Collections.Trees.TreeList<T>.Enumerator
+Tvl.Collections.Trees.TreeList<T>.Enumerator.Current.get -> T
+Tvl.Collections.Trees.TreeList<T>.Enumerator.Enumerator(Tvl.Collections.Trees.TreeList<T> list) -> void
+Tvl.Collections.Trees.TreeList<T>.Enumerator.MoveNext() -> bool
+Tvl.Collections.Trees.TreeList<T>.Enumerator.Reset() -> void
+Tvl.Collections.Trees.TreeList<T>.GetEnumerator() -> Tvl.Collections.Trees.TreeList<T>.Enumerator
+Tvl.Collections.Trees.TreeList<T>.IndexOf(T item) -> int
+Tvl.Collections.Trees.TreeList<T>.Insert(int index, T item) -> void
+Tvl.Collections.Trees.TreeList<T>.Remove(T item) -> bool
+Tvl.Collections.Trees.TreeList<T>.RemoveAt(int index) -> void
+Tvl.Collections.Trees.TreeList<T>.TreeList() -> void
+Tvl.Collections.Trees.TreeList<T>.TreeList(int branchingFactor) -> void
+Tvl.Collections.Trees.TreeList<T>.this[int index].get -> T
+Tvl.Collections.Trees.TreeList<T>.this[int index].set -> void

@@ -1,8 +1,11 @@
-﻿namespace Tvl.Collections.Trees
+﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Tvl.Collections.Trees
 {
     using System;
 
-    partial class TreeList<T>
+    public partial class TreeList<T>
     {
         private sealed class LeafNode : Node
         {

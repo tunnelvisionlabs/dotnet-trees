@@ -1,4 +1,7 @@
-﻿namespace Tvl.Collections.Trees
+﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Tvl.Collections.Trees
 {
     using System;
     using System.Collections;
@@ -23,53 +26,6 @@
                 throw new ArgumentOutOfRangeException("branchingFactor");
 
             _branchingFactor = branchingFactor;
-        }
-
-        public T this[int index]
-        {
-            get
-            {
-                if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
-                if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", "index");
-
-                return _root[index];
-            }
-
-            set
-            {
-                if (index < 0)
-                    throw new ArgumentOutOfRangeException("index");
-                if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", "index");
-
-                _root[index] = value;
-                _version++;
-            }
-        }
-
-        object IList.this[int index]
-        {
-            get
-            {
-                return this[index];
-            }
-
-            set
-            {
-                if (value == null && default(T) != null)
-                    throw new ArgumentNullException(nameof(value));
-
-                try
-                {
-                    this[index] = (T)value;
-                }
-                catch (InvalidCastException)
-                {
-                    throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
-                }
-            }
         }
 
         public int Count
@@ -120,6 +76,53 @@
             }
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException("index");
+                if (index >= Count)
+                    throw new ArgumentException("index must be less than Count", "index");
+
+                return _root[index];
+            }
+
+            set
+            {
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException("index");
+                if (index >= Count)
+                    throw new ArgumentException("index must be less than Count", "index");
+
+                _root[index] = value;
+                _version++;
+            }
+        }
+
+        object IList.this[int index]
+        {
+            get
+            {
+                return this[index];
+            }
+
+            set
+            {
+                if (value == null && default(T) != null)
+                    throw new ArgumentNullException(nameof(value));
+
+                try
+                {
+                    this[index] = (T)value;
+                }
+                catch (InvalidCastException)
+                {
+                    throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
+                }
+            }
+        }
+
         public void Add(T item)
         {
             _root = Node.Insert(_root, _branchingFactor, Count, item);
@@ -157,7 +160,7 @@
             if (value == null)
             {
                 if (default(T) == null)
-                    return Contains(default(T));
+                    return Contains(default);
             }
             else if (value is T)
             {
@@ -210,7 +213,7 @@
             if (value == null)
             {
                 if (default(T) == null)
-                    return IndexOf(default(T));
+                    return IndexOf(default);
             }
             else if (value is T)
             {

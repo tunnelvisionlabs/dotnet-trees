@@ -1,10 +1,13 @@
-﻿namespace Tvl.Collections.Trees
+﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Tvl.Collections.Trees
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
 
-    partial class TreeList<T>
+    public partial class TreeList<T>
     {
         public struct Enumerator : IEnumerator<T>
         {
@@ -19,7 +22,7 @@
                 _list = list;
                 _version = list._version;
                 _index = -1;
-                _current = default(T);
+                _current = default;
             }
 
             public T Current

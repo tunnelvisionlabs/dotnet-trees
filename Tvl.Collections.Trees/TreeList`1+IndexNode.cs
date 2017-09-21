@@ -1,8 +1,11 @@
-﻿namespace Tvl.Collections.Trees
+﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+namespace Tvl.Collections.Trees
 {
     using System;
 
-    partial class TreeList<T>
+    public partial class TreeList<T>
     {
         private sealed class IndexNode : Node
         {
@@ -27,15 +30,6 @@
                 _count = child1.Count + child2.Count;
             }
 
-            private static int FindLowerBound(int[] data, int length, int value)
-            {
-                int index = Array.BinarySearch(data, 0, length, value);
-                if (index < 0)
-                    return -index - 2;
-
-                return index;
-            }
-
             internal override int Count
             {
                 get
@@ -57,6 +51,15 @@
                     int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
                     _nodes[pageIndex][index - _offsets[pageIndex]] = value;
                 }
+            }
+
+            private static int FindLowerBound(int[] data, int length, int value)
+            {
+                int index = Array.BinarySearch(data, 0, length, value);
+                if (index < 0)
+                    return -index - 2;
+
+                return index;
             }
 
             internal override int IndexOf(T item)
