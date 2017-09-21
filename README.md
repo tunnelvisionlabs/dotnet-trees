@@ -4,11 +4,13 @@ Efficient implementations of standard .NET collection interfaces using tree data
 
 [![Build status](https://ci.appveyor.com/api/projects/status/wdrb3wg41lomsaxt/branch/master?svg=true)](https://ci.appveyor.com/project/sharwell/dotnet-trees/branch/master)
 
+[![codecov](https://codecov.io/gh/tunnelvisionlabs/dotnet-trees/branch/master/graph/badge.svg)](https://codecov.io/gh/tunnelvisionlabs/dotnet-trees)
+
 [![Join the chat at https://gitter.im/tunnelvisionlabs/dotnet-trees](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/tunnelvisionlabs/dotnet-trees?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Releases
 
-*Note:* The following will only be active following the first public preview release.
+:warning: The following will only be active following the first public preview release.
 
 * [Binaries (NuGet)](https://www.nuget.org/packages/Tvl.Collections.Trees)
 * [Release Notes](https://github.com/tunnelvisionlabs/dotnet-trees/releases)
