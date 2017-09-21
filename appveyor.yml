@@ -1,8 +1,12 @@
 version: 1.0.{build}
-configuration: Debug
+image: Visual Studio 2017
+configuration:
+- Debug
+- Release
 init:
 - git config --global core.autocrlf true
 before_build:
 - nuget restore
 build:
+  project: dotnet-trees.sln
   verbosity: minimal
