@@ -14,14 +14,14 @@ namespace TreeCollectionTests
         public void TestTreeListConstructor()
         {
             TreeList<int> list = new TreeList<int>();
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
         }
 
         [Fact]
         public void TestTreeListBranchingFactorConstructor()
         {
             TreeList<int> list = new TreeList<int>(8);
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
 
             Assert.Throws<ArgumentOutOfRangeException>(() => new TreeList<int>(-1));
             Assert.Throws<ArgumentOutOfRangeException>(() => new TreeList<int>(0));
@@ -34,9 +34,9 @@ namespace TreeCollectionTests
             const int Value = 600;
 
             TreeList<int> list = new TreeList<int>();
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
             list.Add(Value);
-            Assert.Equal(1, list.Count);
+            Assert.Single(list);
             Assert.Equal(Value, list[0]);
             int[] expected = { Value };
             int[] actual = list.ToArray();
@@ -67,9 +67,9 @@ namespace TreeCollectionTests
             const int Value = 600;
 
             TreeList<int> list = new TreeList<int>();
-            Assert.Equal(0, list.Count);
+            Assert.Empty(list);
             list.Insert(0, Value);
-            Assert.Equal(1, list.Count);
+            Assert.Single(list);
             Assert.Equal(Value, list[0]);
             int[] expected = { Value };
             int[] actual = list.ToArray();
