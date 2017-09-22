@@ -12,7 +12,7 @@
     },
     "orderingRules": {
       // Ignore accessibility for determining the element order
-      "elementOrder": [ "kind", "constant", "static", "readonly" ]
+      "elementOrder": [ "kind", "constant" ]
     }
   }
 }
