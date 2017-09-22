@@ -74,13 +74,18 @@ namespace Tvl.Collections.Trees
         {
             get
             {
-                return this[index];
+                if ((uint)index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+
+                return _root[index];
             }
 
             set
             {
                 if (value == null && default(T) != null)
                     throw new ArgumentNullException(nameof(value));
+                if ((uint)index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 try
                 {
@@ -196,6 +201,8 @@ namespace Tvl.Collections.Trees
         {
             if (value == null && default(T) != null)
                 throw new ArgumentNullException(nameof(value));
+            if ((uint)index >= Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             try
             {
