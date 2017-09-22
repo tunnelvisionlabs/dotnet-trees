@@ -103,6 +103,11 @@ namespace Tvl.Collections.Trees
             _root = Node.Insert(_root, _branchingFactor, Count, item);
         }
 
+        public void AddRange(IEnumerable<T> collection)
+        {
+            throw new NotImplementedException();
+        }
+
         int IList.Add(object value)
         {
             if (value == null && default(T) != null)
@@ -145,6 +150,11 @@ namespace Tvl.Collections.Trees
             return false;
         }
 
+        public void CopyTo(T[] array)
+        {
+            CopyTo(array, 0);
+        }
+
         public void CopyTo(T[] array, int arrayIndex)
         {
             if (array == null)
@@ -177,6 +187,16 @@ namespace Tvl.Collections.Trees
             return _root.IndexOf(item);
         }
 
+        public int IndexOf(T item, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int IndexOf(T item, int index, int count)
+        {
+            throw new NotImplementedException();
+        }
+
         int IList.IndexOf(object value)
         {
             if (value == null)
@@ -195,6 +215,11 @@ namespace Tvl.Collections.Trees
         public void Insert(int index, T item)
         {
             _root = Node.Insert(_root, _branchingFactor, index, item);
+        }
+
+        public void InsertRange(int index, IEnumerable<T> collection)
+        {
+            throw new NotImplementedException();
         }
 
         void IList.Insert(int index, object value)
@@ -236,6 +261,158 @@ namespace Tvl.Collections.Trees
         public void RemoveAt(int index)
         {
             _root = Node.RemoveAt(_root, index);
+        }
+
+        public void RemoveRange(int index, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int RemoveAll(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int BinarySearch(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int BinarySearch(T item, IComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TreeList<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Exists(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Find(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TreeList<T> FindAll(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindIndex(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindIndex(int startIndex, Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindIndex(int startIndex, int count, Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T FindLast(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindLastIndex(Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindLastIndex(int startIndex, Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int FindLastIndex(int startIndex, int count, Predicate<T> match)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int LastIndexOf(T item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int LastIndexOf(T item, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int LastIndexOf(T item, int index, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ForEach(Action<T> action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TreeList<T> GetRange(int index, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reverse()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reverse(int index, int count)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sort()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sort(IComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sort(int index, int count, IComparer<T> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sort(Comparison<T> comparison)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T[] ToArray()
+        {
+            T[] result = new T[Count];
+            CopyTo(result, 0);
+            return result;
+        }
+
+        public void TrimExcess()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TrueForAll(Predicate<T> match)
+        {
+            throw new NotImplementedException();
         }
     }
 }
