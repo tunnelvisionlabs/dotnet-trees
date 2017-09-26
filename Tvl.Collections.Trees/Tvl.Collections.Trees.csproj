@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PublicApiAnalyzer" Version="1.0.0-alpha001" PrivateAssets="all" />
+    <PackageReference Include="PublicApiAnalyzer" Version="1.0.0-beta001" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
