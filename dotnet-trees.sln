@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 15.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1A56671-AEC2-433C-9396-7EF9BE756463}"
 	ProjectSection(SolutionItems) = preProject
-		.codecov.yml = .codecov.yml
 		.editorconfig = .editorconfig
 		appveyor.yml = appveyor.yml
+		codecov.yml = codecov.yml
 		CONTRIBUTING.md = CONTRIBUTING.md
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
@@ -23,7 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvl.Collections.Trees.Test"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5838E255-240E-441B-B3D9-259C3DE9E108}"
 	ProjectSection(SolutionItems) = preProject
-		.codecov.yml = .codecov.yml
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
