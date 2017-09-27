@@ -9,6 +9,7 @@ Tvl.Collections.Trees.TreeList<T>.Contains(T item) -> bool
 Tvl.Collections.Trees.TreeList<T>.ConvertAll<TOutput>(System.Func<T, TOutput> converter) -> Tvl.Collections.Trees.TreeList<TOutput>
 Tvl.Collections.Trees.TreeList<T>.CopyTo(T[] array) -> void
 Tvl.Collections.Trees.TreeList<T>.CopyTo(T[] array, int arrayIndex) -> void
+Tvl.Collections.Trees.TreeList<T>.CopyTo(int index, T[] array, int arrayIndex, int count) -> void
 Tvl.Collections.Trees.TreeList<T>.Count.get -> int
 Tvl.Collections.Trees.TreeList<T>.Enumerator
 Tvl.Collections.Trees.TreeList<T>.Enumerator.Current.get -> T

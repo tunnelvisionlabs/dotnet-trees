@@ -168,6 +168,11 @@ namespace Tvl.Collections.Trees
                 array[arrayIndex + i] = this[i];
         }
 
+        public void CopyTo(int index, T[] array, int arrayIndex, int count)
+        {
+            throw new NotImplementedException();
+        }
+
         void ICollection.CopyTo(Array array, int index)
         {
             throw new NotImplementedException();
