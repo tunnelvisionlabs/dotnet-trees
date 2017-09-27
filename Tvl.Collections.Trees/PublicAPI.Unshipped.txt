@@ -142,5 +142,42 @@ Tvl.Collections.Trees.TreeList<T>.TrimExcess() -> void
 Tvl.Collections.Trees.TreeList<T>.TrueForAll(System.Predicate<T> match) -> bool
 Tvl.Collections.Trees.TreeList<T>.this[int index].get -> T
 Tvl.Collections.Trees.TreeList<T>.this[int index].set -> void
+Tvl.Collections.Trees.TreeSet<T>
+Tvl.Collections.Trees.TreeSet<T>.Add(T item) -> bool
+Tvl.Collections.Trees.TreeSet<T>.Clear() -> void
+Tvl.Collections.Trees.TreeSet<T>.Comparer.get -> System.Collections.Generic.IEqualityComparer<T>
+Tvl.Collections.Trees.TreeSet<T>.Contains(T item) -> bool
+Tvl.Collections.Trees.TreeSet<T>.CopyTo(T[] array) -> void
+Tvl.Collections.Trees.TreeSet<T>.CopyTo(T[] array, int arrayIndex) -> void
+Tvl.Collections.Trees.TreeSet<T>.CopyTo(T[] array, int arrayIndex, int count) -> void
+Tvl.Collections.Trees.TreeSet<T>.Count.get -> int
+Tvl.Collections.Trees.TreeSet<T>.Enumerator
+Tvl.Collections.Trees.TreeSet<T>.Enumerator.Current.get -> T
+Tvl.Collections.Trees.TreeSet<T>.Enumerator.Dispose() -> void
+Tvl.Collections.Trees.TreeSet<T>.Enumerator.Enumerator() -> void
+Tvl.Collections.Trees.TreeSet<T>.Enumerator.MoveNext() -> bool
+Tvl.Collections.Trees.TreeSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
+Tvl.Collections.Trees.TreeSet<T>.GetEnumerator() -> Tvl.Collections.Trees.TreeSet<T>.Enumerator
+Tvl.Collections.Trees.TreeSet<T>.IntersectWith(System.Collections.Generic.IEnumerable<T> other) -> void
+Tvl.Collections.Trees.TreeSet<T>.IsProperSubsetOf(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.IsProperSupersetOf(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.IsSubsetOf(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.IsSupersetOf(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.Overlaps(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.Remove(T item) -> bool
+Tvl.Collections.Trees.TreeSet<T>.RemoveWhere(System.Predicate<T> match) -> int
+Tvl.Collections.Trees.TreeSet<T>.SetEquals(System.Collections.Generic.IEnumerable<T> other) -> bool
+Tvl.Collections.Trees.TreeSet<T>.SymmetricExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet() -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(System.Collections.Generic.IEnumerable<T> collection) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IEqualityComparer<T> comparer) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(System.Collections.Generic.IEqualityComparer<T> comparer) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(int branchingFactor) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(int branchingFactor, System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IEqualityComparer<T> comparer) -> void
+Tvl.Collections.Trees.TreeSet<T>.TreeSet(int branchingFactor, System.Collections.Generic.IEqualityComparer<T> comparer) -> void
+Tvl.Collections.Trees.TreeSet<T>.TrimExcess() -> void
+Tvl.Collections.Trees.TreeSet<T>.TryGetValue(T equalValue, out T actualValue) -> bool
+Tvl.Collections.Trees.TreeSet<T>.UnionWith(System.Collections.Generic.IEnumerable<T> other) -> void
 static Tvl.Collections.Trees.SortedTreeSet<T>.CreateSetComparer() -> System.Collections.Generic.IEqualityComparer<Tvl.Collections.Trees.SortedTreeSet<T>>
 static Tvl.Collections.Trees.SortedTreeSet<T>.CreateSetComparer(System.Collections.Generic.IEqualityComparer<T> memberEqualityComparer) -> System.Collections.Generic.IEqualityComparer<Tvl.Collections.Trees.SortedTreeSet<T>>
+static Tvl.Collections.Trees.TreeSet<T>.CreateSetComparer() -> System.Collections.Generic.IEqualityComparer<Tvl.Collections.Trees.TreeSet<T>>
