@@ -19,7 +19,7 @@ namespace Tvl.Collections.Trees
 
             object ICollection.SyncRoot => throw null;
 
-            public void Add(TKey item) => throw null;
+            void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
 
             public void Clear() => throw null;
 

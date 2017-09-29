@@ -99,7 +99,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> vo
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Add(TKey item) -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Clear() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.CopyTo(TKey[] array, int arrayIndex) -> void
@@ -125,7 +124,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingF
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.TryAdd(TKey key, TValue value) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Add(TValue item) -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Clear() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Contains(TValue item) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.CopyTo(TValue[] array, int arrayIndex) -> void
@@ -137,7 +135,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.En
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.IsReadOnly.get -> bool
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Remove(TValue item) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Values.get -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].get -> TValue

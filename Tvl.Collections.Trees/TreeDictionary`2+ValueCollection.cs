@@ -19,7 +19,7 @@ namespace Tvl.Collections.Trees
 
             object ICollection.SyncRoot => throw null;
 
-            public void Add(TValue item) => throw null;
+            void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
 
             public void Clear() => throw null;
 
@@ -29,7 +29,7 @@ namespace Tvl.Collections.Trees
 
             public Enumerator GetEnumerator() => throw null;
 
-            public bool Remove(TValue item) => throw null;
+            bool ICollection<TValue>.Remove(TValue item) => throw new NotSupportedException();
 
             void ICollection.CopyTo(Array array, int index) => throw null;
 
