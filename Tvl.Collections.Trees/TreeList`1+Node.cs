@@ -4,6 +4,7 @@
 namespace Tvl.Collections.Trees
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     public partial class TreeList<T>
@@ -45,6 +46,11 @@ namespace Tvl.Collections.Trees
                 }
             }
 
+            internal static Node InsertRange(Node root, int branchingFactor, int index, IEnumerable<T> collection)
+            {
+                throw new NotImplementedException();
+            }
+
             internal static Node RemoveAt(Node root, int index)
             {
                 if (index < 0)
@@ -52,6 +58,16 @@ namespace Tvl.Collections.Trees
                 if (index >= root.Count)
                     throw new ArgumentException();
 
+                throw new NotImplementedException();
+            }
+
+            internal static Node RemoveRange(Node root, int index, int count)
+            {
+                throw new NotImplementedException();
+            }
+
+            internal static Node RemoveAll(Node root, Predicate<T> match)
+            {
                 throw new NotImplementedException();
             }
 

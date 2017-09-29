@@ -93,7 +93,7 @@ namespace Tvl.Collections.Trees
                 }
                 catch (InvalidCastException)
                 {
-                    throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
+                    throw new ArgumentException($"The value \"{value.GetType()}\" isn't of type \"{typeof(T)}\" and can't be used in this generic collection.", nameof(value));
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace Tvl.Collections.Trees
             }
             catch (InvalidCastException)
             {
-                throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
+                throw new ArgumentException($"The value \"{value.GetType()}\" isn't of type \"{typeof(T)}\" and can't be used in this generic collection.", nameof(value));
             }
 
             return Count - 1;
@@ -227,11 +227,15 @@ namespace Tvl.Collections.Trees
         public void Insert(int index, T item)
         {
             _root = Node.Insert(_root, _branchingFactor, index, item);
+            _version++;
         }
 
         public void InsertRange(int index, IEnumerable<T> collection)
         {
-            throw new NotImplementedException();
+            int previousCount = Count;
+            _root = Node.InsertRange(_root, _branchingFactor, index, collection);
+            if (Count > previousCount)
+                _version++;
         }
 
         void IList.Insert(int index, object value)
@@ -273,30 +277,46 @@ namespace Tvl.Collections.Trees
         public void RemoveAt(int index)
         {
             _root = Node.RemoveAt(_root, index);
+            _version++;
         }
 
         public void RemoveRange(int index, int count)
         {
-            throw new NotImplementedException();
+            _root = Node.RemoveRange(_root, index, count);
+            if (count > 0)
+                _version++;
         }
 
         public int RemoveAll(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            int previousCount = Count;
+            _root = Node.RemoveAll(_root, match);
+            int result = previousCount - Count;
+            if (result > 0)
+                _version++;
+
+            return result;
         }
 
         public int BinarySearch(T item)
         {
-            throw new NotImplementedException();
+            return BinarySearch(0, Count, item, null);
         }
 
         public int BinarySearch(T item, IComparer<T> comparer)
         {
-            throw new NotImplementedException();
+            return BinarySearch(0, Count, item, comparer);
         }
 
         public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
         {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count - count)
+                throw new ArgumentException();
+
             throw new NotImplementedException();
         }
 
@@ -307,12 +327,21 @@ namespace Tvl.Collections.Trees
 
         public bool Exists(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            return FindIndex(match) >= 0;
         }
 
         public T Find(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
+            foreach (T item in this)
+            {
+                if (match(item))
+                    return item;
+            }
+
+            return default;
         }
 
         public TreeList<T> FindAll(Predicate<T> match)
@@ -322,12 +351,12 @@ namespace Tvl.Collections.Trees
 
         public int FindIndex(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            return FindIndex(0, Count, match);
         }
 
         public int FindIndex(int startIndex, Predicate<T> match)
         {
-            throw new NotImplementedException();
+            return FindIndex(startIndex, Count - startIndex, match);
         }
 
         public int FindIndex(int startIndex, int count, Predicate<T> match)
@@ -342,12 +371,12 @@ namespace Tvl.Collections.Trees
 
         public int FindLastIndex(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            return FindLastIndex(Count - 1, Count, match);
         }
 
         public int FindLastIndex(int startIndex, Predicate<T> match)
         {
-            throw new NotImplementedException();
+            return FindLastIndex(startIndex, startIndex + 1, match);
         }
 
         public int FindLastIndex(int startIndex, int count, Predicate<T> match)
@@ -357,12 +386,17 @@ namespace Tvl.Collections.Trees
 
         public int LastIndexOf(T item)
         {
-            throw new NotImplementedException();
+            if (Count == 0)
+            {
+                return -1;
+            }
+
+            return LastIndexOf(item, Count - 1, Count);
         }
 
         public int LastIndexOf(T item, int index)
         {
-            throw new NotImplementedException();
+            return LastIndexOf(item, index, index + 1);
         }
 
         public int LastIndexOf(T item, int index, int count)
@@ -372,7 +406,13 @@ namespace Tvl.Collections.Trees
 
         public void ForEach(Action<T> action)
         {
-            throw new NotImplementedException();
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            foreach (T item in this)
+            {
+                action(item);
+            }
         }
 
         public TreeList<T> GetRange(int index, int count)
