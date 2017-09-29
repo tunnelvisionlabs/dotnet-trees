@@ -11,6 +11,8 @@ Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.Dispose() ->
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.GetEnumerator() -> Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator
+Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.IndexOfKey(TKey key) -> int
+Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.IndexOfValue(TValue value) -> int
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Clear() -> void
 Tvl.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool

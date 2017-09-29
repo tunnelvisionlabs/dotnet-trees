@@ -68,7 +68,11 @@ namespace Tvl.Collections.Trees
 
         public bool ContainsKey(TKey key) => throw null;
 
+        public int IndexOfKey(TKey key) => throw null;
+
         public bool ContainsValue(TValue value) => throw null;
+
+        public int IndexOfValue(TValue value) => throw null;
 
         public bool TryGetValue(TKey key, out TValue value) => throw null;
 
