@@ -60,11 +60,9 @@ Tvl.Collections.Trees.SortedTreeSet<T>.Count.get -> int
 Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator
 Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator.Current.get -> T
 Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.SortedTreeSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
 Tvl.Collections.Trees.SortedTreeSet<T>.GetEnumerator() -> Tvl.Collections.Trees.SortedTreeSet<T>.Enumerator
-Tvl.Collections.Trees.SortedTreeSet<T>.GetViewBetween(T lowerValue, T upperValue) -> Tvl.Collections.Trees.SortedTreeSet<T>
 Tvl.Collections.Trees.SortedTreeSet<T>.IntersectWith(System.Collections.Generic.IEnumerable<T> other) -> void
 Tvl.Collections.Trees.SortedTreeSet<T>.IsProperSubsetOf(System.Collections.Generic.IEnumerable<T> other) -> bool
 Tvl.Collections.Trees.SortedTreeSet<T>.IsProperSupersetOf(System.Collections.Generic.IEnumerable<T> other) -> bool

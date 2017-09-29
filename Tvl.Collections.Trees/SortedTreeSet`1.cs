@@ -6,91 +6,583 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
 
     public partial class SortedTreeSet<T> : ISet<T>, IReadOnlyCollection<T>, ICollection
     {
-        public SortedTreeSet() => throw null;
+        private readonly SortedTreeList<T> _sortedList;
 
-        public SortedTreeSet(IEnumerable<T> collection) => throw null;
+        public SortedTreeSet()
+        {
+            _sortedList = new SortedTreeList<T>();
+        }
 
-        public SortedTreeSet(IComparer<T> comparer) => throw null;
+        public SortedTreeSet(IEnumerable<T> collection)
+        {
+            _sortedList = new SortedTreeList<T>(collection);
+        }
 
-        public SortedTreeSet(IEnumerable<T> collection, IComparer<T> comparer) => throw null;
+        public SortedTreeSet(IComparer<T> comparer)
+        {
+            _sortedList = new SortedTreeList<T>(comparer);
+        }
 
-        public SortedTreeSet(int branchingFactor) => throw null;
+        public SortedTreeSet(IEnumerable<T> collection, IComparer<T> comparer)
+        {
+            _sortedList = new SortedTreeList<T>(comparer);
+            UnionWith(collection);
+        }
 
-        public SortedTreeSet(int branchingFactor, IComparer<T> comparer) => throw null;
+        public SortedTreeSet(int branchingFactor)
+        {
+            _sortedList = new SortedTreeList<T>(branchingFactor);
+        }
 
-        public SortedTreeSet(int branchingFactor, IEnumerable<T> collection, IComparer<T> comparer) => throw null;
+        public SortedTreeSet(int branchingFactor, IComparer<T> comparer)
+        {
+            _sortedList = new SortedTreeList<T>(branchingFactor, comparer);
+        }
 
-        public IComparer<T> Comparer => throw null;
+        public SortedTreeSet(int branchingFactor, IEnumerable<T> collection, IComparer<T> comparer)
+        {
+            _sortedList = new SortedTreeList<T>(branchingFactor, comparer);
+            UnionWith(collection);
+        }
 
-        public int Count => throw null;
+        public IComparer<T> Comparer => _sortedList.Comparer;
 
-        public T Max => throw null;
+        public int Count => _sortedList.Count;
 
-        public T Min => throw null;
+        public T Max => _sortedList.Count == 0 ? default : _sortedList[Count - 1];
 
-        bool ICollection<T>.IsReadOnly => throw null;
+        public T Min => _sortedList.Count == 0 ? default : _sortedList[0];
 
-        bool ICollection.IsSynchronized => throw null;
+        bool ICollection<T>.IsReadOnly => false;
 
-        object ICollection.SyncRoot => throw null;
+        bool ICollection.IsSynchronized => false;
 
-        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer() => throw null;
+        object ICollection.SyncRoot => ((ICollection)_sortedList).SyncRoot;
 
-        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer(IEqualityComparer<T> memberEqualityComparer) => throw null;
+        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer()
+        {
+            return SortedTreeSetEqualityComparer.Default;
+        }
 
-        public bool Add(T item) => throw null;
+        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer(IEqualityComparer<T> memberEqualityComparer)
+        {
+            if (memberEqualityComparer == null || memberEqualityComparer == EqualityComparer<T>.Default)
+                return CreateSetComparer();
 
-        public void Clear() => throw null;
+            return new SortedTreeSetEqualityComparer(memberEqualityComparer);
+        }
 
-        public bool Contains(T item) => throw null;
+        public bool Add(T item) => _sortedList.Add(item, addIfPresent: false);
 
-        public void CopyTo(T[] array) => throw null;
+        public void Clear() => _sortedList.Clear();
 
-        public void CopyTo(T[] array, int arrayIndex) => throw null;
+        public bool Contains(T item) => _sortedList.Contains(item);
 
-        public void CopyTo(T[] array, int arrayIndex, int count) => throw null;
+        public void CopyTo(T[] array) => _sortedList.CopyTo(array);
 
-        public void ExceptWith(IEnumerable<T> other) => throw null;
+        public void CopyTo(T[] array, int arrayIndex) => _sortedList.CopyTo(array, arrayIndex);
 
-        public SortedTreeSet<T> GetViewBetween(T lowerValue, T upperValue) => throw null;
+        public void CopyTo(T[] array, int arrayIndex, int count) => _sortedList.CopyTo(0, array, arrayIndex, count);
 
-        public Enumerator GetEnumerator() => throw null;
+        public void ExceptWith(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
 
-        public void IntersectWith(IEnumerable<T> other) => throw null;
+            if (Count == 0)
+            {
+                return;
+            }
 
-        public bool IsProperSubsetOf(IEnumerable<T> other) => throw null;
+            if (other == this)
+            {
+                Clear();
+                return;
+            }
 
-        public bool IsProperSupersetOf(IEnumerable<T> other) => throw null;
+            foreach (T item in other)
+            {
+                Remove(item);
+            }
+        }
 
-        public bool IsSubsetOf(IEnumerable<T> other) => throw null;
+        public Enumerator GetEnumerator() => new Enumerator(_sortedList.GetEnumerator());
 
-        public bool IsSupersetOf(IEnumerable<T> other) => throw null;
+        public void IntersectWith(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
 
-        public bool Overlaps(IEnumerable<T> other) => throw null;
+            if (Count == 0)
+                return;
 
-        public bool Remove(T item) => throw null;
+            if (this == other)
+                return;
 
-        public int RemoveWhere(Predicate<T> match) => throw null;
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                int i = 0;
+                int j = 0;
+                while (i < Count && j < sortedSet.Count)
+                {
+                    int comparison = Comparer.Compare(_sortedList[i], sortedSet._sortedList[j]);
+                    if (i == 0)
+                    {
+                        // Keep the item
+                        i++;
+                        j++;
+                    }
+                    else if (i < 0)
+                    {
+                        _sortedList.RemoveAt(i);
+                    }
+                    else
+                    {
+                        // The item may be present, but it's not the current item
+                        j++;
+                    }
+                }
 
-        public bool SetEquals(IEnumerable<T> other) => throw null;
+                _sortedList.RemoveRange(i, Count - i);
+            }
+            else
+            {
+                var toSave = new SortedTreeSet<T>(Comparer);
+                foreach (T item in other)
+                {
+                    if (Contains(item))
+                        toSave.Add(item);
+                }
 
-        public void SymmetricExceptWith(IEnumerable<T> other) => throw null;
+                IntersectWith(toSave);
+            }
+        }
 
-        public void UnionWith(IEnumerable<T> other) => throw null;
+        public bool IsProperSubsetOf(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
 
-        public void TrimExcess() => throw null;
+            if (Count == 0)
+                return other.Any();
 
-        public bool TryGetValue(T equalValue, out T actualValue) => throw null;
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                if (Count >= sortedSet.Count)
+                    return false;
 
-        void ICollection<T>.Add(T item) => throw null;
+                foreach (T item in this)
+                {
+                    if (!sortedSet.Contains(item))
+                        return false;
+                }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+                return true;
+            }
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            return uniqueCount == Count && unfoundCount > 0;
+        }
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+        public bool IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (Count == 0)
+                return false;
+
+            if (this == other)
+                return false;
+
+            if (other is ICollection collection && collection.Count == 0)
+            {
+                Debug.Assert(Count > 0, $"Assertion failed: {nameof(Count)} > 0");
+                return true;
+            }
+
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                if (sortedSet.Count >= Count)
+                    return false;
+
+                foreach (T item in sortedSet)
+                {
+                    if (!Contains(item))
+                        return false;
+                }
+
+                return true;
+            }
+
+            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            return uniqueCount < Count && unfoundCount == 0;
+        }
+
+        public bool IsSubsetOf(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (Count == 0)
+                return true;
+
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                if (Count > sortedSet.Count)
+                    return false;
+
+                foreach (T item in this)
+                {
+                    if (!sortedSet.Contains(item))
+                        return false;
+                }
+
+                return true;
+            }
+
+            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            return uniqueCount == Count && unfoundCount >= 0;
+        }
+
+        public bool IsSupersetOf(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (this == other)
+                return true;
+
+            if (other is ICollection collection && collection.Count == 0)
+                return true;
+
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                if (Count < sortedSet.Count)
+                    return false;
+
+                foreach (T item in sortedSet)
+                {
+                    if (!Contains(item))
+                        return false;
+                }
+
+                return true;
+            }
+
+            foreach (T item in other)
+            {
+                if (!Contains(item))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public bool Overlaps(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (Count == 0)
+            {
+                return false;
+            }
+
+            foreach (T item in other)
+            {
+                if (Contains(item))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool Remove(T item) => _sortedList.Remove(item);
+
+        public int RemoveWhere(Predicate<T> match) => _sortedList.RemoveAll(match);
+
+        public bool SetEquals(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (this == other)
+                return true;
+
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                if (Count != sortedSet.Count)
+                    return false;
+
+                Enumerator x = GetEnumerator();
+                Enumerator y = sortedSet.GetEnumerator();
+                while (true)
+                {
+                    if (!x.MoveNext())
+                    {
+                        return y.MoveNext();
+                    }
+
+                    if (!y.MoveNext())
+                    {
+                        return false;
+                    }
+
+                    if (Comparer.Compare(x.Current, y.Current) != 0)
+                        return false;
+                }
+            }
+
+            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            return uniqueCount == Count && unfoundCount == 0;
+        }
+
+        public void SymmetricExceptWith(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            if (Count == 0)
+            {
+                UnionWith(other);
+                return;
+            }
+
+            if (other == this)
+            {
+                Clear();
+                return;
+            }
+
+            if (other is SortedTreeSet<T> sortedSet && Comparer.Equals(sortedSet.Comparer))
+            {
+                foreach (T item in other)
+                {
+                    if (!Remove(item))
+                        Add(item);
+                }
+
+                return;
+            }
+
+            sortedSet = new SortedTreeSet<T>(other, Comparer);
+            SymmetricExceptWith(sortedSet);
+        }
+
+        public void UnionWith(IEnumerable<T> other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            foreach (T item in other)
+            {
+                Add(item);
+            }
+        }
+
+        public void TrimExcess() => _sortedList.TrimExcess();
+
+        public bool TryGetValue(T equalValue, out T actualValue)
+        {
+            int index = _sortedList.BinarySearch(equalValue);
+            if (index < 0)
+            {
+                actualValue = default;
+                return false;
+            }
+
+            actualValue = _sortedList[index];
+            return true;
+        }
+
+        void ICollection<T>.Add(T item) => Add(item);
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_sortedList).CopyTo(array, index);
+
+        private (int uniqueCount, int unfoundCount) CheckUniqueAndUnfoundElements(IEnumerable<T> other, bool returnIfUnfound)
+        {
+            if (Count == 0)
+            {
+                if (other.Any())
+                    return (uniqueCount: 0, unfoundCount: 1);
+
+                return (uniqueCount: 0, unfoundCount: 0);
+            }
+
+            const int StackAllocThreshold = 100;
+            int originalLastIndex = Count;
+            int intArrayLength = ((originalLastIndex - 1) / 32) + 1;
+            Span<int> span = intArrayLength <= StackAllocThreshold
+                ? stackalloc int[intArrayLength]
+                : new int[intArrayLength];
+            BitHelper bitHelper = new BitHelper(span);
+
+            // count of items in other not found in this
+            int unfoundCount = 0;
+
+            // count of unique items in other found in this
+            int uniqueCount = 0;
+
+            foreach (T item in other)
+            {
+                int index = _sortedList.IndexOf(item);
+                if (index >= 0)
+                {
+                    if (!bitHelper.IsMarked(index))
+                    {
+                        bitHelper.MarkBit(index);
+                        uniqueCount++;
+                    }
+                }
+                else
+                {
+                    unfoundCount++;
+                    if (returnIfUnfound)
+                        return (uniqueCount, unfoundCount);
+                }
+            }
+
+            return (uniqueCount, unfoundCount);
+        }
+
+#pragma warning disable SA1206 // Declaration keywords should follow order
+        private ref struct BitHelper
+#pragma warning restore SA1206 // Declaration keywords should follow order
+        {
+            private readonly Span<int> _span;
+
+            public BitHelper(Span<int> span)
+            {
+                _span = span;
+            }
+
+            internal void MarkBit(int bitPosition)
+            {
+                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
+
+                int bitArrayIndex = bitPosition / 32;
+                if (bitArrayIndex < _span.Length)
+                {
+                    // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
+                    _span[bitArrayIndex] |= 1 << (bitPosition & 31);
+                }
+            }
+
+            internal bool IsMarked(int bitPosition)
+            {
+                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
+
+                int bitArrayIndex = bitPosition / 32;
+                if (bitArrayIndex >= _span.Length)
+                    return false;
+
+                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
+                return (_span[bitArrayIndex] & (1 << (bitPosition & 31))) != 0;
+            }
+        }
+
+        private class SortedTreeSetEqualityComparer : IEqualityComparer<SortedTreeSet<T>>
+        {
+            public static readonly IEqualityComparer<SortedTreeSet<T>> Default = new SortedTreeSetEqualityComparer();
+
+            private readonly IComparer<T> _comparer;
+            private readonly IEqualityComparer<T> _equalityComparer;
+
+            private SortedTreeSetEqualityComparer()
+                : this(null, null)
+            {
+            }
+
+            public SortedTreeSetEqualityComparer(IComparer<T> comparer)
+                : this(comparer, null)
+            {
+            }
+
+            public SortedTreeSetEqualityComparer(IEqualityComparer<T> memberEqualityComparer)
+                : this(null, memberEqualityComparer)
+            {
+            }
+
+            public SortedTreeSetEqualityComparer(IComparer<T> comparer, IEqualityComparer<T> memberEqualityComparer)
+            {
+                _comparer = comparer ?? Comparer<T>.Default;
+                _equalityComparer = memberEqualityComparer ?? EqualityComparer<T>.Default;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is SortedTreeSetEqualityComparer comparer))
+                    return false;
+
+                return _comparer == comparer._comparer;
+            }
+
+            public override int GetHashCode()
+            {
+                return _comparer.GetHashCode() ^ _equalityComparer.GetHashCode();
+            }
+
+            public bool Equals(SortedTreeSet<T> x, SortedTreeSet<T> y)
+            {
+                if (x is null)
+                {
+                    return y is null;
+                }
+                else if (y is null)
+                {
+                    return false;
+                }
+
+                if (x.Comparer.Equals(y.Comparer))
+                {
+                    return x.SetEquals(y);
+                }
+
+                bool found = false;
+                foreach (T item1 in x)
+                {
+                    found = false;
+                    foreach (T item2 in y)
+                    {
+                        if (_comparer.Compare(item1, item2) == 0)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            public int GetHashCode(SortedTreeSet<T> obj)
+            {
+                if (obj == null)
+                    return 0;
+
+                int hashCode = 0;
+                foreach (T item in obj)
+                {
+                    hashCode = hashCode ^ _equalityComparer.GetHashCode(item);
+                }
+
+                return hashCode;
+            }
+        }
     }
 }

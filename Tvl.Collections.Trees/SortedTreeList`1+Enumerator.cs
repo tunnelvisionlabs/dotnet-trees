@@ -26,7 +26,9 @@ namespace Tvl.Collections.Trees
 
             public bool MoveNext() => _enumerator.MoveNext();
 
-            void IEnumerator.Reset() => _enumerator.InternalReset();
+            void IEnumerator.Reset() => InternalReset();
+
+            internal void InternalReset() => _enumerator.InternalReset();
         }
     }
 }
