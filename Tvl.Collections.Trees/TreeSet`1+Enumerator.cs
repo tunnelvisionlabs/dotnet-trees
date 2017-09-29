@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,15 +10,24 @@ namespace Tvl.Collections.Trees
     {
         public struct Enumerator : IEnumerator<T>
         {
-            public T Current => throw null;
+            private SortedTreeList<(int hashCode, T value)>.Enumerator _enumerator;
 
-            object IEnumerator.Current => throw null;
+            internal Enumerator(SortedTreeList<(int hashCode, T value)>.Enumerator enumerator)
+            {
+                _enumerator = enumerator;
+            }
 
-            public void Dispose() => throw null;
+            public T Current => _enumerator.Current.value;
 
-            public bool MoveNext() => throw null;
+            object IEnumerator.Current => Current;
 
-            void IEnumerator.Reset() => throw null;
+            public void Dispose() => _enumerator.Dispose();
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IEnumerator.Reset() => InternalReset();
+
+            internal void InternalReset() => _enumerator.InternalReset();
         }
     }
 }

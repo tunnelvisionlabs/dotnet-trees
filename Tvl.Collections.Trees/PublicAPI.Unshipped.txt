@@ -154,7 +154,6 @@ Tvl.Collections.Trees.TreeSet<T>.Count.get -> int
 Tvl.Collections.Trees.TreeSet<T>.Enumerator
 Tvl.Collections.Trees.TreeSet<T>.Enumerator.Current.get -> T
 Tvl.Collections.Trees.TreeSet<T>.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.TreeSet<T>.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeSet<T>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
 Tvl.Collections.Trees.TreeSet<T>.GetEnumerator() -> Tvl.Collections.Trees.TreeSet<T>.Enumerator
