@@ -14,6 +14,7 @@ namespace Tvl.Collections.Trees
             private readonly TreeList<T> _list;
             private int _version;
 
+            private LeafNode _leafNode;
             private int _index;
             private T _current;
 
@@ -21,6 +22,7 @@ namespace Tvl.Collections.Trees
             {
                 _list = list;
                 _version = list._version;
+                _leafNode = null;
                 _index = -1;
                 _current = default;
             }
@@ -53,7 +55,19 @@ namespace Tvl.Collections.Trees
                 if (_list._version != _version)
                     throw new InvalidOperationException();
 
-                if (_index == _list.Count - 1)
+                if (_index == -1)
+                {
+                    // Need to get the first leaf node
+                    _leafNode = _list._root.FirstLeaf;
+                }
+                else if (_index == _leafNode.Count - 1)
+                {
+                    // Need to move to the next leaf
+                    _leafNode = _leafNode.Next;
+                    _index = -1;
+                }
+
+                if (_leafNode == null)
                 {
                     _index = int.MinValue;
                     return false;
@@ -67,6 +81,7 @@ namespace Tvl.Collections.Trees
             public void Reset()
             {
                 _version = _list._version;
+                _leafNode = null;
                 _index = -1;
             }
         }

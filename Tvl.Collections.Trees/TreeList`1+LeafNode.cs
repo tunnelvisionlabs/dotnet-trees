@@ -11,6 +11,7 @@ namespace Tvl.Collections.Trees
         private sealed class LeafNode : Node
         {
             private readonly T[] _data;
+            private LeafNode _next;
             private int _count;
 
             internal LeafNode(int branchingFactor)
@@ -18,13 +19,11 @@ namespace Tvl.Collections.Trees
                 _data = new T[branchingFactor];
             }
 
-            internal override int Count
-            {
-                get
-                {
-                    return _count;
-                }
-            }
+            internal override int Count => _count;
+
+            internal override LeafNode FirstLeaf => this;
+
+            internal LeafNode Next => _next;
 
             internal override T this[int index]
             {
@@ -85,6 +84,8 @@ namespace Tvl.Collections.Trees
                         splitNode.Insert(branchingFactor, false, index - splitPoint, item);
                     }
 
+                    splitNode._next = _next;
+                    _next = splitNode;
                     return splitNode;
                 }
             }

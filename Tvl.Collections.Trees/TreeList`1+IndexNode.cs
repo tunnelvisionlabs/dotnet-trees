@@ -31,13 +31,9 @@ namespace Tvl.Collections.Trees
                 _count = child1.Count + child2.Count;
             }
 
-            internal override int Count
-            {
-                get
-                {
-                    return _count;
-                }
-            }
+            internal override int Count => _count;
+
+            internal override LeafNode FirstLeaf => _nodes[0].FirstLeaf;
 
             internal override T this[int index]
             {

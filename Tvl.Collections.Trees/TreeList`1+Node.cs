@@ -18,6 +18,11 @@ namespace Tvl.Collections.Trees
                 get;
             }
 
+            internal abstract LeafNode FirstLeaf
+            {
+                get;
+            }
+
             internal abstract T this[int index]
             {
                 get;
@@ -84,6 +89,8 @@ namespace Tvl.Collections.Trees
                         return 0;
                     }
                 }
+
+                internal override LeafNode FirstLeaf => null;
 
                 internal override T this[int index]
                 {
