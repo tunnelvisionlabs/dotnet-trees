@@ -189,17 +189,24 @@ namespace Tvl.Collections.Trees
 
         public int IndexOf(T item)
         {
-            return _root.IndexOf(item);
+            return IndexOf(item, 0, Count);
         }
 
         public int IndexOf(T item, int index)
         {
-            throw new NotImplementedException();
+            return IndexOf(item, index, Count - index);
         }
 
         public int IndexOf(T item, int index, int count)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count - count)
+                throw new ArgumentException();
+
+            return _root.IndexOf(item, index, count);
         }
 
         int IList.IndexOf(object value)

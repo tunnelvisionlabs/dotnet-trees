@@ -4,6 +4,7 @@
 namespace Tvl.Collections.Trees
 {
     using System;
+    using System.Diagnostics;
 
     public partial class TreeList<T>
     {
@@ -62,13 +63,28 @@ namespace Tvl.Collections.Trees
                 return index;
             }
 
-            internal override int IndexOf(T item)
+            internal override int IndexOf(T item, int index, int count)
             {
-                for (int i = 0; i < Count; i++)
+                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
+                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+
+                for (int i = FindLowerBound(_offsets, _nodeCount, index); i < Count; i++)
                 {
-                    int index = _nodes[i].IndexOf(item);
-                    if (index >= 0)
-                        return _offsets[i] + index;
+                    int offset = _offsets[i];
+                    if (count <= offset - index)
+                        return -1;
+
+                    int adjustedIndex = index - offset;
+
+                    int adjustedCount = _nodes[i].Count;
+                    if (index + count < offset + adjustedCount)
+                        adjustedCount -= offset + adjustedCount - index - count;
+                    if (index > offset)
+                        adjustedCount -= index - offset;
+
+                    int foundIndex = _nodes[i].IndexOf(item, adjustedIndex, adjustedCount);
+                    if (foundIndex >= 0)
+                        return offset + foundIndex;
                 }
 
                 return -1;

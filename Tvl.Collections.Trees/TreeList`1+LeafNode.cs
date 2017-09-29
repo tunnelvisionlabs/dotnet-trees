@@ -4,6 +4,7 @@
 namespace Tvl.Collections.Trees
 {
     using System;
+    using System.Diagnostics;
 
     public partial class TreeList<T>
     {
@@ -38,8 +39,11 @@ namespace Tvl.Collections.Trees
                 }
             }
 
-            internal override int IndexOf(T item)
+            internal override int IndexOf(T item, int index, int count)
             {
+                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
+                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+
                 return Array.IndexOf(_data, item, 0, _count);
             }
 
