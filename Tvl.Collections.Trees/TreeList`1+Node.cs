@@ -23,6 +23,16 @@ namespace Tvl.Collections.Trees
                 get;
             }
 
+            internal abstract Node NextNode
+            {
+                get;
+            }
+
+            internal abstract Node FirstChild
+            {
+                get;
+            }
+
             internal abstract T this[int index]
             {
                 get;
@@ -76,9 +86,23 @@ namespace Tvl.Collections.Trees
                 throw new NotImplementedException();
             }
 
+            internal static Node TrimExcess(Node root)
+            {
+                throw new NotImplementedException();
+            }
+
             internal abstract int IndexOf(T item, int index, int count);
 
             internal abstract Node Insert(int branchingFactor, bool isAppend, int index, T item);
+
+            internal TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter)
+            {
+                Debug.Assert(NextNode == null, $"Assertion failed: {nameof(NextNode)} == null");
+
+                return ConvertAll(converter, null);
+            }
+
+            internal abstract TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode);
 
             private sealed class EmptyNode : Node
             {
@@ -91,6 +115,10 @@ namespace Tvl.Collections.Trees
                 }
 
                 internal override LeafNode FirstLeaf => null;
+
+                internal override Node NextNode => null;
+
+                internal override Node FirstChild => null;
 
                 internal override T this[int index]
                 {
@@ -119,6 +147,11 @@ namespace Tvl.Collections.Trees
                     LeafNode node = new LeafNode(branchingFactor);
                     node.Insert(branchingFactor, isAppend, index, item);
                     return node;
+                }
+
+                internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+                {
+                    return TreeList<TOutput>.Node.Empty;
                 }
             }
         }

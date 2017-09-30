@@ -12,6 +12,7 @@ namespace Tvl.Collections.Trees
         {
             private readonly int[] _offsets;
             private readonly Node[] _nodes;
+            private IndexNode _next;
             private int _nodeCount;
             private int _count;
 
@@ -34,6 +35,12 @@ namespace Tvl.Collections.Trees
             internal override int Count => _count;
 
             internal override LeafNode FirstLeaf => _nodes[0].FirstLeaf;
+
+            internal override Node NextNode => Next;
+
+            internal override Node FirstChild => _nodes[0];
+
+            internal IndexNode Next => _next;
 
             internal override T this[int index]
             {
@@ -106,6 +113,24 @@ namespace Tvl.Collections.Trees
                 return InsertIndex(branchingFactor, isAppend, pageIndex + 1, splitChild);
             }
 
+            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+            {
+                var result = new TreeList<TOutput>.IndexNode(_nodes.Length);
+
+                TreeList<TOutput>.Node convertedNextChild = convertedNextNode?.FirstChild;
+                for (int i = _nodeCount - 1; i >= 0; i--)
+                {
+                    convertedNextChild = _nodes[i].ConvertAll(converter, convertedNextChild);
+                    result._nodes[i] = convertedNextChild;
+                }
+
+                Array.Copy(_offsets, result._offsets, _nodeCount);
+                result._next = (TreeList<TOutput>.IndexNode)convertedNextNode;
+                result._count = _count;
+                result._nodeCount = _nodeCount;
+                return result;
+            }
+
             private Node InsertIndex(int branchingFactor, bool isAppend, int index, Node node)
             {
                 if (_nodeCount < _nodes.Length)
@@ -138,6 +163,7 @@ namespace Tvl.Collections.Trees
                     result._nodes[0] = node;
                     result._nodeCount = 1;
                     result._count = node.Count;
+                    _next = result;
                     return result;
                 }
                 else
@@ -166,6 +192,8 @@ namespace Tvl.Collections.Trees
                     else
                         splitNode.InsertIndex(branchingFactor, false, index - splitPoint, node);
 
+                    splitNode._next = _next;
+                    _next = splitNode;
                     return splitNode;
                 }
             }

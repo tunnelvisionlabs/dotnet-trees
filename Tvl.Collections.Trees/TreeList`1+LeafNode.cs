@@ -23,6 +23,10 @@ namespace Tvl.Collections.Trees
 
             internal override LeafNode FirstLeaf => this;
 
+            internal override Node NextNode => Next;
+
+            internal override Node FirstChild => null;
+
             internal LeafNode Next => _next;
 
             internal override T this[int index]
@@ -38,12 +42,31 @@ namespace Tvl.Collections.Trees
                 }
             }
 
+            internal void CopyToArray(Array array, int index)
+            {
+                Array.Copy(_data, 0, array, index, _count);
+            }
+
             internal override int IndexOf(T item, int index, int count)
             {
                 Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
                 Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
 
                 return Array.IndexOf(_data, item, 0, _count);
+            }
+
+            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+            {
+                var result = new TreeList<TOutput>.LeafNode(_data.Length);
+
+                for (int i = _count - 1; i >= 0; i--)
+                {
+                    result._data[i] = converter(_data[i]);
+                }
+
+                result._next = (TreeList<TOutput>.LeafNode)convertedNextNode;
+                result._count = _count;
+                return result;
             }
 
             internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
@@ -61,7 +84,9 @@ namespace Tvl.Collections.Trees
                 if (isAppend)
                 {
                     // optimize the case of adding at the end of the overall list
-                    return Empty.Insert(branchingFactor, isAppend, 0, item);
+                    var result = (LeafNode)Empty.Insert(branchingFactor, isAppend, 0, item);
+                    _next = result;
+                    return result;
                 }
                 else
                 {

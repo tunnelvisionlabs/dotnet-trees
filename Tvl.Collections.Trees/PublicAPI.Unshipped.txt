@@ -49,7 +49,9 @@ Tvl.Collections.Trees.TreeList<T>.Sort(System.Comparison<T> comparison) -> void
 Tvl.Collections.Trees.TreeList<T>.Sort(int index, int count, System.Collections.Generic.IComparer<T> comparer) -> void
 Tvl.Collections.Trees.TreeList<T>.ToArray() -> T[]
 Tvl.Collections.Trees.TreeList<T>.TreeList() -> void
+Tvl.Collections.Trees.TreeList<T>.TreeList(System.Collections.Generic.IEnumerable<T> collection) -> void
 Tvl.Collections.Trees.TreeList<T>.TreeList(int branchingFactor) -> void
+Tvl.Collections.Trees.TreeList<T>.TreeList(int branchingFactor, System.Collections.Generic.IEnumerable<T> collection) -> void
 Tvl.Collections.Trees.TreeList<T>.TrimExcess() -> void
 Tvl.Collections.Trees.TreeList<T>.TrueForAll(System.Predicate<T> match) -> bool
 Tvl.Collections.Trees.TreeList<T>.this[int index].get -> T

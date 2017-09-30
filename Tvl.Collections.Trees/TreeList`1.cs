@@ -6,6 +6,8 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;
 
@@ -20,12 +22,32 @@ namespace Tvl.Collections.Trees
         {
         }
 
+        public TreeList(IEnumerable<T> collection)
+            : this(16, collection)
+        {
+        }
+
         public TreeList(int branchingFactor)
         {
             if (branchingFactor < 2)
                 throw new ArgumentOutOfRangeException(nameof(branchingFactor));
 
             _branchingFactor = branchingFactor;
+        }
+
+        public TreeList(int branchingFactor, IEnumerable<T> collection)
+            : this(branchingFactor)
+        {
+            AddRange(collection);
+        }
+
+        private TreeList(int branchingFactor, Node root)
+        {
+            Debug.Assert(branchingFactor >= 2, $"Assertion failed: {nameof(branchingFactor)} >= 2");
+            Debug.Assert(root != null, $"Assertion failed: {nameof(root)} != null");
+
+            _branchingFactor = branchingFactor;
+            _root = root;
         }
 
         public int Count
@@ -53,7 +75,7 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", nameof(index));
+                    throw new ArgumentException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
 
                 return _root[index];
             }
@@ -63,7 +85,7 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException("index must be less than Count", nameof(index));
+                    throw new ArgumentException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
 
                 _root[index] = value;
                 _version++;
@@ -101,11 +123,15 @@ namespace Tvl.Collections.Trees
         public void Add(T item)
         {
             _root = Node.Insert(_root, _branchingFactor, Count, item);
+            _version++;
         }
 
         public void AddRange(IEnumerable<T> collection)
         {
-            throw new NotImplementedException();
+            int previousCount = Count;
+            _root = Node.InsertRange(_root, _branchingFactor, previousCount, collection);
+            if (Count > previousCount)
+                _version++;
         }
 
         int IList.Add(object value)
@@ -127,7 +153,11 @@ namespace Tvl.Collections.Trees
 
         public void Clear()
         {
-            _root = Node.Empty;
+            if (Count != 0)
+            {
+                _root = Node.Empty;
+                _version++;
+            }
         }
 
         public bool Contains(T item)
@@ -152,30 +182,50 @@ namespace Tvl.Collections.Trees
 
         public void CopyTo(T[] array)
         {
-            CopyTo(array, 0);
+            CopyTo(0, array, 0, Count);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
-            if (arrayIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
-            if (array.Length - arrayIndex < Count)
-                throw new ArgumentException("Not enough space is available in the destination array.", nameof(arrayIndex));
-
-            for (int i = 0; i < Count; i++)
-                array[arrayIndex + i] = this[i];
+            CopyTo(0, array, arrayIndex, Count);
         }
 
         public void CopyTo(int index, T[] array, int arrayIndex, int count)
         {
-            throw new NotImplementedException();
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (arrayIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (Count - index < count)
+                throw new ArgumentException();
+            if (array.Length - arrayIndex < count)
+                throw new ArgumentException("Not enough space is available in the destination array.", nameof(arrayIndex));
+
+            for (int i = 0; i < count; i++)
+            {
+                array[arrayIndex + i] = this[index + i];
+            }
         }
 
         void ICollection.CopyTo(Array array, int index)
         {
-            throw new NotImplementedException();
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (array.Length - index < Count)
+                throw new ArgumentException("Not enough space is available in the destination array.", nameof(index));
+
+            int offset = index;
+            LeafNode leaf = _root.FirstLeaf;
+            while (leaf != null)
+            {
+                leaf.CopyToArray(array, offset);
+                offset += leaf.Count;
+                leaf = leaf.Next;
+            }
         }
 
         public Enumerator GetEnumerator()
@@ -317,12 +367,13 @@ namespace Tvl.Collections.Trees
             if (index > Count - count)
                 throw new ArgumentException();
 
-            throw new NotImplementedException();
+            return _root.BinarySearch(index, count, item, comparer);
         }
 
         public TreeList<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
         {
-            throw new NotImplementedException();
+            var newRoot = _root.ConvertAll(converter);
+            return new TreeList<TOutput>(_branchingFactor, newRoot);
         }
 
         public bool Exists(Predicate<T> match)
@@ -346,7 +397,10 @@ namespace Tvl.Collections.Trees
 
         public TreeList<T> FindAll(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
+            return new TreeList<T>(_branchingFactor, this.Where(i => match(i)));
         }
 
         public int FindIndex(Predicate<T> match)
@@ -361,11 +415,23 @@ namespace Tvl.Collections.Trees
 
         public int FindIndex(int startIndex, int count, Predicate<T> match)
         {
-            throw new NotImplementedException();
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+            if (startIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (startIndex > Count - count)
+                throw new ArgumentException();
+
+            return _root.FindIndex(startIndex, count, match);
         }
 
         public T FindLast(Predicate<T> match)
         {
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
             throw new NotImplementedException();
         }
 
@@ -417,27 +483,45 @@ namespace Tvl.Collections.Trees
 
         public TreeList<T> GetRange(int index, int count)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count - count)
+                throw new ArgumentException();
+
+            return new TreeList<T>(_branchingFactor, this.Skip(index).Take(count));
         }
 
         public void Reverse()
         {
-            throw new NotImplementedException();
+            Reverse(0, Count);
         }
 
         public void Reverse(int index, int count)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count - count)
+                throw new ArgumentException();
+
+            if (count != 0)
+            {
+                _root.Reverse(index, count);
+                _version++;
+            }
         }
 
         public void Sort()
         {
-            throw new NotImplementedException();
+            Sort(0, Count, null);
         }
 
         public void Sort(IComparer<T> comparer)
         {
-            throw new NotImplementedException();
+            Sort(0, Count, comparer);
         }
 
         public void Sort(int index, int count, IComparer<T> comparer)
@@ -459,12 +543,22 @@ namespace Tvl.Collections.Trees
 
         public void TrimExcess()
         {
-            throw new NotImplementedException();
+            _root = Node.TrimExcess(_root, _branchingFactor);
+            _version++;
         }
 
         public bool TrueForAll(Predicate<T> match)
         {
-            throw new NotImplementedException();
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
+            foreach (T item in this)
+            {
+                if (!match(item))
+                    return false;
+            }
+
+            return true;
         }
     }
 }
