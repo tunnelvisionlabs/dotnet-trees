@@ -114,7 +114,7 @@ namespace Tvl.Collections.Trees.Test.List
 
             try
             {
-                TreeList<string> listObject = new TreeList<string>(1);
+                TreeList<string> listObject = new TreeList<string>();
                 listObject.Add(null);
                 if (listObject[0] != null)
                 {

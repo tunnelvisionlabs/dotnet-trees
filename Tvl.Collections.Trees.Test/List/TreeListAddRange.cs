@@ -52,7 +52,7 @@ namespace Tvl.Collections.Trees.Test.List
             try
             {
                 string[] strArray = { "Hello", "world", "Tom", "school" };
-                TreeList<string> listObject = new TreeList<string>(1);
+                TreeList<string> listObject = new TreeList<string>();
                 listObject.AddRange(strArray);
                 if (listObject.Count != 4)
                 {
@@ -115,7 +115,7 @@ namespace Tvl.Collections.Trees.Test.List
             try
             {
                 IEnumerable<string> i = null;
-                TreeList<string> listObject = new TreeList<string>(100);
+                TreeList<string> listObject = new TreeList<string>();
                 listObject.AddRange(i);
                 userMessage = "The ArgumentNullException was not thrown as expected";
                 retVal = false;
