@@ -4,6 +4,7 @@
 namespace Tvl.Collections.Trees
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     public partial class TreeList<T>
@@ -52,7 +53,15 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
                 Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
 
-                return Array.IndexOf(_data, item, 0, _count);
+                return Array.IndexOf(_data, item, index, count);
+            }
+
+            internal override int LastIndexOf(T item, int index, int count)
+            {
+                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
+                Debug.Assert(count >= 0 && count - 1 <= index, $"Assertion failed: {nameof(count)} >= 0 && {nameof(count)} - 1 <= {nameof(index)}");
+
+                return Array.LastIndexOf(_data, item, index, count);
             }
 
             internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
@@ -113,6 +122,108 @@ namespace Tvl.Collections.Trees
                     _next = splitNode;
                     return splitNode;
                 }
+            }
+
+            internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+            {
+                Node insertionNode = this;
+                Node lastLeaf = null;
+                foreach (T item in collection)
+                {
+                    Debug.Assert(index >= 0 && index <= ((LeafNode)insertionNode)._data.Length, "Assertion failed: index >= 0 && index <= ((LeafNode)insertionNode)._data.Length");
+
+                    Node newLastLeaf = insertionNode.Insert(branchingFactor, isAppend, index, item);
+                    if (newLastLeaf != null)
+                    {
+                        // this insertion resulted in a split, so at minimum 'index' must be updated
+                        if (lastLeaf != null && insertionNode != lastLeaf)
+                        {
+                            // We were not inserting into the last leaf (an earlier split in the InsertRange operation
+                            // resulted in insertions prior to the last leaf)
+                            if (index < insertionNode.Count)
+                            {
+                                // The split does not change the insertion node.
+                                index++;
+                            }
+                            else
+                            {
+                                index = index + 1 - insertionNode.Count;
+                                insertionNode = newLastLeaf;
+                            }
+                        }
+                        else if (index < insertionNode.Count)
+                        {
+                            // The split resulted in a new last leaf, but no change in the insertion node.
+                            index++;
+                            lastLeaf = newLastLeaf;
+                        }
+                        else
+                        {
+                            // The split resulted in a new last leaf which becomes the new insertion node.
+                            index = index + 1 - insertionNode.Count;
+                            lastLeaf = newLastLeaf;
+                            insertionNode = newLastLeaf;
+                        }
+                    }
+                    else
+                    {
+                        index++;
+                    }
+                }
+
+                return lastLeaf;
+            }
+
+            internal override bool RemoveAt(int index)
+            {
+                for (int i = index; i < _count - 1; i++)
+                {
+                    _data[i] = _data[i + 1];
+                }
+
+                _data[_count - 1] = default;
+                _count--;
+
+                if (_count < _data.Length / 2 && _next != null)
+                {
+                    if (_count + _next.Count <= _data.Length)
+                    {
+                        // Merge nodes and remove the next node
+                        throw new NotImplementedException();
+                    }
+                    else
+                    {
+                        // Rebalance nodes
+                        throw new NotImplementedException();
+                    }
+                }
+
+                return false;
+            }
+
+            internal override void Sort(int index, int count, IComparer<T> comparer)
+            {
+                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
+                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+
+                Array.Sort(_data, index, count, comparer);
+            }
+
+            internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+            {
+                Debug.Assert(startIndex >= 0, $"Assertion failed: {nameof(startIndex)} >= 0");
+                Debug.Assert(count >= 0 && startIndex <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(startIndex)} <= {nameof(Count)} - {nameof(count)}");
+
+                return Array.FindIndex(_data, startIndex, count, match);
+            }
+
+            internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+            {
+                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
+                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+
+                return Array.BinarySearch(_data, index, count, item, comparer);
             }
         }
     }

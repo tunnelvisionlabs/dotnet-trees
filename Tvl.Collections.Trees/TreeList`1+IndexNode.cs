@@ -4,6 +4,7 @@
 namespace Tvl.Collections.Trees
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
 
     public partial class TreeList<T>
@@ -25,11 +26,35 @@ namespace Tvl.Collections.Trees
             internal IndexNode(int branchingFactor, Node child1, Node child2)
                 : this(branchingFactor)
             {
+                Debug.Assert(child1.NextNode == child2, "Assertion failed: child1.NextNode == child2");
+
                 _nodes[0] = child1;
                 _nodes[1] = child2;
                 _offsets[1] = child1.Count;
                 _nodeCount = 2;
                 _count = child1.Count + child2.Count;
+            }
+
+            internal IndexNode(int branchingFactor, Node firstChild, Node lastChild, out IndexNode lastNode)
+                : this(branchingFactor)
+            {
+                lastNode = null;
+                for (Node current = firstChild; current != null; current = current == lastChild ? null : current.NextNode)
+                {
+                    if (_nodeCount == _nodes.Length)
+                    {
+                        // TODO: Avoid recursion here
+                        _next = new IndexNode(branchingFactor, current, lastChild, out lastNode);
+                        break;
+                    }
+
+                    _nodes[_nodeCount] = current;
+                    _offsets[_nodeCount] = _count;
+                    _count += current.Count;
+                    _nodeCount++;
+                }
+
+                lastNode = lastNode ?? this;
             }
 
             internal override int Count => _count;
@@ -71,13 +96,13 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
                 Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
 
-                for (int i = FindLowerBound(_offsets, _nodeCount, index); i < Count; i++)
+                for (int i = FindLowerBound(_offsets, _nodeCount, index); i < _nodeCount; i++)
                 {
                     int offset = _offsets[i];
                     if (count <= offset - index)
                         return -1;
 
-                    int adjustedIndex = index - offset;
+                    int adjustedIndex = Math.Max(index - offset, 0);
 
                     int adjustedCount = _nodes[i].Count;
                     if (index + count < offset + adjustedCount)
@@ -86,6 +111,34 @@ namespace Tvl.Collections.Trees
                         adjustedCount -= index - offset;
 
                     int foundIndex = _nodes[i].IndexOf(item, adjustedIndex, adjustedCount);
+                    if (foundIndex >= 0)
+                        return offset + foundIndex;
+                }
+
+                return -1;
+            }
+
+            internal override int LastIndexOf(T item, int index, int count)
+            {
+                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
+                Debug.Assert(count >= 0 && count - 1 <= index, $"Assertion failed: {nameof(count)} >= 0 && {nameof(count)} - 1 <= {nameof(index)}");
+
+                for (int i = FindLowerBound(_offsets, _nodeCount, index); i >= 0; i--)
+                {
+                    int offset = _offsets[i];
+
+                    int adjustedCount = _nodes[i].Count;
+                    if (index - count > offset + adjustedCount)
+                        return -1;
+
+                    int adjustedIndex = Math.Min(index - offset, _nodes[i].Count - 1);
+
+                    if (adjustedIndex == index - offset)
+                        adjustedCount -= adjustedCount - 1 - adjustedIndex;
+                    if (index - count >= offset)
+                        adjustedCount -= offset - (index - count);
+
+                    int foundIndex = _nodes[i].LastIndexOf(item, adjustedIndex, adjustedCount);
                     if (foundIndex >= 0)
                         return offset + foundIndex;
                 }
@@ -111,6 +164,102 @@ namespace Tvl.Collections.Trees
 
                 _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
                 return InsertIndex(branchingFactor, isAppend, pageIndex + 1, splitChild);
+            }
+
+            internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+            {
+                int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
+                int previousCount = _nodes[pageIndex].Count;
+                Node splitChild = _nodes[pageIndex].InsertRange(branchingFactor, isAppend, index - _offsets[pageIndex], collection);
+                if (splitChild == null)
+                {
+                    int insertionCount = _nodes[pageIndex].Count - previousCount;
+                    for (int i = pageIndex + 1; i < _nodeCount; i++)
+                        _offsets[i] += insertionCount;
+
+                    _count += insertionCount;
+                    return null;
+                }
+
+                throw new NotImplementedException();
+            }
+
+            internal override bool RemoveAt(int index)
+            {
+                int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
+                bool removedChild = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex]);
+                if (!removedChild)
+                {
+                    for (int i = pageIndex + 1; i < _nodeCount; i++)
+                        _offsets[i]--;
+
+                    _count--;
+                    return false;
+                }
+
+                throw new NotImplementedException();
+            }
+
+            internal override void Sort(int index, int count, IComparer<T> comparer)
+            {
+                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
+                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+
+                int firstPage = FindLowerBound(_offsets, _nodeCount, index);
+                int lastPage = firstPage;
+                for (int i = firstPage; i < _nodeCount; i++)
+                {
+                    int pageOffset = _offsets[i];
+                    if (pageOffset - count >= index)
+                    {
+                        // Nothing to sort on this page
+                        break;
+                    }
+
+                    lastPage = i;
+                    int pageIndex = i == firstPage ? index - pageOffset : 0;
+                    int pageCount = index + count >= pageOffset + _nodes[i].Count ? _nodes[i].Count - pageIndex : index + count - pageOffset - pageIndex;
+                    _nodes[i].Sort(pageIndex, pageCount, comparer);
+                }
+
+                if (firstPage != lastPage)
+                {
+                    // Need to merge the results
+                    throw new NotImplementedException();
+                }
+            }
+
+            internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+            {
+                Debug.Assert(startIndex >= 0, $"Assertion failed: {nameof(startIndex)} >= 0");
+                Debug.Assert(count >= 0 && startIndex <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(startIndex)} <= {nameof(Count)} - {nameof(count)}");
+
+                for (int i = FindLowerBound(_offsets, _nodeCount, startIndex); i < Count; i++)
+                {
+                    int offset = _offsets[i];
+                    if (count <= offset - startIndex)
+                        return -1;
+
+                    int adjustedIndex = startIndex - offset;
+
+                    int adjustedCount = _nodes[i].Count;
+                    if (startIndex + count < offset + adjustedCount)
+                        adjustedCount -= offset + adjustedCount - startIndex - count;
+                    if (startIndex > offset)
+                        adjustedCount -= startIndex - offset;
+
+                    int foundIndex = _nodes[i].FindIndex(adjustedIndex, adjustedCount, match);
+                    if (foundIndex >= 0)
+                        return offset + foundIndex;
+                }
+
+                return -1;
+            }
+
+            internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+            {
+                throw new NotImplementedException();
             }
 
             internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)

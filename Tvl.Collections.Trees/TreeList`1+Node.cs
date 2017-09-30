@@ -63,7 +63,27 @@ namespace Tvl.Collections.Trees
 
             internal static Node InsertRange(Node root, int branchingFactor, int index, IEnumerable<T> collection)
             {
-                throw new NotImplementedException();
+                if (collection == null)
+                    throw new ArgumentNullException(nameof(collection));
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (index > root.Count)
+                    throw new ArgumentOutOfRangeException();
+
+                // We can't insert a range into the empty node
+                if (root == Empty)
+                    root = new LeafNode(branchingFactor);
+
+                Node splitNode = root.InsertRange(branchingFactor, index == root.Count, index, collection);
+                while (splitNode != null)
+                {
+                    // Make a new level, walking nodes on the previous root level from 'node' to 'splitNode'
+                    IndexNode newRoot = new IndexNode(branchingFactor, root, splitNode, out IndexNode newSplitNode);
+                    root = newRoot;
+                    splitNode = newSplitNode == newRoot ? null : newSplitNode;
+                }
+
+                return root;
             }
 
             internal static Node RemoveAt(Node root, int index)
@@ -71,14 +91,34 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= root.Count)
-                    throw new ArgumentException();
+                    throw new ArgumentOutOfRangeException();
+
+                bool removedNode = root.RemoveAt(index);
+                if (!removedNode)
+                    return root;
 
                 throw new NotImplementedException();
             }
 
             internal static Node RemoveRange(Node root, int index, int count)
             {
-                throw new NotImplementedException();
+                if (index < 0)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (count < 0)
+                    throw new ArgumentOutOfRangeException(nameof(count));
+                if (index > root.Count - count)
+                    throw new ArgumentOutOfRangeException();
+
+                if (count == root.Count)
+                    return Empty;
+
+                Node result = root;
+                for (int i = 0; i < count; i++)
+                {
+                    result = RemoveAt(result, index + count - i - 1);
+                }
+
+                return result;
             }
 
             internal static Node RemoveAll(Node root, Predicate<T> match)
@@ -91,9 +131,35 @@ namespace Tvl.Collections.Trees
                 throw new NotImplementedException();
             }
 
+            internal void Reverse(int index, int count)
+            {
+                int firstIndex = index;
+                int lastIndex = firstIndex + count - 1;
+                while (lastIndex > firstIndex)
+                {
+                    T temp = this[firstIndex];
+                    this[firstIndex] = this[lastIndex];
+                    this[lastIndex] = temp;
+                    firstIndex++;
+                    lastIndex--;
+                }
+            }
+
             internal abstract int IndexOf(T item, int index, int count);
 
+            internal abstract int LastIndexOf(T item, int index, int count);
+
             internal abstract Node Insert(int branchingFactor, bool isAppend, int index, T item);
+
+            internal abstract Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection);
+
+            internal abstract bool RemoveAt(int index);
+
+            internal abstract void Sort(int index, int count, IComparer<T> comparer);
+
+            internal abstract int FindIndex(int startIndex, int count, Predicate<T> match);
+
+            internal abstract int BinarySearch(int index, int count, T item, IComparer<T> comparer);
 
             internal TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter)
             {
@@ -141,12 +207,52 @@ namespace Tvl.Collections.Trees
                     return -1;
                 }
 
+                internal override int LastIndexOf(T item, int index, int count)
+                {
+                    throw ExceptionUtilities.Unreachable;
+                }
+
                 internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
                 {
                     Debug.Assert(index == 0 && isAppend, "index == 0 && isAppend");
                     LeafNode node = new LeafNode(branchingFactor);
                     node.Insert(branchingFactor, isAppend, index, item);
                     return node;
+                }
+
+                internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+                {
+                    throw ExceptionUtilities.Unreachable;
+                }
+
+                internal override bool RemoveAt(int index)
+                {
+                    throw ExceptionUtilities.Unreachable;
+                }
+
+                internal override void Sort(int index, int count, IComparer<T> comparer)
+                {
+                    Debug.Assert(index == 0, $"Assertion failed: {nameof(index)} == 0");
+                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+                }
+
+                internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+                {
+                    Debug.Assert(startIndex == 0, $"Assertion failed: {nameof(startIndex)} == 0");
+                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
+
+                    return -1;
+                }
+
+                internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+                {
+                    Debug.Assert(index == 0, $"Assertion failed: {nameof(index)} == 0");
+                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+
+                    return ~0;
                 }
 
                 internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)

@@ -237,13 +237,20 @@ namespace Tvl.Collections.Trees
             if (array.Length - index < Count)
                 throw new ArgumentException("Not enough space is available in the destination array.", nameof(index));
 
-            int offset = index;
-            LeafNode leaf = _root.FirstLeaf;
-            while (leaf != null)
+            try
             {
-                leaf.CopyToArray(array, offset);
-                offset += leaf.Count;
-                leaf = leaf.Next;
+                int offset = index;
+                LeafNode leaf = _root.FirstLeaf;
+                while (leaf != null)
+                {
+                    leaf.CopyToArray(array, offset);
+                    offset += leaf.Count;
+                    leaf = leaf.Next;
+                }
+            }
+            catch (ArrayTypeMismatchException)
+            {
+                throw new ArgumentException("Invalid array type");
             }
         }
 
@@ -273,7 +280,7 @@ namespace Tvl.Collections.Trees
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (index > Count - count)
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException();
 
             return _root.IndexOf(item, index, count);
         }
@@ -486,7 +493,16 @@ namespace Tvl.Collections.Trees
 
         public int LastIndexOf(T item, int index, int count)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (count - 1 > index)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count)
+                throw new ArgumentOutOfRangeException();
+
+            return _root.LastIndexOf(item, index, count);
         }
 
         public void ForEach(Action<T> action)
@@ -545,12 +561,22 @@ namespace Tvl.Collections.Trees
 
         public void Sort(int index, int count, IComparer<T> comparer)
         {
-            throw new NotImplementedException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index > Count - count)
+                throw new ArgumentOutOfRangeException();
+
+            _root.Sort(index, count, comparer ?? Comparer<T>.Default);
         }
 
         public void Sort(Comparison<T> comparison)
         {
-            throw new NotImplementedException();
+            if (comparison == null)
+                throw new ArgumentNullException(nameof(comparison));
+
+            Sort(0, Count, new ComparisonComparer(comparison));
         }
 
         public T[] ToArray()
@@ -562,7 +588,7 @@ namespace Tvl.Collections.Trees
 
         public void TrimExcess()
         {
-            _root = Node.TrimExcess(_root, _branchingFactor);
+            _root = Node.TrimExcess(_root);
             _version++;
         }
 
@@ -578,6 +604,18 @@ namespace Tvl.Collections.Trees
             }
 
             return true;
+        }
+
+        private sealed class ComparisonComparer : IComparer<T>
+        {
+            private readonly Comparison<T> _comparison;
+
+            public ComparisonComparer(Comparison<T> comparison)
+            {
+                _comparison = comparison;
+            }
+
+            public int Compare(T x, T y) => _comparison(x, y);
         }
     }
 }

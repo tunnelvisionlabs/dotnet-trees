@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace TreeCollectionTests
+namespace Tvl.Collections.Trees.Test
 {
     using System;
     using System.Collections.Generic;
@@ -77,17 +77,10 @@ namespace TreeCollectionTests
             list.Remove("Text");
             Assert.Equal(originalCount, list.Count);
 
-            try
-            {
-                object removedItem = list[0];
-                list.Remove(list[0]);
-                Assert.Equal(originalCount - 1, list.Count);
-                Assert.True(list.Contains(removedItem));
-            }
-            catch (NotImplementedException)
-            {
-                // Allowed for now
-            }
+            object removedItem = list[0];
+            list.Remove(list[0]);
+            Assert.Equal(originalCount - 1, list.Count);
+            Assert.True(list.Contains(removedItem));
 
             if (supportsNullValues)
             {
@@ -139,58 +132,51 @@ namespace TreeCollectionTests
             Assert.IsType<object>(collection.SyncRoot);
             Assert.Same(collection.SyncRoot, collection.SyncRoot);
 
-            try
+            if (supportsNullValues)
             {
-                if (supportsNullValues)
-                {
-                    var copy = new object[collection.Count];
+                var copy = new object[collection.Count];
 
-                    Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
-                    Assert.All(copy, Assert.Null);
-                    Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
-                    Assert.All(copy, Assert.Null);
+                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.All(copy, Assert.Null);
+                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.All(copy, Assert.Null);
 
-                    collection.CopyTo(copy, 0);
-                    Assert.Equal(600, copy[0]);
-                    Assert.Equal(601, copy[1]);
+                collection.CopyTo(copy, 0);
+                Assert.Equal(600, copy[0]);
+                Assert.Equal(601, copy[1]);
 
-                    copy = new object[collection.Count + 2];
-                    collection.CopyTo(copy, 1);
-                    Assert.Null(copy[0]);
-                    Assert.Equal(600, copy[1]);
-                    Assert.Equal(601, copy[2]);
-                    Assert.Null(copy[3]);
+                copy = new object[collection.Count + 2];
+                collection.CopyTo(copy, 1);
+                Assert.Null(copy[0]);
+                Assert.Equal(600, copy[1]);
+                Assert.Equal(601, copy[2]);
+                Assert.Null(copy[3]);
 
-                    // TODO: One of these applies to int?, while the other applies to object. Need to resolve.
-                    ////Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
-                    ////Assert.Throws<InvalidCastException>(() => collection.CopyTo(new string[collection.Count], 0));
-                }
-                else
-                {
-                    var copy = new int[collection.Count];
-
-                    Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
-                    Assert.All(copy, item => Assert.Equal(0, item));
-                    Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
-                    Assert.All(copy, item => Assert.Equal(0, item));
-
-                    collection.CopyTo(copy, 0);
-                    Assert.Equal(600, copy[0]);
-                    Assert.Equal(601, copy[1]);
-
-                    copy = new int[collection.Count + 2];
-                    collection.CopyTo(copy, 1);
-                    Assert.Equal(0, copy[0]);
-                    Assert.Equal(600, copy[1]);
-                    Assert.Equal(601, copy[2]);
-                    Assert.Equal(0, copy[3]);
-
-                    Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
-                }
+                // TODO: One of these applies to int?, while the other applies to object. Need to resolve.
+                ////Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
+                ////Assert.Throws<InvalidCastException>(() => collection.CopyTo(new string[collection.Count], 0));
             }
-            catch (NotImplementedException)
+            else
             {
-                // TODO: Allowed for now
+                var copy = new int[collection.Count];
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.All(copy, item => Assert.Equal(0, item));
+                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.All(copy, item => Assert.Equal(0, item));
+
+                collection.CopyTo(copy, 0);
+                Assert.Equal(600, copy[0]);
+                Assert.Equal(601, copy[1]);
+
+                copy = new int[collection.Count + 2];
+                collection.CopyTo(copy, 1);
+                Assert.Equal(0, copy[0]);
+                Assert.Equal(600, copy[1]);
+                Assert.Equal(601, copy[2]);
+                Assert.Equal(0, copy[3]);
+
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
             }
         }
 

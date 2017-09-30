@@ -74,7 +74,7 @@ namespace Tvl.Collections.Trees
                 }
 
                 _index++;
-                _current = _list[_index];
+                _current = _leafNode[_index];
                 return true;
             }
 
