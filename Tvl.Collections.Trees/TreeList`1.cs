@@ -10,12 +10,18 @@ namespace Tvl.Collections.Trees
     using System.Linq;
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;
+#if NETSTANDARD1_0
+    using System.Threading;
+#endif
 
     public partial class TreeList<T> : IList<T>, IReadOnlyList<T>, IList, ICollection
     {
         private readonly int _branchingFactor;
         private Node _root = Node.Empty;
         private int _version;
+#if NETSTANDARD1_0
+        private object _syncRoot;
+#endif
 
         public TreeList()
             : this(16)
@@ -66,7 +72,20 @@ namespace Tvl.Collections.Trees
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => throw new NotSupportedException();
+        object ICollection.SyncRoot
+        {
+            get
+            {
+#if NETSTANDARD1_0
+                if (_syncRoot == null)
+                    Interlocked.CompareExchange(ref _syncRoot, new object(), null);
+
+                return _syncRoot;
+#else
+                return SyncRootFallback.GetOrCreateSyncRoot(this);
+#endif
+            }
+        }
 
         public T this[int index]
         {

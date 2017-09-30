@@ -122,28 +122,22 @@ namespace TreeCollectionTests
         [Fact]
         public void TestICollectionInterface()
         {
-            TestICollectionInterfaceImpl(new TreeList<int> { 600, 601 }, supportsSyncRoot: false, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new TreeList<int?> { 600, 601 }, supportsSyncRoot: false, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new TreeList<object> { 600, 601 }, supportsSyncRoot: false, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new TreeList<int> { 600, 601 }, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new TreeList<int?> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new TreeList<object> { 600, 601 }, supportsNullValues: true);
 
             // Run the same set of tests on List<T> to ensure consistent behavior
-            TestICollectionInterfaceImpl(new List<int> { 600, 601 }, supportsSyncRoot: true, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new List<int?> { 600, 601 }, supportsSyncRoot: true, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new List<object> { 600, 601 }, supportsSyncRoot: true, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new List<int> { 600, 601 }, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new List<int?> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new List<object> { 600, 601 }, supportsNullValues: true);
         }
 
-        private static void TestICollectionInterfaceImpl(ICollection collection, bool supportsSyncRoot, bool supportsNullValues)
+        private static void TestICollectionInterfaceImpl(ICollection collection, bool supportsNullValues)
         {
             Assert.False(collection.IsSynchronized);
 
-            if (supportsSyncRoot)
-            {
-                Assert.IsType<object>(collection.SyncRoot);
-            }
-            else
-            {
-                Assert.Throws<NotSupportedException>(() => collection.SyncRoot);
-            }
+            Assert.IsType<object>(collection.SyncRoot);
+            Assert.Same(collection.SyncRoot, collection.SyncRoot);
 
             try
             {
