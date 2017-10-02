@@ -225,6 +225,27 @@ namespace Tvl.Collections.Trees
 
                 return Array.BinarySearch(_data, index, count, item, comparer);
             }
+
+            internal override void Validate(ValidationRules rules)
+            {
+                Debug.Assert(_data != null, $"Assertion failed: {nameof(_data)} != null");
+                Debug.Assert(_data.Length >= 2, $"Assertion failed: {nameof(_data.Length)} >= 2");
+                Debug.Assert(_count >= 0 && _count <= _data.Length, $"Assertion failed: {nameof(_count)} >= 0 && {nameof(_count)} <= {nameof(_data)}.Length");
+
+                // Only the last node is allowed to have a reduced number of children
+                Debug.Assert(_count >= _data.Length / 2 || _next == null, $"Assertion failed: {nameof(_count)} >= {nameof(_data)}.Length / 2 || {nameof(_next)} == null");
+
+                if (default(T) == null)
+                {
+                    for (int i = _count; i < _data.Length; i++)
+                        Debug.Assert(_data[i] == null, $"Assertion failed: {nameof(_data)}[i] == null");
+                }
+
+                if (rules.HasFlag(ValidationRules.RequirePacked))
+                {
+                    Debug.Assert(_next == null || _count == _data.Length, $"Assertion failed: {nameof(_next)} == null || {nameof(_count)} == {nameof(_data)}.Length");
+                }
+            }
         }
     }
 }

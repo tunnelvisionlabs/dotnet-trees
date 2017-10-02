@@ -196,6 +196,16 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestAddStaysPacked()
+        {
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            for (int i = 0; i < 2 * 4 * 4; i++)
+                list.Add(i);
+
+            list.Validate(ValidationRules.RequirePacked);
+        }
+
+        [Fact]
         public void TestAddMany()
         {
             int[] expected = { 600, 601, 602, 603, 700, 701, 702, 703, 800, 801, 802, 803 };

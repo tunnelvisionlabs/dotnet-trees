@@ -606,6 +606,14 @@ namespace Tvl.Collections.Trees
             return true;
         }
 
+        internal void Validate(ValidationRules validationRules)
+        {
+            Debug.Assert(_branchingFactor >= 2, $"Assertion failed: {nameof(_branchingFactor)} >= 2");
+            Debug.Assert(_root != null, $"Assertion failed: {nameof(_root)} != null");
+
+            _root.Validate(validationRules);
+        }
+
         private sealed class ComparisonComparer : IComparer<T>
         {
             private readonly Comparison<T> _comparison;

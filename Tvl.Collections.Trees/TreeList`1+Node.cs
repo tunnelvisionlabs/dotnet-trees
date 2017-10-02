@@ -170,6 +170,8 @@ namespace Tvl.Collections.Trees
 
             internal abstract TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode);
 
+            internal abstract void Validate(ValidationRules rules);
+
             private sealed class EmptyNode : Node
             {
                 internal override int Count
@@ -258,6 +260,11 @@ namespace Tvl.Collections.Trees
                 internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
                 {
                     return TreeList<TOutput>.Node.Empty;
+                }
+
+                internal override void Validate(ValidationRules rules)
+                {
+                    Debug.Assert(this == Empty, $"Assertion failed: this == {nameof(Empty)}");
                 }
             }
         }

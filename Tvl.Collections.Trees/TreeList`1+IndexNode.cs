@@ -346,6 +346,51 @@ namespace Tvl.Collections.Trees
                     return splitNode;
                 }
             }
+
+            internal override void Validate(ValidationRules rules)
+            {
+                Debug.Assert(_nodes != null, $"Assertion failed: {nameof(_nodes)} != null");
+                Debug.Assert(_nodes.Length >= 2, $"Assertion failed: {nameof(_nodes.Length)} >= 2");
+                Debug.Assert(_offsets != null, $"Assertion failed: {nameof(_offsets)} != null");
+                Debug.Assert(_offsets.Length == _nodes.Length, $"Assertion failed: {nameof(_offsets)}.Length == {nameof(_nodes)}.Length");
+                Debug.Assert(_nodeCount >= 0 && _nodeCount <= _nodes.Length, $"Assertion failed: {nameof(_nodeCount)} >= 0 && {nameof(_nodeCount)} <= {nameof(_nodes)}.Length");
+
+                // Only the last node is allowed to have a reduced number of children
+                Debug.Assert(_nodeCount >= _nodes.Length / 2 || _next == null, $"Assertion failed: {nameof(_nodeCount)} >= {nameof(_nodes)}.Length / 2 || {nameof(_next)} == null");
+
+                int sum = 0;
+                for (int i = 0; i < _nodeCount; i++)
+                {
+                    Debug.Assert(_offsets[i] == sum, $"Assertion failed: {nameof(_offsets)}[i] == {nameof(sum)}");
+                    if (i < _nodeCount - 1)
+                    {
+                        Debug.Assert(_nodes[i + 1] == _nodes[i].NextNode, $"Assertion failed: {nameof(_nodes)}[i + 1] == {nameof(_nodes)}[i].NextNode");
+                    }
+                    else if (_next != null)
+                    {
+                        Debug.Assert(_next._nodes[0] == _nodes[i].NextNode, $"Assertion failed: {nameof(_next)}._nodes[0] == {nameof(_nodes)}[i].NextNode");
+                    }
+                    else
+                    {
+                        Debug.Assert(_nodes[i].NextNode == null, $"Assertion failed: {nameof(_nodes)}[i].NextNode == null");
+                    }
+
+                    sum += _nodes[i].Count;
+                }
+
+                Debug.Assert(_count == sum, $"Assertion failed: {nameof(_count)} == {nameof(sum)}");
+
+                for (int i = _nodeCount; i < _nodes.Length; i++)
+                {
+                    Debug.Assert(_offsets[i] == 0, $"Assertion failed: {nameof(_offsets)}[i] == 0");
+                    Debug.Assert(_nodes[i] == null, $"Assertion failed: {nameof(_nodes)}[i] == null");
+                }
+
+                if (rules.HasFlag(ValidationRules.RequirePacked))
+                {
+                    Debug.Assert(_next == null || _nodeCount == _nodes.Length, $"Assertion failed: {nameof(_next)} == null || {nameof(_nodeCount)} == {nameof(_nodes)}.Length");
+                }
+            }
         }
     }
 }
