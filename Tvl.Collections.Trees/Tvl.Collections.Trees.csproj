@@ -15,6 +15,10 @@
     <AssemblyOriginatorKeyFile Condition="'$(KeyConfiguration)' != 'Final'">..\build\keys\Tvl.Collections.Trees.dev.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(KeyConfiguration)' != 'Final'">
+    <DefineConstants>$(DefineConstants);DEVELOPMENT_KEY</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="PublicApiAnalyzer" Version="1.0.0-beta001" PrivateAssets="all" />
   </ItemGroup>
