@@ -48,12 +48,18 @@ namespace Tvl.Collections.Trees
                 Array.Copy(_data, 0, array, index, _count);
             }
 
-            internal override int IndexOf(T item, int index, int count)
+            internal override (LeafNode leafNode, int offset) GetLeafNode(int index)
             {
-                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
-                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
 
-                return Array.IndexOf(_data, item, index, count);
+                return (this, 0);
+            }
+
+            internal override int IndexOf(T item, TreeSpan span)
+            {
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+
+                return Array.IndexOf(_data, item, span.Start, span.Count);
             }
 
             internal override int LastIndexOf(T item, int index, int count)
@@ -201,29 +207,28 @@ namespace Tvl.Collections.Trees
                 return false;
             }
 
-            internal override void Sort(int index, int count, IComparer<T> comparer)
+            internal override void Sort(TreeSpan span, IComparer<T> comparer)
             {
-                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
-                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                 Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
 
-                Array.Sort(_data, index, count, comparer);
+                Array.Sort(_data, span.Start, span.Count, comparer);
             }
 
-            internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+            internal override int FindIndex(TreeSpan span, Predicate<T> match)
             {
-                Debug.Assert(startIndex >= 0, $"Assertion failed: {nameof(startIndex)} >= 0");
-                Debug.Assert(count >= 0 && startIndex <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(startIndex)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
 
-                return Array.FindIndex(_data, startIndex, count, match);
+                return Array.FindIndex(_data, span.Start, span.Count, match);
             }
 
-            internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+            internal override int BinarySearch(TreeSpan span, T item, IComparer<T> comparer)
             {
-                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
-                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
 
-                return Array.BinarySearch(_data, index, count, item, comparer);
+                return Array.BinarySearch(_data, span.Start, span.Count, item, comparer);
             }
 
             internal override void Validate(ValidationRules rules)

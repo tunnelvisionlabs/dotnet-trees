@@ -255,5 +255,29 @@ namespace Tvl.Collections.Trees.Test
             int[] actual = list.ToArray();
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void TestBinarySearchFullList()
+        {
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                list.Add(i * 2);
+                reference.Add(i * 2);
+            }
+
+            // Test below start value
+            Assert.Equal(reference.BinarySearch(reference[0] - 1), list.BinarySearch(reference[0] - 1));
+
+            for (int i = 0; i < reference.Count; i++)
+            {
+                // Test current value
+                Assert.Equal(reference.BinarySearch(reference[i]), list.BinarySearch(reference[i]));
+
+                // Test above current value
+                Assert.Equal(reference.BinarySearch(reference[i] + 1), list.BinarySearch(reference[i] + 1));
+            }
+        }
     }
 }

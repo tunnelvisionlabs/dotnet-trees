@@ -12,18 +12,27 @@ namespace Tvl.Collections.Trees
         public struct Enumerator : IEnumerator<T>
         {
             private readonly TreeList<T> _list;
-            private int _version;
+            private readonly TreeSpan _span;
+            private readonly int _version;
 
-            private LeafNode _leafNode;
             private int _index;
+            private LeafNode _leafNode;
+            private int _leafIndex;
             private T _current;
 
-            public Enumerator(TreeList<T> list)
+            internal Enumerator(TreeList<T> list)
+                : this(list, list._root.Span)
+            {
+            }
+
+            internal Enumerator(TreeList<T> list, TreeSpan span)
             {
                 _list = list;
+                _span = span;
                 _version = list._version;
-                _leafNode = null;
                 _index = -1;
+                _leafNode = null;
+                _leafIndex = -1;
                 _current = default;
             }
 
@@ -57,32 +66,43 @@ namespace Tvl.Collections.Trees
 
                 if (_index == -1)
                 {
+                    if (_span.IsEmpty)
+                    {
+                        _index = int.MinValue;
+                        return false;
+                    }
+
                     // Need to get the first leaf node
-                    _leafNode = _list._root.FirstLeaf;
+                    (_leafNode, _leafIndex) = _list._root.GetLeafNode(_span.Start);
+
+                    // The leaf index will be incremented below; want the correct final result
+                    _leafIndex--;
                 }
-                else if (_index == _leafNode.Count - 1)
+                else if (_leafIndex == _leafNode.Count - 1)
                 {
                     // Need to move to the next leaf
                     _leafNode = _leafNode.Next;
-                    _index = -1;
+                    _leafIndex = -1;
                 }
 
-                if (_leafNode == null)
+                _index++;
+                if (_index == _span.EndExclusive)
                 {
                     _index = int.MinValue;
                     return false;
                 }
 
-                _index++;
-                _current = _leafNode[_index];
+                _leafIndex++;
+                _current = _leafNode[_leafIndex];
                 return true;
             }
 
             public void Reset()
             {
-                _version = _list._version;
                 _leafNode = null;
                 _index = -1;
+                _leafIndex = -1;
+                _current = default;
             }
         }
     }

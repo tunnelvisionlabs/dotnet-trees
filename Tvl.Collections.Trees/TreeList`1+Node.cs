@@ -13,6 +13,8 @@ namespace Tvl.Collections.Trees
         {
             internal static readonly Node Empty = new EmptyNode();
 
+            internal TreeSpan Span => new TreeSpan(0, Count);
+
             internal abstract int Count
             {
                 get;
@@ -131,10 +133,12 @@ namespace Tvl.Collections.Trees
                 throw new NotImplementedException();
             }
 
-            internal void Reverse(int index, int count)
+            internal abstract (LeafNode leafNode, int offset) GetLeafNode(int index);
+
+            internal void Reverse(TreeSpan span)
             {
-                int firstIndex = index;
-                int lastIndex = firstIndex + count - 1;
+                int firstIndex = span.Start;
+                int lastIndex = firstIndex + span.Count - 1;
                 while (lastIndex > firstIndex)
                 {
                     T temp = this[firstIndex];
@@ -145,7 +149,7 @@ namespace Tvl.Collections.Trees
                 }
             }
 
-            internal abstract int IndexOf(T item, int index, int count);
+            internal abstract int IndexOf(T item, TreeSpan span);
 
             internal abstract int LastIndexOf(T item, int index, int count);
 
@@ -155,11 +159,11 @@ namespace Tvl.Collections.Trees
 
             internal abstract bool RemoveAt(int index);
 
-            internal abstract void Sort(int index, int count, IComparer<T> comparer);
+            internal abstract void Sort(TreeSpan span, IComparer<T> comparer);
 
-            internal abstract int FindIndex(int startIndex, int count, Predicate<T> match);
+            internal abstract int FindIndex(TreeSpan span, Predicate<T> match);
 
-            internal abstract int BinarySearch(int index, int count, T item, IComparer<T> comparer);
+            internal abstract int BinarySearch(TreeSpan span, T item, IComparer<T> comparer);
 
             internal TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter)
             {
@@ -192,19 +196,23 @@ namespace Tvl.Collections.Trees
                 {
                     get
                     {
-                        throw new InvalidOperationException();
+                        throw ExceptionUtilities.Unreachable;
                     }
 
                     set
                     {
-                        throw new InvalidOperationException();
+                        throw ExceptionUtilities.Unreachable;
                     }
                 }
 
-                internal override int IndexOf(T item, int index, int count)
+                internal override (LeafNode leafNode, int offset) GetLeafNode(int index)
                 {
-                    Debug.Assert(index == 0, $"Assertion failed: {nameof(index)} == 0");
-                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    throw ExceptionUtilities.Unreachable;
+                }
+
+                internal override int IndexOf(T item, TreeSpan span)
+                {
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
 
                     return -1;
                 }
@@ -232,26 +240,23 @@ namespace Tvl.Collections.Trees
                     throw ExceptionUtilities.Unreachable;
                 }
 
-                internal override void Sort(int index, int count, IComparer<T> comparer)
+                internal override void Sort(TreeSpan span, IComparer<T> comparer)
                 {
-                    Debug.Assert(index == 0, $"Assertion failed: {nameof(index)} == 0");
-                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                     Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
                 }
 
-                internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+                internal override int FindIndex(TreeSpan span, Predicate<T> match)
                 {
-                    Debug.Assert(startIndex == 0, $"Assertion failed: {nameof(startIndex)} == 0");
-                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                     Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
 
                     return -1;
                 }
 
-                internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+                internal override int BinarySearch(TreeSpan span, T item, IComparer<T> comparer)
                 {
-                    Debug.Assert(index == 0, $"Assertion failed: {nameof(index)} == 0");
-                    Debug.Assert(count == 0, $"Assertion failed: {nameof(count)} == 0");
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                     Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
 
                     return ~0;

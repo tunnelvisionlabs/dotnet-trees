@@ -91,28 +91,31 @@ namespace Tvl.Collections.Trees
                 return index;
             }
 
-            internal override int IndexOf(T item, int index, int count)
+            internal override (LeafNode leafNode, int offset) GetLeafNode(int index)
             {
-                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
-                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
 
-                for (int i = FindLowerBound(_offsets, _nodeCount, index); i < _nodeCount; i++)
+                if (index == 0)
+                    return (FirstLeaf, 0);
+
+                int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
+                var (leafNode, indexWithinPage) = _nodes[pageIndex].GetLeafNode(index);
+                return (leafNode, indexWithinPage + _offsets[pageIndex]);
+            }
+
+            internal override int IndexOf(T item, TreeSpan span)
+            {
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+
+                for (int i = FindLowerBound(_offsets, _nodeCount, span.Start); i < _nodeCount; i++)
                 {
-                    int offset = _offsets[i];
-                    if (count <= offset - index)
+                    TreeSpan mappedSpan = MapSpanDownToChild(span, i);
+                    if (mappedSpan.IsEmpty)
                         return -1;
 
-                    int adjustedIndex = Math.Max(index - offset, 0);
-
-                    int adjustedCount = _nodes[i].Count;
-                    if (index + count < offset + adjustedCount)
-                        adjustedCount -= offset + adjustedCount - index - count;
-                    if (index > offset)
-                        adjustedCount -= index - offset;
-
-                    int foundIndex = _nodes[i].IndexOf(item, adjustedIndex, adjustedCount);
+                    int foundIndex = _nodes[i].IndexOf(item, mappedSpan);
                     if (foundIndex >= 0)
-                        return offset + foundIndex;
+                        return _offsets[i] + foundIndex;
                 }
 
                 return -1;
@@ -200,27 +203,21 @@ namespace Tvl.Collections.Trees
                 throw new NotImplementedException();
             }
 
-            internal override void Sort(int index, int count, IComparer<T> comparer)
+            internal override void Sort(TreeSpan span, IComparer<T> comparer)
             {
-                Debug.Assert(index >= 0, $"Assertion failed: {nameof(index)} >= 0");
-                Debug.Assert(count >= 0 && index <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(index)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                 Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
 
-                int firstPage = FindLowerBound(_offsets, _nodeCount, index);
+                int firstPage = FindLowerBound(_offsets, _nodeCount, span.Start);
                 int lastPage = firstPage;
                 for (int i = firstPage; i < _nodeCount; i++)
                 {
-                    int pageOffset = _offsets[i];
-                    if (pageOffset - count >= index)
-                    {
-                        // Nothing to sort on this page
+                    TreeSpan mappedSpan = MapSpanDownToChild(span, i);
+                    if (mappedSpan.IsEmpty)
                         break;
-                    }
 
                     lastPage = i;
-                    int pageIndex = i == firstPage ? index - pageOffset : 0;
-                    int pageCount = index + count >= pageOffset + _nodes[i].Count ? _nodes[i].Count - pageIndex : index + count - pageOffset - pageIndex;
-                    _nodes[i].Sort(pageIndex, pageCount, comparer);
+                    _nodes[i].Sort(mappedSpan, comparer);
                 }
 
                 if (firstPage != lastPage)
@@ -230,36 +227,97 @@ namespace Tvl.Collections.Trees
                 }
             }
 
-            internal override int FindIndex(int startIndex, int count, Predicate<T> match)
+            internal override int FindIndex(TreeSpan span, Predicate<T> match)
             {
-                Debug.Assert(startIndex >= 0, $"Assertion failed: {nameof(startIndex)} >= 0");
-                Debug.Assert(count >= 0 && startIndex <= Count - count, $"Assertion failed: {nameof(count)} >= 0 && {nameof(startIndex)} <= {nameof(Count)} - {nameof(count)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
 
-                for (int i = FindLowerBound(_offsets, _nodeCount, startIndex); i < Count; i++)
+                for (int i = FindLowerBound(_offsets, _nodeCount, span.Start); i < Count; i++)
                 {
-                    int offset = _offsets[i];
-                    if (count <= offset - startIndex)
+                    TreeSpan mappedSpan = MapSpanDownToChild(span, i);
+                    if (mappedSpan.IsEmpty)
                         return -1;
 
-                    int adjustedIndex = startIndex - offset;
-
-                    int adjustedCount = _nodes[i].Count;
-                    if (startIndex + count < offset + adjustedCount)
-                        adjustedCount -= offset + adjustedCount - startIndex - count;
-                    if (startIndex > offset)
-                        adjustedCount -= startIndex - offset;
-
-                    int foundIndex = _nodes[i].FindIndex(adjustedIndex, adjustedCount, match);
+                    int foundIndex = _nodes[i].FindIndex(mappedSpan, match);
                     if (foundIndex >= 0)
-                        return offset + foundIndex;
+                        return _offsets[i] + foundIndex;
                 }
 
                 return -1;
             }
 
-            internal override int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+            internal override int BinarySearch(TreeSpan span, T item, IComparer<T> comparer)
             {
-                throw new NotImplementedException();
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+
+                // Since accessing FirstLeaf is O(1), at each index level we are only looking for the correct child page
+                int firstPage = FindLowerBound(_offsets, _nodeCount, span.Start);
+                int lastPage = FindLowerBound(_offsets, _nodeCount, span.EndInclusive);
+
+                int lowPage = firstPage;
+                int highPage = lastPage;
+                while (lowPage < highPage)
+                {
+                    // Avoid choosing page == lowPage because we won't have enough information to make progress
+                    int page = lowPage + ((highPage - lowPage + 1) >> 1);
+
+                    T value;
+                    if (page == firstPage)
+                    {
+                        LeafNode firstLeaf = _nodes[page].FirstLeaf;
+                        if (span.Start - _offsets[firstPage] < firstLeaf.Count)
+                        {
+                            value = firstLeaf[span.Start - _offsets[firstPage]];
+                        }
+                        else
+                        {
+                            value = _nodes[firstPage][span.Start - _offsets[firstPage]];
+                        }
+                    }
+                    else
+                    {
+                        value = _nodes[page].FirstLeaf[0];
+                    }
+
+                    int c;
+                    try
+                    {
+                        c = comparer.Compare(value, item);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new InvalidOperationException("Failed to compare two elements in the list.", e);
+                    }
+
+                    if (c == 0)
+                    {
+                        // Binary search allows any index once found
+                        return _offsets[page];
+                    }
+
+                    if (c < 0)
+                    {
+                        lowPage = page;
+                    }
+                    else
+                    {
+                        highPage = page - 1;
+                    }
+                }
+
+                if (lowPage < 0 || lowPage >= _nodeCount)
+                    throw new NotImplementedException();
+
+                int result = _nodes[lowPage].BinarySearch(MapSpanDownToChild(span, lowPage), item, comparer);
+                if (result < 0)
+                {
+                    return ~(~result + _offsets[lowPage]);
+                }
+                else
+                {
+                    return result + _offsets[lowPage];
+                }
             }
 
             internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
@@ -278,6 +336,17 @@ namespace Tvl.Collections.Trees
                 result._count = _count;
                 result._nodeCount = _nodeCount;
                 return result;
+            }
+
+            private TreeSpan MapSpanDownToChild(TreeSpan span, int childIndex)
+            {
+                Debug.Assert(childIndex >= 0 && childIndex < _nodeCount, $"Assertion failed: {nameof(childIndex)} >= && {nameof(childIndex)} < {nameof(_nodeCount)}");
+
+                // Offset the input span
+                TreeSpan mappedFullSpan = span.Offset(-_offsets[childIndex]);
+
+                // Return the intersection
+                return TreeSpan.Intersect(mappedFullSpan, _nodes[childIndex].Span);
             }
 
             private Node InsertIndex(int branchingFactor, bool isAppend, int index, Node node)

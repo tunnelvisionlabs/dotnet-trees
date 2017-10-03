@@ -282,7 +282,7 @@ namespace Tvl.Collections.Trees
             if (index > Count - count)
                 throw new ArgumentOutOfRangeException();
 
-            return _root.IndexOf(item, index, count);
+            return _root.IndexOf(item, new TreeSpan(index, count));
         }
 
         int IList.IndexOf(object value)
@@ -393,7 +393,7 @@ namespace Tvl.Collections.Trees
             if (index > Count - count)
                 throw new ArgumentException();
 
-            return _root.BinarySearch(index, count, item, comparer);
+            return _root.BinarySearch(new TreeSpan(index, count), item, comparer ?? Comparer<T>.Default);
         }
 
         public TreeList<TOutput> ConvertAll<TOutput>(Func<T, TOutput> converter)
@@ -450,7 +450,7 @@ namespace Tvl.Collections.Trees
             if (startIndex > Count - count)
                 throw new ArgumentException();
 
-            return _root.FindIndex(startIndex, count, match);
+            return _root.FindIndex(new TreeSpan(startIndex, count), match);
         }
 
         public T FindLast(Predicate<T> match)
@@ -544,7 +544,7 @@ namespace Tvl.Collections.Trees
 
             if (count != 0)
             {
-                _root.Reverse(index, count);
+                _root.Reverse(new TreeSpan(index, count));
                 _version++;
             }
         }
@@ -568,7 +568,7 @@ namespace Tvl.Collections.Trees
             if (index > Count - count)
                 throw new ArgumentOutOfRangeException();
 
-            _root.Sort(index, count, comparer ?? Comparer<T>.Default);
+            _root.Sort(new TreeSpan(index, count), comparer ?? Comparer<T>.Default);
         }
 
         public void Sort(Comparison<T> comparison)
