@@ -213,7 +213,82 @@ namespace Tvl.Collections.Trees
                 if (firstPage != lastPage)
                 {
                     // Need to merge the results
-                    throw new NotImplementedException();
+                    int pageCount = lastPage - firstPage + 1;
+                    for (int mergeSegmentSize = 1; mergeSegmentSize < pageCount; mergeSegmentSize *= 2)
+                    {
+                        for (int firstSegment = firstPage; firstSegment < lastPage; firstSegment += mergeSegmentSize * 2)
+                        {
+                            int secondSegment = firstSegment + mergeSegmentSize;
+                            if (secondSegment > lastPage)
+                                break;
+
+                            TreeSpan firstSpan = GetSegmentSpan(span, firstSegment, mergeSegmentSize);
+                            TreeSpan secondSpan = GetSegmentSpan(span, secondSegment, mergeSegmentSize);
+                            MergeSegments(firstSpan, secondSpan);
+                        }
+                    }
+                }
+
+                // Local functions
+                TreeSpan GetSegmentSpan(TreeSpan bounds, int firstPageOfSegment, int segmentPageCount)
+                {
+                    int lastPageOfSegment = Math.Min(_nodeCount - 1, firstPageOfSegment + segmentPageCount - 1);
+                    int startIndex = _offsets[firstPageOfSegment];
+                    int endIndexExclusive = _offsets[lastPageOfSegment] + _nodes[lastPageOfSegment].Count;
+                    return TreeSpan.Intersect(bounds, TreeSpan.FromBounds(startIndex, endIndexExclusive));
+                }
+
+                void MergeSegments(TreeSpan first, TreeSpan second)
+                {
+                    Debug.Assert(first.IsSubspanOf(Span), $"Assertion failed: {nameof(first)}.IsSubspanOf({nameof(Span)})");
+                    Debug.Assert(second.IsSubspanOf(Span), $"Assertion failed: {nameof(second)}.IsSubspanOf({nameof(Span)})");
+                    Debug.Assert(first.EndExclusive == second.Start, $"Assertion failed: first.EndExclusive == second.Start");
+
+                    // Stop immediately if already ordered
+                    if (comparer.Compare(this[first.EndInclusive], this[second.Start]) <= 0)
+                        return;
+
+                    int i = first.Start;
+                    int j = second.Start;
+                    while (true)
+                    {
+                        if (i == first.EndExclusive)
+                        {
+                            break;
+                        }
+
+                        Debug.Assert(j < second.EndExclusive, $"Assertion failed: j < second.EndExclusive");
+
+                        int c = comparer.Compare(this[i], this[j]);
+                        if (c == 0)
+                        {
+                            i++;
+                        }
+                        else if (c < 0)
+                        {
+                            i++;
+                        }
+                        else
+                        {
+                            T temp = this[i];
+                            this[i] = this[j];
+                            this[j] = temp;
+                            i++;
+                            while (i < first.EndExclusive && j < second.EndExclusive - 1 && comparer.Compare(temp, this[j + 1]) > 0)
+                            {
+                                j++;
+                                T temp2 = this[i];
+                                this[i] = this[j];
+                                this[j] = temp2;
+                                i++;
+                            }
+
+                            if (j > 1 && j + 1 < second.EndExclusive)
+                                MergeSegments(TreeSpan.FromBounds(second.Start, j + 1), TreeSpan.FromBounds(j + 1, second.EndExclusive));
+
+                            j = second.Start;
+                        }
+                    }
                 }
             }
 

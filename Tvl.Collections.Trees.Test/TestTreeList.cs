@@ -279,5 +279,24 @@ namespace Tvl.Collections.Trees.Test
                 Assert.Equal(reference.BinarySearch(reference[i] + 1), list.BinarySearch(reference[i] + 1));
             }
         }
+
+        [Fact]
+        public void TestSort()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list.Insert(index, item);
+                reference.Insert(index, item);
+            }
+
+            list.Sort();
+            reference.Sort();
+            Assert.Equal(reference, list);
+        }
     }
 }
