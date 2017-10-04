@@ -121,29 +121,19 @@ namespace Tvl.Collections.Trees
                 return -1;
             }
 
-            internal override int LastIndexOf(T item, int index, int count)
+            internal override int LastIndexOf(T item, TreeSpan span)
             {
-                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
-                Debug.Assert(count >= 0 && count - 1 <= index, $"Assertion failed: {nameof(count)} >= 0 && {nameof(count)} - 1 <= {nameof(index)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
 
-                for (int i = FindLowerBound(_offsets, _nodeCount, index); i >= 0; i--)
+                for (int i = FindLowerBound(_offsets, _nodeCount, span.EndInclusive); i >= 0; i--)
                 {
-                    int offset = _offsets[i];
-
-                    int adjustedCount = _nodes[i].Count;
-                    if (index - count > offset + adjustedCount)
+                    TreeSpan mappedSpan = MapSpanDownToChild(span, i);
+                    if (mappedSpan.IsEmpty)
                         return -1;
 
-                    int adjustedIndex = Math.Min(index - offset, _nodes[i].Count - 1);
-
-                    if (adjustedIndex == index - offset)
-                        adjustedCount -= adjustedCount - 1 - adjustedIndex;
-                    if (index - count >= offset)
-                        adjustedCount -= offset - (index - count);
-
-                    int foundIndex = _nodes[i].LastIndexOf(item, adjustedIndex, adjustedCount);
+                    int foundIndex = _nodes[i].LastIndexOf(item, mappedSpan);
                     if (foundIndex >= 0)
-                        return offset + foundIndex;
+                        return _offsets[i] + foundIndex;
                 }
 
                 return -1;
@@ -239,6 +229,25 @@ namespace Tvl.Collections.Trees
                         return -1;
 
                     int foundIndex = _nodes[i].FindIndex(mappedSpan, match);
+                    if (foundIndex >= 0)
+                        return _offsets[i] + foundIndex;
+                }
+
+                return -1;
+            }
+
+            internal override int FindLastIndex(TreeSpan span, Predicate<T> match)
+            {
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
+
+                for (int i = FindLowerBound(_offsets, _nodeCount, span.EndInclusive); i >= 0; i--)
+                {
+                    TreeSpan mappedSpan = MapSpanDownToChild(span, i);
+                    if (mappedSpan.IsEmpty)
+                        return -1;
+
+                    int foundIndex = _nodes[i].FindLastIndex(mappedSpan, match);
                     if (foundIndex >= 0)
                         return _offsets[i] + foundIndex;
                 }

@@ -62,12 +62,11 @@ namespace Tvl.Collections.Trees
                 return Array.IndexOf(_data, item, span.Start, span.Count);
             }
 
-            internal override int LastIndexOf(T item, int index, int count)
+            internal override int LastIndexOf(T item, TreeSpan span)
             {
-                Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
-                Debug.Assert(count >= 0 && count - 1 <= index, $"Assertion failed: {nameof(count)} >= 0 && {nameof(count)} - 1 <= {nameof(index)}");
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
 
-                return Array.LastIndexOf(_data, item, index, count);
+                return Array.LastIndexOf(_data, item, span.EndInclusive, span.Count);
             }
 
             internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
@@ -221,6 +220,14 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
 
                 return Array.FindIndex(_data, span.Start, span.Count, match);
+            }
+
+            internal override int FindLastIndex(TreeSpan span, Predicate<T> match)
+            {
+                Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
+
+                return Array.FindLastIndex(_data, span.EndInclusive, span.Count, match);
             }
 
             internal override int BinarySearch(TreeSpan span, T item, IComparer<T> comparer)

@@ -473,7 +473,24 @@ namespace Tvl.Collections.Trees
 
         public int FindLastIndex(int startIndex, int count, Predicate<T> match)
         {
-            throw new NotImplementedException();
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
+            if (Count == 0)
+            {
+                if (startIndex != -1)
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+            else
+            {
+                if ((uint)startIndex >= (uint)Count)
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
+            }
+
+            if (count < 0 || startIndex - count + 1 < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            return _root.FindLastIndex(TreeSpan.FromReverseSpan(startIndex, count), match);
         }
 
         public int LastIndexOf(T item)
@@ -502,7 +519,7 @@ namespace Tvl.Collections.Trees
             if (index > Count)
                 throw new ArgumentOutOfRangeException();
 
-            return _root.LastIndexOf(item, index, count);
+            return _root.LastIndexOf(item, TreeSpan.FromReverseSpan(index, count));
         }
 
         public void ForEach(Action<T> action)

@@ -151,7 +151,7 @@ namespace Tvl.Collections.Trees
 
             internal abstract int IndexOf(T item, TreeSpan span);
 
-            internal abstract int LastIndexOf(T item, int index, int count);
+            internal abstract int LastIndexOf(T item, TreeSpan span);
 
             internal abstract Node Insert(int branchingFactor, bool isAppend, int index, T item);
 
@@ -162,6 +162,8 @@ namespace Tvl.Collections.Trees
             internal abstract void Sort(TreeSpan span, IComparer<T> comparer);
 
             internal abstract int FindIndex(TreeSpan span, Predicate<T> match);
+
+            internal abstract int FindLastIndex(TreeSpan span, Predicate<T> match);
 
             internal abstract int BinarySearch(TreeSpan span, T item, IComparer<T> comparer);
 
@@ -217,9 +219,11 @@ namespace Tvl.Collections.Trees
                     return -1;
                 }
 
-                internal override int LastIndexOf(T item, int index, int count)
+                internal override int LastIndexOf(T item, TreeSpan span)
                 {
-                    throw ExceptionUtilities.Unreachable;
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+
+                    return -1;
                 }
 
                 internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
@@ -247,6 +251,14 @@ namespace Tvl.Collections.Trees
                 }
 
                 internal override int FindIndex(TreeSpan span, Predicate<T> match)
+                {
+                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
+                    Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
+
+                    return -1;
+                }
+
+                internal override int FindLastIndex(TreeSpan span, Predicate<T> match)
                 {
                     Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                     Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");

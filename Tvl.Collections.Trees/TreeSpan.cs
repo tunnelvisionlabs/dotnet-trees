@@ -45,6 +45,11 @@ namespace Tvl.Collections.Trees
             return new TreeSpan(start, endExclusive - start);
         }
 
+        public static TreeSpan FromReverseSpan(int start, int count)
+        {
+            return new TreeSpan(start - count + 1, count);
+        }
+
         public static TreeSpan Intersect(TreeSpan left, TreeSpan right)
         {
             int start = Math.Max(left.Start, right.Start);
