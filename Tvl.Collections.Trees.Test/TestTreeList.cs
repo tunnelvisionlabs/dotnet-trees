@@ -281,6 +281,68 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestFindIndex()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Predicate<int> predicate = value => value == i;
+                Assert.Equal(reference.FindIndex(predicate), list.FindIndex(predicate));
+            }
+        }
+
+        [Fact]
+        public void TestFindLastIndex()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Predicate<int> predicate = value => value == i;
+                Assert.Equal(reference.FindLastIndex(predicate), list.FindIndex(predicate));
+            }
+        }
+
+        [Fact]
+        public void TestConvertAll()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list.Insert(index, item);
+                reference.Insert(index, item);
+            }
+
+            TreeList<string> stringList = list.ConvertAll(value => value.ToString());
+            List<string> referenceStringList = reference.ConvertAll(value => value.ToString());
+
+            stringList.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+            Assert.Equal(referenceStringList, stringList);
+        }
+
+        [Fact]
         public void TestSort()
         {
             Random random = new Random();

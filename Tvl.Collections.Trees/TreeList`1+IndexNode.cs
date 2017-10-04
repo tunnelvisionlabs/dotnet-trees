@@ -574,7 +574,11 @@ namespace Tvl.Collections.Trees
 
             private TreeSpan MapSpanDownToChild(TreeSpan span, int childIndex)
             {
-                Debug.Assert(childIndex >= 0 && childIndex < _nodeCount, $"Assertion failed: {nameof(childIndex)} >= && {nameof(childIndex)} < {nameof(_nodeCount)}");
+                Debug.Assert(childIndex >= 0 && childIndex <= _nodeCount, $"Assertion failed: {nameof(childIndex)} >= 0 && {nameof(childIndex)} <= {nameof(_nodeCount)}");
+                if (childIndex == _nodeCount)
+                {
+                    return new TreeSpan(Count, 0);
+                }
 
                 // Offset the input span
                 TreeSpan mappedFullSpan = span.Offset(-_offsets[childIndex]);
