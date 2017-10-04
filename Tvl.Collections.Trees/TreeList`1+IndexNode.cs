@@ -177,11 +177,44 @@ namespace Tvl.Collections.Trees
                 throw new NotImplementedException();
             }
 
+            internal override bool RemoveLast()
+            {
+                if (_next != null)
+                {
+                    Debug.Assert(_next.Count == 1, $"Assertion failed: _next.Count == 1");
+                    bool removedChild = _nodes[_nodeCount - 1].RemoveLast();
+                    Debug.Assert(removedChild, $"Assertion failed: removedChild");
+                    _next = null;
+                    return true;
+                }
+                else
+                {
+                    Debug.Assert(_count > 1, $"Assertion failed: _count > 1");
+                    if (_nodes[_nodeCount - 1].Count > 1)
+                    {
+                        bool removedChild = _nodes[_nodeCount - 1].RemoveLast();
+                        Debug.Assert(!removedChild, $"Assertion failed: !removedChild");
+                        _count--;
+                        return false;
+                    }
+                    else
+                    {
+                        bool removedChild = _nodes[_nodeCount - 2].RemoveLast();
+                        Debug.Assert(removedChild, $"Assertion failed: removedChild");
+                        _nodeCount--;
+                        _offsets[_nodeCount] = 0;
+                        _nodes[_nodeCount] = null;
+                        _count--;
+                        return false;
+                    }
+                }
+            }
+
             internal override bool RemoveAt(int index)
             {
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
-                bool removedChild = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex]);
-                if (!removedChild)
+                bool rebalancedChild = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex]);
+                if (!rebalancedChild)
                 {
                     for (int i = pageIndex + 1; i < _nodeCount; i++)
                         _offsets[i]--;
@@ -190,7 +223,124 @@ namespace Tvl.Collections.Trees
                     return false;
                 }
 
-                throw new NotImplementedException();
+                Node expectedNext = pageIndex == _nodeCount - 1 ? _next?._nodes[0] : _nodes[pageIndex + 1];
+                Node nextChild = _nodes[pageIndex].NextNode;
+                bool removedChild = nextChild != expectedNext;
+                if (!removedChild)
+                {
+                    // This assertion can only fail if RemoveAt(int) is used when RemoveLast() is needed.
+                    Debug.Assert(_nodes[pageIndex].Count > 0, $"Assertion failed: _nodes[pageIndex].Count > 0");
+
+                    // The children were rebalanced, but that only affects node counts at this level
+                    for (int i = pageIndex; i < _nodeCount; i++)
+                    {
+                        _offsets[i] = i == 0 ? 0 : _offsets[i - 1] + _nodes[i - 1].Count;
+                    }
+
+                    _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
+
+                    bool affectedNextPage = pageIndex == _nodeCount - 1 && _next != null;
+                    if (affectedNextPage)
+                    {
+                        for (int i = 1; i < _next._nodeCount; i++)
+                        {
+                            _next._offsets[i] = _next._offsets[i - 1] + _next._nodes[i - 1].Count;
+                        }
+
+                        _next._count = _next._offsets[_next._nodeCount - 1] + _next._nodes[_next._nodeCount - 1].Count;
+                    }
+
+                    return affectedNextPage;
+                }
+                else
+                {
+                    bool removedFromNextPage = pageIndex == _nodeCount - 1;
+                    if (removedFromNextPage)
+                    {
+                        if (_next._nodeCount == 1)
+                        {
+                            // Removed the only child of the next page
+                            Debug.Assert(_next._next == null, $"Assertion failed: _next._next == null");
+                            _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
+                            _next = null;
+                            return true;
+                        }
+
+                        // The general strategy when the first node is removed from the next page is to move the last
+                        // node of the current page to the first node of the next. This trivially works as long as it
+                        // doesn't force a rebalancing of the current page
+                        _next._nodes[0] = _nodes[_nodeCount - 1];
+                        _count = _offsets[_nodeCount - 1];
+                        _offsets[_nodeCount - 1] = 0;
+                        _nodes[_nodeCount - 1] = null;
+                        _nodeCount--;
+                        for (int i = 1; i < _next._nodeCount; i++)
+                        {
+                            _next._offsets[i] = _next._offsets[i - 1] + _next._nodes[i - 1].Count;
+                        }
+
+                        _next._count = _next._offsets[_next._nodeCount - 1] + _next._nodes[_next._nodeCount - 1].Count;
+                    }
+                    else
+                    {
+                        for (int i = pageIndex + 1; i < _nodeCount - 1; i++)
+                        {
+                            _offsets[i] = _offsets[i - 1] + _nodes[i - 1].Count;
+                            _nodes[i] = _nodes[i + 1];
+                        }
+
+                        _offsets[_nodeCount - 1] = 0;
+                        _nodes[_nodeCount - 1] = default;
+                        _nodeCount--;
+                        _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
+                    }
+
+                    if (_nodeCount < _nodes.Length / 2 && _next != null)
+                    {
+                        if (_nodeCount + _next._nodeCount <= _nodes.Length)
+                        {
+                            // Merge nodes and remove the next node
+                            Array.Copy(_next._nodes, 0, _nodes, _nodeCount, _next._nodeCount);
+                            for (int i = 0; i < _next._nodeCount; i++)
+                                _offsets[_nodeCount + i] = _offsets[_nodeCount + i - 1] + _nodes[_nodeCount + i - 1].Count;
+
+                            _nodeCount += _next._nodeCount;
+                            _count += _next.Count;
+                            _next = _next._next;
+                            return true;
+                        }
+                        else
+                        {
+                            // Rebalance nodes
+                            int minimumNodeCount = _nodes.Length / 2;
+                            int transferCount = _next._nodeCount - minimumNodeCount;
+                            Array.Copy(_next._nodes, 0, _nodes, _nodeCount, transferCount);
+                            Array.Copy(_next._nodes, transferCount, _next._nodes, 0, _next._nodeCount - transferCount);
+                            Array.Clear(_next._offsets, _next._nodeCount - transferCount, transferCount);
+                            Array.Clear(_next._nodes, _next._nodeCount - transferCount, transferCount);
+                            for (int i = 0; i < transferCount; i++)
+                            {
+                                _offsets[_nodeCount + i] = _offsets[_nodeCount + i - 1] + _nodes[_nodeCount + i - 1].Count;
+                            }
+
+                            _nodeCount += transferCount;
+                            _next._nodeCount -= transferCount;
+                            _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
+
+                            for (int i = 1; i < _next._nodeCount; i++)
+                            {
+                                _next._offsets[i] = _next._offsets[i - 1] + _next._nodes[i - 1].Count;
+                            }
+
+                            _next._count = _next._offsets[_next._nodeCount - 1] + _next._nodes[_next._nodeCount - 1].Count;
+                            return true;
+                        }
+                    }
+
+                    // No rebalancing was done, but if we removed the child node from the next page then it was still
+                    // impacted due to moving a child from the current page to the next.
+                    return removedFromNextPage;
+                }
             }
 
             internal override void Sort(TreeSpan span, IComparer<T> comparer)
@@ -514,6 +664,8 @@ namespace Tvl.Collections.Trees
                 int sum = 0;
                 for (int i = 0; i < _nodeCount; i++)
                 {
+                    _nodes[i].Validate(rules);
+
                     Debug.Assert(_offsets[i] == sum, $"Assertion failed: {nameof(_offsets)}[i] == {nameof(sum)}");
                     if (i < _nodeCount - 1)
                     {

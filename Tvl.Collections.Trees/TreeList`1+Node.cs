@@ -95,11 +95,24 @@ namespace Tvl.Collections.Trees
                 if (index >= root.Count)
                     throw new ArgumentOutOfRangeException();
 
-                bool removedNode = root.RemoveAt(index);
-                if (!removedNode)
-                    return root;
+                if (index == root.Count - 1)
+                {
+                    if (index == 0)
+                        return Empty;
 
-                throw new NotImplementedException();
+                    root.RemoveLast();
+                }
+                else
+                {
+                    root.RemoveAt(index);
+                }
+
+                while (root.FirstChild != null && root.FirstChild.NextNode == null)
+                {
+                    root = root.FirstChild;
+                }
+
+                return root;
             }
 
             internal static Node RemoveRange(Node root, int index, int count)
@@ -156,6 +169,8 @@ namespace Tvl.Collections.Trees
             internal abstract Node Insert(int branchingFactor, bool isAppend, int index, T item);
 
             internal abstract Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection);
+
+            internal abstract bool RemoveLast();
 
             internal abstract bool RemoveAt(int index);
 
@@ -235,6 +250,11 @@ namespace Tvl.Collections.Trees
                 }
 
                 internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+                {
+                    throw ExceptionUtilities.Unreachable;
+                }
+
+                internal override bool RemoveLast()
                 {
                     throw ExceptionUtilities.Unreachable;
                 }

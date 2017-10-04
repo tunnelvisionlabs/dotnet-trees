@@ -455,10 +455,11 @@ namespace Tvl.Collections.Trees
 
         public T FindLast(Predicate<T> match)
         {
-            if (match == null)
-                throw new ArgumentNullException(nameof(match));
+            int index = FindLastIndex(match);
+            if (index < 0)
+                return default;
 
-            throw new NotImplementedException();
+            return this[index];
         }
 
         public int FindLastIndex(Predicate<T> match)
@@ -627,6 +628,10 @@ namespace Tvl.Collections.Trees
         {
             Debug.Assert(_branchingFactor >= 2, $"Assertion failed: {nameof(_branchingFactor)} >= 2");
             Debug.Assert(_root != null, $"Assertion failed: {nameof(_root)} != null");
+            if (_root.FirstChild != null)
+            {
+                Debug.Assert(_root.FirstChild.NextNode != null, $"Assertion failed: _root.FirstChild.NextNode != null");
+            }
 
             _root.Validate(validationRules);
         }

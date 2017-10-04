@@ -179,6 +179,23 @@ namespace Tvl.Collections.Trees
                 return lastLeaf;
             }
 
+            internal override bool RemoveLast()
+            {
+                if (_next != null)
+                {
+                    Debug.Assert(_next.Count == 1, $"Assertion failed: _next.Count == 1");
+                    _next = null;
+                    return true;
+                }
+                else
+                {
+                    Debug.Assert(_count > 1, $"Assertion failed: _count > 1");
+                    _count--;
+                    _data[_count] = default;
+                    return false;
+                }
+            }
+
             internal override bool RemoveAt(int index)
             {
                 for (int i = index; i < _count - 1; i++)
@@ -194,16 +211,26 @@ namespace Tvl.Collections.Trees
                     if (_count + _next.Count <= _data.Length)
                     {
                         // Merge nodes and remove the next node
-                        throw new NotImplementedException();
+                        Array.Copy(_next._data, 0, _data, _count, _next.Count);
+                        _count += _next._count;
+                        _next = _next._next;
+                        return true;
                     }
                     else
                     {
                         // Rebalance nodes
-                        throw new NotImplementedException();
+                        int minimumNodeCount = _data.Length / 2;
+                        int transferCount = _next.Count - minimumNodeCount;
+                        Array.Copy(_next._data, 0, _data, _count, transferCount);
+                        Array.Copy(_next._data, transferCount, _next._data, 0, _next._count - transferCount);
+                        Array.Clear(_next._data, _next._count - transferCount, transferCount);
+                        _count += transferCount;
+                        _next._count -= transferCount;
+                        return true;
                     }
                 }
 
-                return false;
+                return _count == 0;
             }
 
             internal override void Sort(TreeSpan span, IComparer<T> comparer)

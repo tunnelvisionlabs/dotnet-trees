@@ -298,5 +298,94 @@ namespace Tvl.Collections.Trees.Test
             reference.Sort();
             Assert.Equal(reference, list);
         }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        [InlineData(4)]
+        [InlineData(5)]
+        [InlineData(6)]
+        public void TestRemoveAt(int seed)
+        {
+            Random random = new Random(seed);
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list.Insert(index, item);
+                reference.Insert(index, item);
+            }
+
+            while (list.Count > 0)
+            {
+                int index = random.Next(list.Count);
+                Assert.Equal(reference[index], list[index]);
+                reference.RemoveAt(index);
+                list.RemoveAt(index);
+                list.Validate(ValidationRules.None);
+
+                Assert.Equal(reference, list);
+            }
+
+            Assert.Empty(list);
+            Assert.Empty(reference);
+        }
+
+        [Fact]
+        public void TestQueueLikeBehavior()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int item = random.Next();
+                list.Add(item);
+                reference.Add(item);
+            }
+
+            while (list.Count > 0)
+            {
+                Assert.Equal(reference[0], list[0]);
+                reference.RemoveAt(0);
+                list.RemoveAt(0);
+                list.Validate(ValidationRules.None);
+
+                Assert.Equal(reference, list);
+            }
+
+            Assert.Empty(list);
+            Assert.Empty(reference);
+        }
+
+        [Fact]
+        public void TestStackLikeBehavior()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int item = random.Next();
+                list.Add(item);
+                reference.Add(item);
+            }
+
+            while (list.Count > 0)
+            {
+                Assert.Equal(reference[reference.Count - 1], list[list.Count - 1]);
+                reference.RemoveAt(reference.Count - 1);
+                list.RemoveAt(list.Count - 1);
+                list.Validate(ValidationRules.None);
+
+                Assert.Equal(reference, list);
+            }
+
+            Assert.Empty(list);
+            Assert.Empty(reference);
+        }
     }
 }
