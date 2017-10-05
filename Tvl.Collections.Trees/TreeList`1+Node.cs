@@ -143,7 +143,13 @@ namespace Tvl.Collections.Trees
 
             internal static Node TrimExcess(Node root)
             {
-                throw new NotImplementedException();
+                bool changedAnything = root.TrimExcess();
+                while (root.FirstChild != null && root.FirstChild.NextNode == null)
+                {
+                    root = root.FirstChild;
+                }
+
+                return root;
             }
 
             internal abstract (LeafNode leafNode, int offset) GetLeafNode(int index);
@@ -190,6 +196,8 @@ namespace Tvl.Collections.Trees
             }
 
             internal abstract TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode);
+
+            internal abstract bool TrimExcess();
 
             internal abstract void Validate(ValidationRules rules);
 
@@ -297,6 +305,11 @@ namespace Tvl.Collections.Trees
                 internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
                 {
                     return TreeList<TOutput>.Node.Empty;
+                }
+
+                internal override bool TrimExcess()
+                {
+                    return false;
                 }
 
                 internal override void Validate(ValidationRules rules)

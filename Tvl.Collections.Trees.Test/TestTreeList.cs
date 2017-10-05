@@ -343,6 +343,32 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestTrimExcess()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            list.Validate(ValidationRules.None);
+
+            // In the first call to TrimExcess, items will move
+            list.TrimExcess();
+            list.Validate(ValidationRules.RequirePacked);
+            Assert.Equal(reference, list);
+
+            // In the second call, the list is already packed so nothing will move
+            list.TrimExcess();
+            list.Validate(ValidationRules.RequirePacked);
+            Assert.Equal(reference, list);
+        }
+
+        [Fact]
         public void TestSort()
         {
             Random random = new Random();

@@ -265,6 +265,74 @@ namespace Tvl.Collections.Trees
                 return Array.BinarySearch(_data, span.Start, span.Count, item, comparer);
             }
 
+            internal override bool TrimExcess()
+            {
+                bool changedAnything = false;
+                LeafNode first = this;
+                int firstOffset = 0;
+                LeafNode second = null;
+                int secondOffset = 0;
+                while (first != null)
+                {
+                    if (!changedAnything && first.Count == first._data.Length)
+                    {
+                        // Nothing moved yet
+                        first = first.Next;
+                        continue;
+                    }
+
+                    if (second == null && !changedAnything)
+                    {
+                        second = first.Next;
+                        if (second == null)
+                            break;
+
+                        firstOffset = first._count;
+                    }
+
+                    if (second == null)
+                    {
+                        // No more items to copy
+                        Debug.Assert(firstOffset > 0, $"Assertion failed: {nameof(firstOffset)} > 0");
+                        first._count = firstOffset;
+                        for (int i = firstOffset + 1; i < first._data.Length; i++)
+                        {
+                            first._data[i] = default;
+                        }
+
+                        first._next = null;
+                        break;
+                    }
+
+                    changedAnything = true;
+                    int transferCount = Math.Min(second.Count - secondOffset, first._data.Length - firstOffset);
+                    for (int i = 0; i < transferCount; i++)
+                    {
+                        first._data[firstOffset] = second._data[secondOffset];
+                        firstOffset++;
+                        secondOffset++;
+                    }
+
+                    // Move second before first so we can set first._next to null if we hit the end
+                    if (secondOffset == second._count)
+                    {
+                        second = second.Next;
+                        secondOffset = 0;
+                        if (second == null)
+                            continue;
+                    }
+
+                    if (firstOffset == first._data.Length)
+                    {
+                        first._count = firstOffset;
+                        first = first.Next;
+                        firstOffset = 0;
+                    }
+                }
+
+                return changedAnything;
+            }
+
             internal override void Validate(ValidationRules rules)
             {
                 Debug.Assert(_data != null, $"Assertion failed: {nameof(_data)} != null");

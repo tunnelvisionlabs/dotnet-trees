@@ -572,6 +572,39 @@ namespace Tvl.Collections.Trees
                 return result;
             }
 
+            internal override bool TrimExcess()
+            {
+                if (!FirstChild.TrimExcess())
+                    return false;
+
+                // Simply rebuild this level by walking child nodes
+                IndexNode first = this;
+                int firstOffset = 0;
+                _nodeCount = 0;
+                _count = 0;
+                for (Node child = FirstChild; child != null; child = child.NextNode)
+                {
+                    if (firstOffset == first._nodes.Length)
+                    {
+                        first = first.Next;
+                        firstOffset = 0;
+                        first._nodeCount = 0;
+                        first._count = 0;
+                    }
+
+                    first._offsets[firstOffset] = first._count;
+                    first._nodes[firstOffset] = child;
+                    first._nodeCount++;
+                    first._count += child.Count;
+                    firstOffset++;
+                }
+
+                Array.Clear(first._offsets, first._nodeCount, first._offsets.Length - first._nodeCount);
+                Array.Clear(first._nodes, first._nodeCount, first._nodes.Length - first._nodeCount);
+                first._next = null;
+                return true;
+            }
+
             private TreeSpan MapSpanDownToChild(TreeSpan span, int childIndex)
             {
                 Debug.Assert(childIndex >= 0 && childIndex <= _nodeCount, $"Assertion failed: {nameof(childIndex)} >= 0 && {nameof(childIndex)} <= {nameof(_nodeCount)}");
