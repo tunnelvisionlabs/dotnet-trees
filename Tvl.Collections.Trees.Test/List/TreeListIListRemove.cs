@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using Xunit;
@@ -20,32 +19,24 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> myList = new TreeList<int>();
+            int count = 10;
+            IList myIList = myList;
+            object element = null;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<int> myList = new TreeList<int>();
-                int count = 10;
-                IList myIList = myList;
-                object element = null;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i * count;
-                    myIList.Add(element);
-                }
-
-                for (int j = 0; j < count; j++)
-                {
-                    myIList.Remove(myIList[0]);
-                }
-
-                if (myIList.Count != 0)
-                {
-                    userMessage = "calling Remove method can not remove the specified item.";
-                    retVal = false;
-                }
+                element = i * count;
+                myIList.Add(element);
             }
-            catch (Exception e)
+
+            for (int j = 0; j < count; j++)
             {
-                userMessage = "Unexpected exception: " + e;
+                myIList.Remove(myIList[0]);
+            }
+
+            if (myIList.Count != 0)
+            {
+                userMessage = "calling Remove method can not remove the specified item.";
                 retVal = false;
             }
 
@@ -58,32 +49,24 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> myList = new TreeList<string>();
+            int count = 10;
+            object element = null;
+            IList myIList = myList;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<string> myList = new TreeList<string>();
-                int count = 10;
-                object element = null;
-                IList myIList = myList;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i.ToString();
-                    myIList.Add(element);
-                }
-
-                for (int j = 0; j < count; j++)
-                {
-                    myIList.Remove(myIList[0]);
-                }
-
-                if (myIList.Count != 0)
-                {
-                    userMessage = "calling Remove method can not remove the specified item.";
-                    retVal = false;
-                }
+                element = i.ToString();
+                myIList.Add(element);
             }
-            catch (Exception e)
+
+            for (int j = 0; j < count; j++)
             {
-                userMessage = "Unexpected exception: " + e;
+                myIList.Remove(myIList[0]);
+            }
+
+            if (myIList.Count != 0)
+            {
+                userMessage = "calling Remove method can not remove the specified item.";
                 retVal = false;
             }
 

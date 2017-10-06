@@ -20,20 +20,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> myList = new TreeList<int>();
+            bool expectValue = false;
+            bool returnValue = ((ICollection<int>)myList).IsReadOnly;
+            if (expectValue != returnValue)
             {
-                TreeList<int> myList = new TreeList<int>();
-                bool expectValue = false;
-                bool returnValue = ((ICollection<int>)myList).IsReadOnly;
-                if (expectValue != returnValue)
-                {
-                    userMessage = " Calling IsReadOnly property should return false";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " Calling IsReadOnly property should return false";
                 retVal = false;
             }
 
@@ -46,20 +38,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyTestListICollection<int> myList = new MyTestListICollection<int>();
+            bool expectValue = true;
+            bool returnValue = ((ICollection<int>)myList).IsReadOnly;
+            if (expectValue != returnValue)
             {
-                MyTestListICollection<int> myList = new MyTestListICollection<int>();
-                bool expectValue = true;
-                bool returnValue = ((ICollection<int>)myList).IsReadOnly;
-                if (expectValue != returnValue)
-                {
-                    userMessage = " Calling IsReadOnly property should return true";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " Calling IsReadOnly property should return true";
                 retVal = false;
             }
 

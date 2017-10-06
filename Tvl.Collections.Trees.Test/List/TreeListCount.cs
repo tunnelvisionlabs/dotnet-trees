@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -19,27 +18,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> myList = new TreeList<int>();
+            int count = 10;
+
+            int element = 0;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<int> myList = new TreeList<int>();
-                int count = 10;
-
-                int element = 0;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i * count;
-                    myList.Add(element);
-                }
-
-                if (myList.Count != count)
-                {
-                    userMessage = " calling count property should return " + count;
-                    retVal = false;
-                }
+                element = i * count;
+                myList.Add(element);
             }
-            catch (Exception e)
+
+            if (myList.Count != count)
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " calling count property should return " + count;
                 retVal = false;
             }
 
@@ -52,26 +43,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> myList = new TreeList<string>();
+            int count = 10;
+            string element = string.Empty;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<string> myList = new TreeList<string>();
-                int count = 10;
-                string element = string.Empty;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i.ToString();
-                    myList.Add(element);
-                }
-
-                if (myList.Count != count)
-                {
-                    userMessage = " calling count property should return " + count;
-                    retVal = false;
-                }
+                element = i.ToString();
+                myList.Add(element);
             }
-            catch (Exception e)
+
+            if (myList.Count != count)
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " calling count property should return " + count;
                 retVal = false;
             }
 

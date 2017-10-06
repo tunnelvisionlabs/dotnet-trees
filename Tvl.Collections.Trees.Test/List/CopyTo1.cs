@@ -19,25 +19,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[10];
+            listObject.CopyTo(result);
+            for (int i = 0; i < 10; i++)
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[10];
-                listObject.CopyTo(result);
-                for (int i = 0; i < 10; i++)
+                if (listObject[i] != result[i])
                 {
-                    if (listObject[i] != result[i])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -49,21 +41,13 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "Tom", "Jack", "Mike" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            string[] result = new string[3];
+            listObject.CopyTo(result);
+            if ((result[0] != "Tom") || (result[1] != "Jack") || (result[2] != "Mike"))
             {
-                string[] strArray = { "Tom", "Jack", "Mike" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                string[] result = new string[3];
-                listObject.CopyTo(result);
-                if ((result[0] != "Tom") || (result[1] != "Jack") || (result[2] != "Mike"))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -76,26 +60,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            TreeList<MyClass> listObject = new TreeList<MyClass>();
+            listObject.Add(myclass1);
+            listObject.Add(myclass2);
+            listObject.Add(myclass3);
+            MyClass[] mc = new MyClass[3];
+            listObject.CopyTo(mc);
+            if ((mc[0] != myclass1) || (mc[1] != myclass2) || (mc[2] != myclass3))
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                TreeList<MyClass> listObject = new TreeList<MyClass>();
-                listObject.Add(myclass1);
-                listObject.Add(myclass2);
-                listObject.Add(myclass3);
-                MyClass[] mc = new MyClass[3];
-                listObject.CopyTo(mc);
-                if ((mc[0] != myclass1) || (mc[1] != myclass2) || (mc[2] != myclass3))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 

@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using Xunit;
@@ -20,29 +19,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            bool actualValue = ((ICollection)listObject).IsSynchronized;
+            if (actualValue)
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                bool actualValue = ((ICollection)listObject).IsSynchronized;
-                if (actualValue)
-                {
-                    userMessage = "calling IsSynchronized property should return false.";
-                    retVal = false;
-                }
-
-                string[] sArray = { "1", "9", "3", "6", "5", "8", "7", "2", "4", "0" };
-                TreeList<string> listObject1 = new TreeList<string>(sArray);
-                actualValue = ((ICollection)listObject).IsSynchronized;
-                if (actualValue)
-                {
-                    userMessage = "calling IsSynchronized property should return false.";
-                    retVal = false;
-                }
+                userMessage = "calling IsSynchronized property should return false.";
+                retVal = false;
             }
-            catch (Exception e)
+
+            string[] sArray = { "1", "9", "3", "6", "5", "8", "7", "2", "4", "0" };
+            TreeList<string> listObject1 = new TreeList<string>(sArray);
+            actualValue = ((ICollection)listObject).IsSynchronized;
+            if (actualValue)
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "calling IsSynchronized property should return false.";
                 retVal = false;
             }
 

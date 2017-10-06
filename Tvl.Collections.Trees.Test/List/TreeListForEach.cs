@@ -19,22 +19,14 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            MyClass myClass = new MyClass();
+            Action<int> action = new Action<int>(myClass.SumCalc);
+            listObject.ForEach(action);
+            if (myClass.Sum != 40)
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                MyClass myClass = new MyClass();
-                Action<int> action = new Action<int>(myClass.SumCalc);
-                listObject.ForEach(action);
-                if (myClass.Sum != 40)
-                {
-                    userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
                 retVal = false;
             }
 
@@ -47,22 +39,14 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "Hello", "wor", "l", "d" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            MyClass myClass = new MyClass();
+            Action<string> action = new Action<string>(myClass.JoinStr);
+            listObject.ForEach(action);
+            if (myClass.Result != "Helloworld")
             {
-                string[] strArray = { "Hello", "wor", "l", "d" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                MyClass myClass = new MyClass();
-                Action<string> action = new Action<string>(myClass.JoinStr);
-                listObject.ForEach(action);
-                if (myClass.Result != "Helloworld")
-                {
-                    userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
                 retVal = false;
             }
 
@@ -75,29 +59,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass2 myclass1 = new MyClass2('h');
+            MyClass2 myclass2 = new MyClass2('=');
+            MyClass2 myclass3 = new MyClass2('&');
+            MyClass2[] mc = new MyClass2[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass2> listObject = new TreeList<MyClass2>(mc);
+            MyClass myClass = new MyClass();
+            Action<MyClass2> action = new Action<MyClass2>(myClass.DeleteValue);
+            listObject.ForEach(action);
+            for (int i = 0; i < 3; i++)
             {
-                MyClass2 myclass1 = new MyClass2('h');
-                MyClass2 myclass2 = new MyClass2('=');
-                MyClass2 myclass3 = new MyClass2('&');
-                MyClass2[] mc = new MyClass2[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass2> listObject = new TreeList<MyClass2>(mc);
-                MyClass myClass = new MyClass();
-                Action<MyClass2> action = new Action<MyClass2>(myClass.DeleteValue);
-                listObject.ForEach(action);
-                for (int i = 0; i < 3; i++)
+                if (mc[i].Value != null)
                 {
-                    if (mc[i].Value != null)
-                    {
-                        userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);

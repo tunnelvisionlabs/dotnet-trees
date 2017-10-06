@@ -20,38 +20,30 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> myList = new TreeList<int>();
+            int count = 10;
+            int[] expectValue = new int[10];
+            IList myIList = myList;
+            object element = null;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<int> myList = new TreeList<int>();
-                int count = 10;
-                int[] expectValue = new int[10];
-                IList myIList = myList;
-                object element = null;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i * count;
-                    myIList.Add(element);
-                    expectValue[i - 1] = (int)element;
-                }
-
-                IEnumerator returnValue = myIList.GetEnumerator();
-                int j = 0;
-                for (IEnumerator itr = returnValue; itr.MoveNext();)
-                {
-                    int current = (int)itr.Current;
-                    if (expectValue[j] != current)
-                    {
-                        userMessage = " current value should be " + expectValue[j];
-                        retVal = false;
-                    }
-
-                    j++;
-                }
+                element = i * count;
+                myIList.Add(element);
+                expectValue[i - 1] = (int)element;
             }
-            catch (Exception e)
+
+            IEnumerator returnValue = myIList.GetEnumerator();
+            int j = 0;
+            for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+                int current = (int)itr.Current;
+                if (expectValue[j] != current)
+                {
+                    userMessage = " current value should be " + expectValue[j];
+                    retVal = false;
+                }
+
+                j++;
             }
 
             Assert.True(retVal, userMessage);
@@ -63,38 +55,30 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> myList = new TreeList<string>();
+            int count = 10;
+            string[] expectValue = new string[10];
+            object element = null;
+            IList myIList = myList;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<string> myList = new TreeList<string>();
-                int count = 10;
-                string[] expectValue = new string[10];
-                object element = null;
-                IList myIList = myList;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i.ToString();
-                    myIList.Add(element);
-                    expectValue[i - 1] = element.ToString();
-                }
-
-                IEnumerator returnValue = myIList.GetEnumerator();
-                int j = 0;
-                for (IEnumerator itr = returnValue; itr.MoveNext();)
-                {
-                    string current = (string)itr.Current;
-                    if (expectValue[j] != current)
-                    {
-                        userMessage = " current value should be " + expectValue[j];
-                        retVal = false;
-                    }
-
-                    j++;
-                }
+                element = i.ToString();
+                myIList.Add(element);
+                expectValue[i - 1] = element.ToString();
             }
-            catch (Exception e)
+
+            IEnumerator returnValue = myIList.GetEnumerator();
+            int j = 0;
+            for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+                string current = (string)itr.Current;
+                if (expectValue[j] != current)
+                {
+                    userMessage = " current value should be " + expectValue[j];
+                    retVal = false;
+                }
+
+                j++;
             }
 
             Assert.True(retVal, userMessage);

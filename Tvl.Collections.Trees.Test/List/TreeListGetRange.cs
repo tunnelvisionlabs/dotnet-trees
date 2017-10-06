@@ -19,27 +19,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int startIdx = GetInt32(0, 9);       // The starting index of the section to make a shallow copy
+            int endIdx = GetInt32(startIdx, 10); // The end index of the section to make a shallow copy
+            int count = endIdx - startIdx + 1;
+            TreeList<int> listResult = listObject.GetRange(startIdx, count);
+            for (int i = 0; i < count; i++)
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int startIdx = GetInt32(0, 9);       // The starting index of the section to make a shallow copy
-                int endIdx = GetInt32(startIdx, 10); // The end index of the section to make a shallow copy
-                int count = endIdx - startIdx + 1;
-                TreeList<int> listResult = listObject.GetRange(startIdx, count);
-                for (int i = 0; i < count; i++)
+                if (listResult[i] != iArray[i + startIdx])
                 {
-                    if (listResult[i] != iArray[i + startIdx])
-                    {
-                        userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + iArray[i + startIdx];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + iArray[i + startIdx];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -51,27 +43,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            int startIdx = GetInt32(0, 4);      // The starting index of the section to make a shallow copy
+            int endIdx = GetInt32(startIdx, 5); // The end index of the section to make a shallow copy
+            int count = endIdx - startIdx + 1;
+            TreeList<string> listResult = listObject.GetRange(startIdx, count);
+            for (int i = 0; i < count; i++)
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                int startIdx = GetInt32(0, 4);      // The starting index of the section to make a shallow copy
-                int endIdx = GetInt32(startIdx, 5); // The end index of the section to make a shallow copy
-                int count = endIdx - startIdx + 1;
-                TreeList<string> listResult = listObject.GetRange(startIdx, count);
-                for (int i = 0; i < count; i++)
+                if (listResult[i] != strArray[i + startIdx])
                 {
-                    if (listResult[i] != strArray[i + startIdx])
-                    {
-                        userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + strArray[i + startIdx];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + strArray[i + startIdx];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -83,30 +67,22 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            int startIdx = GetInt32(0, 2);      // The starting index of the section to make a shallow copy
+            int endIdx = GetInt32(startIdx, 3); // The end index of the section to make a shallow copy
+            int count = endIdx - startIdx + 1;
+            TreeList<MyClass> listResult = listObject.GetRange(startIdx, count);
+            for (int i = 0; i < count; i++)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                int startIdx = GetInt32(0, 2);      // The starting index of the section to make a shallow copy
-                int endIdx = GetInt32(startIdx, 3); // The end index of the section to make a shallow copy
-                int count = endIdx - startIdx + 1;
-                TreeList<MyClass> listResult = listObject.GetRange(startIdx, count);
-                for (int i = 0; i < count; i++)
+                if (listResult[i] != mc[i + startIdx])
                 {
-                    if (listResult[i] != mc[i + startIdx])
-                    {
-                        userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + mc[i + startIdx];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + mc[i + startIdx];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -118,26 +94,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            TreeList<int> listResult = listObject.GetRange(5, 0);
+            if (listResult == null)
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                TreeList<int> listResult = listObject.GetRange(5, 0);
-                if (listResult == null)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-
-                if (listResult.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
+                userMessage = "The result is not the value as expected";
+                retVal = false;
             }
-            catch (Exception e)
+
+            if (listResult.Count != 0)
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -224,21 +192,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

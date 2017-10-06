@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using Xunit;
@@ -20,29 +19,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> myList = new TreeList<int>();
+            int count = 10;
+            int[] expectValue = new int[10];
+            IList myIList = myList;
+            object element = null;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<int> myList = new TreeList<int>();
-                int count = 10;
-                int[] expectValue = new int[10];
-                IList myIList = myList;
-                object element = null;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i * count;
-                    myIList.Add(element);
-                    expectValue[i - 1] = (int)element;
-                }
-
-                if (!myIList.Contains(element))
-                {
-                    userMessage = " calling Contains method should return true.";
-                    retVal = false;
-                }
+                element = i * count;
+                myIList.Add(element);
+                expectValue[i - 1] = (int)element;
             }
-            catch (Exception e)
+
+            if (!myIList.Contains(element))
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " calling Contains method should return true.";
                 retVal = false;
             }
 
@@ -55,29 +46,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> myList = new TreeList<string>();
+            int count = 10;
+            string[] expectValue = new string[10];
+            object element = null;
+            IList myIList = myList;
+            for (int i = 1; i <= count; i++)
             {
-                TreeList<string> myList = new TreeList<string>();
-                int count = 10;
-                string[] expectValue = new string[10];
-                object element = null;
-                IList myIList = myList;
-                for (int i = 1; i <= count; i++)
-                {
-                    element = i.ToString();
-                    myIList.Add(element);
-                    expectValue[i - 1] = element.ToString();
-                }
-
-                if (!myIList.Contains(element))
-                {
-                    userMessage = " calling Contains method should return true.";
-                    retVal = false;
-                }
+                element = i.ToString();
+                myIList.Add(element);
+                expectValue[i - 1] = element.ToString();
             }
-            catch (Exception e)
+
+            if (!myIList.Contains(element))
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = " calling Contains method should return true.";
                 retVal = false;
             }
 

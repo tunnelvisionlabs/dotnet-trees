@@ -19,20 +19,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 10, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            listObject.RemoveRange(0, 10);
+            if (listObject.Count != 0)
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 10, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                listObject.RemoveRange(0, 10);
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected,count is: " + listObject.Count;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,count is: " + listObject.Count;
                 retVal = false;
             }
 
@@ -45,25 +37,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.RemoveRange(3, 3);
+            string[] expected = { "dog", "apple", "joke", "food" };
+            for (int i = 0; i < 4; i++)
             {
-                string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                listObject.RemoveRange(3, 3);
-                string[] expected = { "dog", "apple", "joke", "food" };
-                for (int i = 0; i < 4; i++)
+                if (listObject[i] != expected[i])
                 {
-                    if (listObject[i] != expected[i])
-                    {
-                        userMessage = "The result is not the value as expected,result is: " + listObject[i];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,result is: " + listObject[i];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -75,27 +59,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            listObject.RemoveRange(1, 0);
+            for (int i = 0; i < 3; i++)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                listObject.RemoveRange(1, 0);
-                for (int i = 0; i < 3; i++)
+                if (listObject[i] != mc[i])
                 {
-                    if (listObject[i] != mc[i])
-                    {
-                        userMessage = "The result is not the value as expected,result is: " + listObject[i];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,result is: " + listObject[i];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);

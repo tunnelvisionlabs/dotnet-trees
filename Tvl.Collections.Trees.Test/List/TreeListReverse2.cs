@@ -19,37 +19,29 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            byte[] byArray = new byte[100];
+            Generator.GetBytes(-55, byArray);
+            TreeList<byte> listObject = new TreeList<byte>(byArray);
+            byte[] expected = Reverse<byte>(byArray);
+            listObject.Reverse(10, 80);
+            for (int i = 0; i < 100; i++)
             {
-                byte[] byArray = new byte[100];
-                Generator.GetBytes(-55, byArray);
-                TreeList<byte> listObject = new TreeList<byte>(byArray);
-                byte[] expected = Reverse<byte>(byArray);
-                listObject.Reverse(10, 80);
-                for (int i = 0; i < 100; i++)
+                if ((i < 10) || (i > 89))
                 {
-                    if ((i < 10) || (i > 89))
+                    if (listObject[i] != byArray[i])
                     {
-                        if (listObject[i] != byArray[i])
-                        {
-                            userMessage = "The result is not the value as expected,i is: " + i;
-                            retVal = false;
-                        }
-                    }
-                    else
-                    {
-                        if (listObject[i] != expected[i])
-                        {
-                            userMessage = "The result is not the value as expected,i is: " + i;
-                            retVal = false;
-                        }
+                        userMessage = "The result is not the value as expected,i is: " + i;
+                        retVal = false;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+                else
+                {
+                    if (listObject[i] != expected[i])
+                    {
+                        userMessage = "The result is not the value as expected,i is: " + i;
+                        retVal = false;
+                    }
+                }
             }
 
             Assert.True(retVal, userMessage);
@@ -61,25 +53,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food", "Microsoft" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.Reverse(2, 5);
+            string[] expected = { "dog", "apple", "food", "dog", "chocolate", "banana", "joke", "Microsoft" };
+            for (int i = 0; i < 8; i++)
             {
-                string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food", "Microsoft" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                listObject.Reverse(2, 5);
-                string[] expected = { "dog", "apple", "food", "dog", "chocolate", "banana", "joke", "Microsoft" };
-                for (int i = 0; i < 8; i++)
+                if (listObject[i] != expected[i])
                 {
-                    if (listObject[i] != expected[i])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -91,29 +75,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass myclass4 = new MyClass();
+            MyClass[] mc = new MyClass[4] { myclass1, myclass2, myclass3, myclass4 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            listObject.Reverse(0, 2);
+            MyClass[] expected = new MyClass[4] { myclass2, myclass1, myclass3, myclass4 };
+            for (int i = 0; i < 4; i++)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass myclass4 = new MyClass();
-                MyClass[] mc = new MyClass[4] { myclass1, myclass2, myclass3, myclass4 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                listObject.Reverse(0, 2);
-                MyClass[] expected = new MyClass[4] { myclass2, myclass1, myclass3, myclass4 };
-                for (int i = 0; i < 4; i++)
+                if (listObject[i] != expected[i])
                 {
-                    if (listObject[i] != expected[i])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -125,19 +101,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> listObject = new TreeList<int>();
+            listObject.Reverse(0, 0);
+            if (listObject.Count != 0)
             {
-                TreeList<int> listObject = new TreeList<int>();
-                listObject.Reverse(0, 0);
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected,count is: " + listObject.Count;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,count is: " + listObject.Count;
                 retVal = false;
             }
 

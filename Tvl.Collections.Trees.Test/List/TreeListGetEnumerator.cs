@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -19,25 +18,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            TreeList<int>.Enumerator enumerator = listObject.GetEnumerator();
+            for (int i = 0; i < 10; i++)
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                TreeList<int>.Enumerator enumerator = listObject.GetEnumerator();
-                for (int i = 0; i < 10; i++)
+                enumerator.MoveNext();
+                if (enumerator.Current != iArray[i])
                 {
-                    enumerator.MoveNext();
-                    if (enumerator.Current != iArray[i])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -49,27 +40,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            TreeList<string>.Enumerator enumerator = listObject.GetEnumerator();
+            int i = 0;
+            while (enumerator.MoveNext())
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                TreeList<string>.Enumerator enumerator = listObject.GetEnumerator();
-                int i = 0;
-                while (enumerator.MoveNext())
+                if (enumerator.Current != strArray[i])
                 {
-                    if (enumerator.Current != strArray[i])
-                    {
-                        userMessage = "The result is not the value as expected,The i is: " + i;
-                        retVal = false;
-                    }
-
-                    i++;
+                    userMessage = "The result is not the value as expected,The i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+
+                i++;
             }
 
             Assert.True(retVal, userMessage);
@@ -81,30 +64,22 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            TreeList<MyClass>.Enumerator enumerator = listObject.GetEnumerator();
+            int i = 0;
+            while (enumerator.MoveNext())
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                TreeList<MyClass>.Enumerator enumerator = listObject.GetEnumerator();
-                int i = 0;
-                while (enumerator.MoveNext())
+                if (enumerator.Current != mc[i])
                 {
-                    if (enumerator.Current != mc[i])
-                    {
-                        userMessage = "The result is not the value as expected,The i is: " + i;
-                        retVal = false;
-                    }
-
-                    i++;
+                    userMessage = "The result is not the value as expected,The i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+
+                i++;
             }
 
             Assert.True(retVal, userMessage);
@@ -116,19 +91,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> listObject = new TreeList<string>();
+            TreeList<string>.Enumerator enumerator = listObject.GetEnumerator();
+            if (enumerator.MoveNext())
             {
-                TreeList<string> listObject = new TreeList<string>();
-                TreeList<string>.Enumerator enumerator = listObject.GetEnumerator();
-                if (enumerator.MoveNext())
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 

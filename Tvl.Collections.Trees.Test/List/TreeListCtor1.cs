@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -19,18 +18,10 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<int> listObject = new TreeList<int>();
+            if (listObject == null)
             {
-                TreeList<int> listObject = new TreeList<int>();
-                if (listObject == null)
-                {
-                    userMessage = "The constructor does not work well";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The constructor does not work well";
                 retVal = false;
             }
 
@@ -43,18 +34,10 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<string> listObject = new TreeList<string>();
+            if (listObject == null)
             {
-                TreeList<string> listObject = new TreeList<string>();
-                if (listObject == null)
-                {
-                    userMessage = "The constructor does not work well";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The constructor does not work well";
                 retVal = false;
             }
 
@@ -67,18 +50,10 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<MyClass> listObject = new TreeList<MyClass>();
+            if (listObject == null)
             {
-                TreeList<MyClass> listObject = new TreeList<MyClass>();
-                if (listObject == null)
-                {
-                    userMessage = "The constructor does not work well";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The constructor does not work well";
                 retVal = false;
             }
 

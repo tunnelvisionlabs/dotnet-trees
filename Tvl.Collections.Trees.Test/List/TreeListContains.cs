@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -19,20 +18,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int i = GetInt32(0, 10);
+            if (!listObject.Contains(i))
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int i = GetInt32(0, 10);
-                if (!listObject.Contains(i))
-                {
-                    userMessage = "The result is not the value as expected,The i is: " + i;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The i is: " + i;
                 retVal = false;
             }
 
@@ -45,19 +36,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            if (!listObject.Contains("dog"))
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                if (!listObject.Contains("dog"))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -70,22 +53,14 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            if (!listObject.Contains(myclass1))
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                if (!listObject.Contains(myclass1))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -98,19 +73,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            char[] chArray = { '1', '9', '3', '6', '5', '8', '7', '2', '4' };
+            TreeList<char> listObject = new TreeList<char>(chArray);
+            if (listObject.Contains('t'))
             {
-                char[] chArray = { '1', '9', '3', '6', '5', '8', '7', '2', '4' };
-                TreeList<char> listObject = new TreeList<char>(chArray);
-                if (listObject.Contains('t'))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -123,19 +90,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", null, "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            if (!listObject.Contains(null))
             {
-                string[] strArray = { "apple", "banana", "chocolate", null, "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                if (!listObject.Contains(null))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -144,21 +103,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

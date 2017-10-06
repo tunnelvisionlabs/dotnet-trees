@@ -19,21 +19,13 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 10, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int index = GetInt32(0, 10);
+            listObject.RemoveAt(index);
+            if (listObject.Contains(iArray[index]))
             {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 10, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int index = GetInt32(0, 10);
-                listObject.RemoveAt(index);
-                if (listObject.Contains(iArray[index]))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -46,30 +38,22 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.RemoveAt(0);
+            if (listObject.Count != 6)
             {
-                string[] strArray = { "dog", "apple", "joke", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                listObject.RemoveAt(0);
-                if (listObject.Count != 6)
+                userMessage = "The result is not the value as expected,count is: " + listObject.Count;
+                retVal = false;
+            }
+
+            for (int i = 0; i < 6; i++)
+            {
+                if (listObject[i] != strArray[i + 1])
                 {
-                    userMessage = "The result is not the value as expected,count is: " + listObject.Count;
+                    userMessage = "The result is not the value as expected,i is: " + i;
                     retVal = false;
                 }
-
-                for (int i = 0; i < 6; i++)
-                {
-                    if (listObject[i] != strArray[i + 1])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -81,29 +65,21 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            listObject.RemoveAt(2);
+            if (listObject.Count != 2)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                listObject.RemoveAt(2);
-                if (listObject.Count != 2)
-                {
-                    userMessage = "The result is not the value as expected,count is: " + listObject.Count;
-                    retVal = false;
-                }
-
-                if (listObject.Contains(myclass3))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
+                userMessage = "The result is not the value as expected,count is: " + listObject.Count;
+                retVal = false;
             }
-            catch (Exception e)
+
+            if (listObject.Contains(myclass3))
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -164,21 +140,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

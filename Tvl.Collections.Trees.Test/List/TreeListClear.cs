@@ -3,7 +3,6 @@
 
 namespace Tvl.Collections.Trees.Test.List
 {
-    using System;
     using System.Collections.Generic;
     using Xunit;
 
@@ -19,20 +18,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            listObject.Clear();
+            if (listObject.Count != 0)
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                listObject.Clear();
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -45,20 +36,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.Clear();
+            if (listObject.Count != 0)
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                listObject.Clear();
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -71,23 +54,15 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            listObject.Clear();
+            if (listObject.Count != 0)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                listObject.Clear();
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -100,19 +75,11 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<MyClass> listObject = new TreeList<MyClass>();
+            listObject.Clear();
+            if (listObject.Count != 0)
             {
-                TreeList<MyClass> listObject = new TreeList<MyClass>();
-                listObject.Clear();
-                if (listObject.Count != 0)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 

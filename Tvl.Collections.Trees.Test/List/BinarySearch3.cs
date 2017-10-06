@@ -19,23 +19,15 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            listObject.Sort();
+            IntClass intClass = new IntClass();
+            int i = 7;
+            int result = listObject.BinarySearch(5, 4, i, intClass);
+            if (result != i)
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                listObject.Sort();
-                IntClass intClass = new IntClass();
-                int i = 7;
-                int result = listObject.BinarySearch(5, 4, i, intClass);
-                if (result != i)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -48,22 +40,14 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            StrClass strClass = new StrClass();
+            listObject.Sort(strClass);
+            int result = listObject.BinarySearch(2, 3, "egg", strClass);
+            if (result != -3)
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                StrClass strClass = new StrClass();
-                listObject.Sort(strClass);
-                int result = listObject.BinarySearch(2, 3, "egg", strClass);
-                if (result != -3)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -76,21 +60,13 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "key", "keys", "key", "key", "sky", "key" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            StrClass strClass = new StrClass();
+            int result = listObject.BinarySearch(0, 1, "key", strClass);
+            if (result != 0)
             {
-                string[] strArray = { "key", "keys", "key", "key", "sky", "key" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                StrClass strClass = new StrClass();
-                int result = listObject.BinarySearch(0, 1, "key", strClass);
-                if (result != 0)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -103,25 +79,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass(10);
+            MyClass myclass2 = new MyClass(20);
+            MyClass myclass3 = new MyClass(30);
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            MyClassIC myclassIC = new MyClassIC();
+            listObject.Sort(myclassIC);
+            int result = listObject.BinarySearch(0, 3, new MyClass(10), myclassIC);
+            if (result != 2)
             {
-                MyClass myclass1 = new MyClass(10);
-                MyClass myclass2 = new MyClass(20);
-                MyClass myclass3 = new MyClass(30);
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                MyClassIC myclassIC = new MyClassIC();
-                listObject.Sort(myclassIC);
-                int result = listObject.BinarySearch(0, 3, new MyClass(10), myclassIC);
-                if (result != 2)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -134,22 +102,14 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.Sort();
+            StrClass strClass = new StrClass();
+            int result = listObject.BinarySearch(0, 3, null, strClass);
+            if (result != -1)
             {
-                string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                listObject.Sort();
-                StrClass strClass = new StrClass();
-                int result = listObject.BinarySearch(0, 3, null, strClass);
-                if (result != -1)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -162,25 +122,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass(10);
+            MyClass myclass2 = new MyClass(20);
+            MyClass myclass3 = new MyClass(30);
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            MyClassIC myclassIC = new MyClassIC();
+            listObject.Sort();
+            int result = listObject.BinarySearch(0, 3, new MyClass(10), null);
+            if (result != 0)
             {
-                MyClass myclass1 = new MyClass(10);
-                MyClass myclass2 = new MyClass(20);
-                MyClass myclass3 = new MyClass(30);
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                MyClassIC myclassIC = new MyClassIC();
-                listObject.Sort();
-                int result = listObject.BinarySearch(0, 3, new MyClass(10), null);
-                if (result != 0)
-                {
-                    userMessage = "The result is not the value as expected,The result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,The result is: " + result;
                 retVal = false;
             }
 
@@ -302,21 +254,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

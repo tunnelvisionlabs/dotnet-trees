@@ -19,25 +19,17 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] insert = { 4, 5, 6, 7 };
+            listObject.InsertRange(4, insert);
+            for (int i = 0; i < 15; i++)
             {
-                int[] iArray = { 0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] insert = { 4, 5, 6, 7 };
-                listObject.InsertRange(4, insert);
-                for (int i = 0; i < 15; i++)
+                if (listObject[i] != i)
                 {
-                    if (listObject[i] != i)
-                    {
-                        userMessage = "The result is not the value as expected,listObject is: " + listObject[i];
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,listObject is: " + listObject[i];
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -49,27 +41,19 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "dog", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            string[] insert = { "Hello", "World" };
+            listObject.InsertRange(0, insert);
+            if (listObject.Count != 8)
             {
-                string[] strArray = { "apple", "dog", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                string[] insert = { "Hello", "World" };
-                listObject.InsertRange(0, insert);
-                if (listObject.Count != 8)
-                {
-                    userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
-                    retVal = false;
-                }
-
-                if ((listObject[0] != "Hello") || (listObject[1] != "World"))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
+                userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
+                retVal = false;
             }
-            catch (Exception e)
+
+            if ((listObject[0] != "Hello") || (listObject[1] != "World"))
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -82,41 +66,33 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass myclass4 = new MyClass();
+            MyClass myclass5 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            MyClass[] insert = new MyClass[2] { myclass4, myclass5 };
+            listObject.InsertRange(3, insert);
+            for (int i = 0; i < 5; i++)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass myclass4 = new MyClass();
-                MyClass myclass5 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                MyClass[] insert = new MyClass[2] { myclass4, myclass5 };
-                listObject.InsertRange(3, insert);
-                for (int i = 0; i < 5; i++)
+                if (i < 3)
                 {
-                    if (i < 3)
+                    if (listObject[i] != mc[i])
                     {
-                        if (listObject[i] != mc[i])
-                        {
-                            userMessage = "The result is not the value as expected,i is: " + i;
-                            retVal = false;
-                        }
-                    }
-                    else
-                    {
-                        if (listObject[i] != insert[i - 3])
-                        {
-                            userMessage = "The result is not the value as expected,i is: " + i;
-                            retVal = false;
-                        }
+                        userMessage = "The result is not the value as expected,i is: " + i;
+                        retVal = false;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
+                else
+                {
+                    if (listObject[i] != insert[i - 3])
+                    {
+                        userMessage = "The result is not the value as expected,i is: " + i;
+                        retVal = false;
+                    }
+                }
             }
 
             Assert.True(retVal, userMessage);
@@ -128,28 +104,20 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "dog", "banana", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            string[] insert = new string[2] { null, null };
+            int index = GetInt32(0, 4);
+            listObject.InsertRange(index, insert);
+            if (listObject.Count != 6)
             {
-                string[] strArray = { "apple", "dog", "banana", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                string[] insert = new string[2] { null, null };
-                int index = GetInt32(0, 4);
-                listObject.InsertRange(index, insert);
-                if (listObject.Count != 6)
-                {
-                    userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
-                    retVal = false;
-                }
-
-                if ((listObject[index] != null) || (listObject[index + 1] != null))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
+                userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
+                retVal = false;
             }
-            catch (Exception e)
+
+            if ((listObject[index] != null) || (listObject[index + 1] != null))
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -240,21 +208,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

@@ -19,26 +19,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[100];
+            int t = GetInt32(0, 90);
+            listObject.CopyTo(0, result, t, 10);
+            for (int i = 0; i < 10; i++)
             {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[100];
-                int t = GetInt32(0, 90);
-                listObject.CopyTo(0, result, t, 10);
-                for (int i = 0; i < 10; i++)
+                if (listObject[i] != result[i + t])
                 {
-                    if (listObject[i] != result[i + t])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected,i is: " + i;
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -50,21 +42,13 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "Tom", "Jack", "Mike" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            string[] result = new string[3];
+            listObject.CopyTo(2, result, 0, 1);
+            if (result[0] != "Mike")
             {
-                string[] strArray = { "Tom", "Jack", "Mike" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                string[] result = new string[3];
-                listObject.CopyTo(2, result, 0, 1);
-                if (result[0] != "Mike")
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -77,26 +61,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            TreeList<MyClass> listObject = new TreeList<MyClass>();
+            listObject.Add(myclass1);
+            listObject.Add(myclass2);
+            listObject.Add(myclass3);
+            MyClass[] mc = new MyClass[3];
+            listObject.CopyTo(0, mc, 0, 3);
+            if ((mc[0] != myclass1) || (mc[1] != myclass2) || (mc[2] != myclass3))
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                TreeList<MyClass> listObject = new TreeList<MyClass>();
-                listObject.Add(myclass1);
-                listObject.Add(myclass2);
-                listObject.Add(myclass3);
-                MyClass[] mc = new MyClass[3];
-                listObject.CopyTo(0, mc, 0, 3);
-                if ((mc[0] != myclass1) || (mc[1] != myclass2) || (mc[2] != myclass3))
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected";
                 retVal = false;
             }
 
@@ -109,24 +85,16 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            TreeList<MyClass> listObject = new TreeList<MyClass>();
+            MyClass[] mc = new MyClass[3];
+            listObject.CopyTo(0, mc, 0, 0);
+            for (int i = 0; i < 3; i++)
             {
-                TreeList<MyClass> listObject = new TreeList<MyClass>();
-                MyClass[] mc = new MyClass[3];
-                listObject.CopyTo(0, mc, 0, 0);
-                for (int i = 0; i < 3; i++)
+                if (mc[i] != null)
                 {
-                    if (mc[i] != null)
-                    {
-                        userMessage = "The result is not the value as expected";
-                        retVal = false;
-                    }
+                    userMessage = "The result is not the value as expected";
+                    retVal = false;
                 }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
             }
 
             Assert.True(retVal, userMessage);
@@ -322,21 +290,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;

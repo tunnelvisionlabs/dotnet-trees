@@ -19,26 +19,18 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = new int[1000];
+            for (int i = 0; i < 1000; i++)
             {
-                int[] iArray = new int[1000];
-                for (int i = 0; i < 1000; i++)
-                {
-                    iArray[i] = i;
-                }
-
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int ob = GetInt32(0, 1000);
-                int result = listObject.LastIndexOf(ob, 999);
-                if (result != ob)
-                {
-                    userMessage = "The result is not the value as expected,result is: " + result;
-                    retVal = false;
-                }
+                iArray[i] = i;
             }
-            catch (Exception e)
+
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int ob = GetInt32(0, 1000);
+            int result = listObject.LastIndexOf(ob, 999);
+            if (result != ob)
             {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,result is: " + result;
                 retVal = false;
             }
 
@@ -51,20 +43,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "dog", "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            int result = listObject.LastIndexOf("dog", 3);
+            if (result != 1)
             {
-                string[] strArray = { "apple", "dog", "banana", "chocolate", "dog", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                int result = listObject.LastIndexOf("dog", 3);
-                if (result != 1)
-                {
-                    userMessage = "The result is not the value as expected,result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,result is: " + result;
                 retVal = false;
             }
 
@@ -77,23 +61,15 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            MyClass myclass1 = new MyClass();
+            MyClass myclass2 = new MyClass();
+            MyClass myclass3 = new MyClass();
+            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
+            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            int result = listObject.LastIndexOf(myclass3, 2);
+            if (result != 2)
             {
-                MyClass myclass1 = new MyClass();
-                MyClass myclass2 = new MyClass();
-                MyClass myclass3 = new MyClass();
-                MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-                TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-                int result = listObject.LastIndexOf(myclass3, 2);
-                if (result != 2)
-                {
-                    userMessage = "The result is not the value as expected,result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,result is: " + result;
                 retVal = false;
             }
 
@@ -106,20 +82,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            string[] strArray = { "apple", "banana", "chocolate", "banana", "banana", "dog", "banana", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            int result = listObject.LastIndexOf("banana", 5);
+            if (result != 4)
             {
-                string[] strArray = { "apple", "banana", "chocolate", "banana", "banana", "dog", "banana", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                int result = listObject.LastIndexOf("banana", 5);
-                if (result != 4)
-                {
-                    userMessage = "The result is not the value as expected,result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,result is: " + result;
                 retVal = false;
             }
 
@@ -132,20 +100,12 @@ namespace Tvl.Collections.Trees.Test.List
             bool retVal = true;
             string userMessage = string.Empty;
 
-            try
+            int[] iArray = { 1, 9, -15, 3, 6, -1, 8, 7, -11, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int result = listObject.LastIndexOf(-11, 6);
+            if (result != -1)
             {
-                int[] iArray = { 1, 9, -15, 3, 6, -1, 8, 7, -11, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int result = listObject.LastIndexOf(-11, 6);
-                if (result != -1)
-                {
-                    userMessage = "The result is not the value as expected,result is: " + result;
-                    retVal = false;
-                }
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
+                userMessage = "The result is not the value as expected,result is: " + result;
                 retVal = false;
             }
 
@@ -206,21 +166,14 @@ namespace Tvl.Collections.Trees.Test.List
 
         private int GetInt32(int minValue, int maxValue)
         {
-            try
+            if (minValue == maxValue)
             {
-                if (minValue == maxValue)
-                {
-                    return minValue;
-                }
-
-                if (minValue < maxValue)
-                {
-                    return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-                }
+                return minValue;
             }
-            catch
+
+            if (minValue < maxValue)
             {
-                throw;
+                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
             }
 
             return minValue;
