@@ -13,8 +13,8 @@ Tvl.Collections.Trees.TreeList<T>.CopyTo(int index, T[] array, int arrayIndex, i
 Tvl.Collections.Trees.TreeList<T>.Count.get -> int
 Tvl.Collections.Trees.TreeList<T>.Enumerator
 Tvl.Collections.Trees.TreeList<T>.Enumerator.Current.get -> T
+Tvl.Collections.Trees.TreeList<T>.Enumerator.Dispose() -> void
 Tvl.Collections.Trees.TreeList<T>.Enumerator.MoveNext() -> bool
-Tvl.Collections.Trees.TreeList<T>.Enumerator.Reset() -> void
 Tvl.Collections.Trees.TreeList<T>.Exists(System.Predicate<T> match) -> bool
 Tvl.Collections.Trees.TreeList<T>.Find(System.Predicate<T> match) -> T
 Tvl.Collections.Trees.TreeList<T>.FindAll(System.Predicate<T> match) -> Tvl.Collections.Trees.TreeList<T>

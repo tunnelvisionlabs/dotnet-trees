@@ -36,33 +36,24 @@ namespace Tvl.Collections.Trees
                 _current = default;
             }
 
-            public T Current
-            {
-                get
-                {
-                    if (_index < 0)
-                        throw new InvalidOperationException();
-
-                    return _current;
-                }
-            }
+            public T Current => _current;
 
             object IEnumerator.Current => Current;
 
-            void IDisposable.Dispose()
+            public void Dispose()
             {
             }
 
             public bool MoveNext()
             {
+                if (_list._version != _version)
+                    throw new InvalidOperationException();
+
                 if (_index < -1)
                 {
                     // Past the end of the list.
                     return false;
                 }
-
-                if (_list._version != _version)
-                    throw new InvalidOperationException();
 
                 if (_index == -1)
                 {
@@ -89,6 +80,7 @@ namespace Tvl.Collections.Trees
                 if (_index == _span.EndExclusive)
                 {
                     _index = int.MinValue;
+                    _current = default;
                     return false;
                 }
 
@@ -97,8 +89,11 @@ namespace Tvl.Collections.Trees
                 return true;
             }
 
-            public void Reset()
+            void IEnumerator.Reset()
             {
+                if (_list._version != _version)
+                    throw new InvalidOperationException();
+
                 _leafNode = null;
                 _index = -1;
                 _leafIndex = -1;

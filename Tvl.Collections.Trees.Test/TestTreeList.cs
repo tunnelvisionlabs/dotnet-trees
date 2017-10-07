@@ -475,5 +475,65 @@ namespace Tvl.Collections.Trees.Test
             Assert.Empty(list);
             Assert.Empty(reference);
         }
+
+        [Fact]
+        public void TestEnumerator()
+        {
+            var list = new TreeList<int>();
+            var enumerator = list.GetEnumerator();
+            Assert.Equal(0, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+
+            // Adding an item to the list invalidates it, but Current is still unchecked
+            list.Add(1);
+            Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+
+            enumerator = list.GetEnumerator();
+            Assert.Equal(0, enumerator.Current);
+            Assert.True(enumerator.MoveNext());
+            Assert.Equal(1, enumerator.Current);
+
+            // Reset has no effect due to boxing the value type
+            ((IEnumerator<int>)enumerator).Reset();
+            Assert.Equal(1, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+        }
+
+        [Fact]
+        public void TestIEnumeratorT()
+        {
+            var list = new TreeList<int>();
+            IEnumerator<int> enumerator = list.GetEnumerator();
+            Assert.Equal(0, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+
+            // Adding an item to the list invalidates it, but Current is still unchecked
+            list.Add(1);
+            Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+            Assert.Throws<InvalidOperationException>(() => enumerator.Reset());
+            Assert.Equal(0, enumerator.Current);
+
+            enumerator = list.GetEnumerator();
+            Assert.Equal(0, enumerator.Current);
+            Assert.True(enumerator.MoveNext());
+            Assert.Equal(1, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+
+            enumerator.Reset();
+            Assert.Equal(0, enumerator.Current);
+            Assert.True(enumerator.MoveNext());
+            Assert.Equal(1, enumerator.Current);
+            enumerator.Reset();
+            Assert.Equal(0, enumerator.Current);
+            Assert.True(enumerator.MoveNext());
+            Assert.Equal(1, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
+        }
     }
 }
