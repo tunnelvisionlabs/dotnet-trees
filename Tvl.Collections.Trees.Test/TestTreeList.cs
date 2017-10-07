@@ -334,6 +334,9 @@ namespace Tvl.Collections.Trees.Test
             {
                 Predicate<int> predicate = value => value == i;
                 Assert.Equal(reference.FindIndex(predicate), list.FindIndex(predicate));
+
+                int firstIndex = list.FindIndex(predicate);
+                Assert.Equal(reference.FindIndex(firstIndex + 1, predicate), list.FindIndex(firstIndex + 1, predicate));
             }
         }
 
@@ -367,6 +370,12 @@ namespace Tvl.Collections.Trees.Test
             {
                 Predicate<int> predicate = value => value == i;
                 Assert.Equal(reference.FindLastIndex(predicate), list.FindLastIndex(predicate));
+
+                int lastIndex = list.FindLastIndex(predicate);
+                if (lastIndex < 1)
+                    continue;
+
+                Assert.Equal(reference.FindLastIndex(lastIndex - 1, predicate), list.FindLastIndex(lastIndex - 1, predicate));
             }
         }
 
@@ -622,7 +631,7 @@ namespace Tvl.Collections.Trees.Test
             Assert.Equal(9, list.Count);
         }
 
-        [Fact(Skip = "Not yet implemented")]
+        [Fact]
         public void TestRemoveAll()
         {
             var list = new TreeList<int>(4, Enumerable.Range(0, 10));

@@ -363,6 +363,9 @@ namespace Tvl.Collections.Trees
 
         public int RemoveAll(Predicate<T> match)
         {
+            if (match == null)
+                throw new ArgumentNullException(nameof(match));
+
             int previousCount = Count;
             _root = Node.RemoveAll(_root, match);
             _version++;

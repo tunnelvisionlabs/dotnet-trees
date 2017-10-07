@@ -138,7 +138,16 @@ namespace Tvl.Collections.Trees
 
             internal static Node RemoveAll(Node root, Predicate<T> match)
             {
-                throw new NotImplementedException();
+                for (int i = 0; i < root.Count; i++)
+                {
+                    if (match(root[i]))
+                    {
+                        root = RemoveAt(root, i);
+                        i--;
+                    }
+                }
+
+                return root;
             }
 
             internal static Node TrimExcess(Node root)
