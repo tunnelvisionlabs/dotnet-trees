@@ -181,6 +181,35 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestIndexer()
+        {
+            TreeList<int> list = new TreeList<int>(4, Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[-1]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[-1] = 0);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[list.Count]);
+            Assert.Throws<ArgumentOutOfRangeException>(() => list[list.Count] = 0);
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Assert.Equal(i, list[i]);
+                list[i] = ~list[i];
+                Assert.Equal(~i, list[i]);
+            }
+        }
+
+        [Fact]
+        public void TestCopyToValidation()
+        {
+            TreeList<int> list = new TreeList<int>(Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(0, null, 0, list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>("srcIndex", () => list.CopyTo(-1, new int[list.Count], 0, list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => list.CopyTo(0, new int[list.Count], -1, list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>("length", () => list.CopyTo(0, new int[list.Count], 0, -1));
+            Assert.Throws<ArgumentException>(null, () => list.CopyTo(1, new int[list.Count], 0, list.Count));
+            Assert.Throws<ArgumentException>(string.Empty, () => list.CopyTo(0, new int[list.Count], 1, list.Count));
+       }
+
+        [Fact]
         public void TestAdd()
         {
             const int Value = 600;
@@ -293,6 +322,7 @@ namespace Tvl.Collections.Trees.Test
                 reference.Insert(index, i);
             }
 
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(null));
             for (int i = 0; i < list.Count; i++)
             {
                 Predicate<int> predicate = value => value == i;
@@ -313,10 +343,11 @@ namespace Tvl.Collections.Trees.Test
                 reference.Insert(index, i);
             }
 
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null));
             for (int i = 0; i < list.Count; i++)
             {
                 Predicate<int> predicate = value => value == i;
-                Assert.Equal(reference.FindLastIndex(predicate), list.FindIndex(predicate));
+                Assert.Equal(reference.FindLastIndex(predicate), list.FindLastIndex(predicate));
             }
         }
 
@@ -382,8 +413,34 @@ namespace Tvl.Collections.Trees.Test
                 reference.Insert(index, item);
             }
 
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Sort(-1, 0, null));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.Sort(0, -1, null));
+            Assert.Throws<ArgumentException>(() => list.Sort(0, list.Count + 1, null));
+
             list.Sort();
             reference.Sort();
+            Assert.Equal(reference, list);
+        }
+
+        [Fact]
+        public void TestSortComparison()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list.Insert(index, item);
+                reference.Insert(index, item);
+            }
+
+            Assert.Throws<ArgumentNullException>(() => list.Sort((Comparison<int>)null));
+
+            Comparison<int> comparison = (x, y) => x - y;
+            list.Sort(comparison);
+            reference.Sort(comparison);
             Assert.Equal(reference, list);
         }
 
@@ -534,6 +591,105 @@ namespace Tvl.Collections.Trees.Test
             Assert.Equal(1, enumerator.Current);
             Assert.False(enumerator.MoveNext());
             Assert.Equal(0, enumerator.Current);
+        }
+
+        [Fact]
+        public void TestRemoveValue()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(0, 10));
+            Assert.False(list.Remove(-1));
+            Assert.Equal(10, list.Count);
+            Assert.True(list.Remove(3));
+            Assert.Equal(9, list.Count);
+        }
+
+        [Fact(Skip = "Not yet implemented")]
+        public void TestRemoveAll()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>(() => list.RemoveAll(null));
+
+            Assert.Equal(5, list.RemoveAll(i => (i % 2) == 0));
+            Assert.Equal(new[] { 1, 3, 5, 7, 9 }, list);
+            Assert.Equal(0, list.RemoveAll(i => i < 0));
+            Assert.Equal(5, list.Count);
+        }
+
+        [Fact]
+        public void TestExists()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>(() => list.Exists(null));
+
+            Assert.False(list.Exists(value => value < 0));
+            foreach (var i in list)
+            {
+                Assert.True(list.Exists(value => value == i));
+            }
+
+            Assert.False(list.Exists(value => value > 10));
+        }
+
+        [Fact]
+        public void TestFind()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(1, 10));
+            Assert.Throws<ArgumentNullException>(() => list.Find(null));
+
+            Assert.Equal(0, list.Find(value => value < 0));
+            foreach (var i in list)
+            {
+                Assert.Equal(i, list.Find(value => value == i));
+            }
+
+            Assert.Equal(2, list.Find(value => value > 1));
+        }
+
+        [Fact]
+        public void TestFindAll()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>(() => list.FindAll(null));
+
+            TreeList<int> found = list.FindAll(i => (i % 2) == 0);
+
+            Assert.Equal(10, list.Count);
+            Assert.Equal(5, found.Count);
+            Assert.Equal(new[] { 0, 2, 4, 6, 8 }, found);
+
+            Assert.Empty(list.FindAll(i => i < 0));
+        }
+
+        [Fact]
+        public void TestFindLast()
+        {
+            var list = new TreeList<int>(4, Enumerable.Range(1, 10));
+            var reference = new List<int>(Enumerable.Range(1, 10));
+            Assert.Throws<ArgumentNullException>(() => list.FindLast(null));
+
+            Assert.Equal(10, list.FindLast(value => (value % 2) == 0));
+            Assert.Equal(10, reference.FindLast(value => (value % 2) == 0));
+
+            Assert.Equal(4, list.FindLast(value => value < 5));
+            Assert.Equal(4, reference.FindLast(value => value < 5));
+        }
+
+        [Fact]
+        public void TestEmptyLastIndexOf()
+        {
+            Assert.Equal(-1, new TreeList<int>().LastIndexOf(0));
+        }
+
+        [Fact]
+        public void TestTrueForAll()
+        {
+            var list = new TreeList<int>();
+            Assert.True(list.TrueForAll(i => false));
+            Assert.Throws<ArgumentNullException>(() => list.TrueForAll(null));
+
+            list.Add(1);
+            Assert.True(list.TrueForAll(i => i > 0));
+            Assert.False(list.TrueForAll(i => i <= 0));
         }
     }
 }

@@ -94,7 +94,7 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
+                    throw new ArgumentOutOfRangeException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
 
                 return _root[index];
             }
@@ -104,7 +104,7 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index >= Count)
-                    throw new ArgumentException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
+                    throw new ArgumentOutOfRangeException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
 
                 _root[index] = value;
                 _version++;
@@ -209,24 +209,24 @@ namespace Tvl.Collections.Trees
             CopyTo(0, array, arrayIndex, Count);
         }
 
-        public void CopyTo(int index, T[] array, int arrayIndex, int count)
+        public void CopyTo(int srcIndex, T[] dest, int dstIndex, int length)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (arrayIndex < 0)
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (Count - index < count)
+            if (dest == null)
+                throw new ArgumentNullException(nameof(dest));
+            if (srcIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(srcIndex));
+            if (dstIndex < 0)
+                throw new ArgumentOutOfRangeException(nameof(dstIndex));
+            if (length < 0)
+                throw new ArgumentOutOfRangeException(nameof(length));
+            if (Count - srcIndex < length)
                 throw new ArgumentException();
-            if (array.Length - arrayIndex < count)
-                throw new ArgumentException("Not enough space is available in the destination array.", nameof(arrayIndex));
+            if (dest.Length - dstIndex < length)
+                throw new ArgumentException("Not enough space is available in the destination array.", string.Empty);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < length; i++)
             {
-                array[arrayIndex + i] = this[index + i];
+                dest[dstIndex + i] = this[srcIndex + i];
             }
         }
 
@@ -308,10 +308,8 @@ namespace Tvl.Collections.Trees
 
         public void InsertRange(int index, IEnumerable<T> collection)
         {
-            int previousCount = Count;
             _root = Node.InsertRange(_root, _branchingFactor, index, collection);
-            if (Count > previousCount)
-                _version++;
+            _version++;
         }
 
         void IList.Insert(int index, object value)
@@ -367,11 +365,8 @@ namespace Tvl.Collections.Trees
         {
             int previousCount = Count;
             _root = Node.RemoveAll(_root, match);
-            int result = previousCount - Count;
-            if (result > 0)
-                _version++;
-
-            return result;
+            _version++;
+            return previousCount - Count;
         }
 
         public int BinarySearch(T item)
@@ -584,7 +579,7 @@ namespace Tvl.Collections.Trees
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (index > Count - count)
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentException();
 
             _root.Sort(new TreeSpan(index, count), comparer ?? Comparer<T>.Default);
         }
