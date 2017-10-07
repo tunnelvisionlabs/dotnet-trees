@@ -443,7 +443,7 @@ namespace Tvl.Collections.Trees
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (startIndex > Count - count)
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException();
 
             return _root.FindIndex(new TreeSpan(startIndex, count), match);
         }

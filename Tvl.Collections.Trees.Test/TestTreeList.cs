@@ -323,6 +323,13 @@ namespace Tvl.Collections.Trees.Test
             }
 
             Assert.Throws<ArgumentNullException>(() => list.FindIndex(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, 0, null));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(-1, i => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, -1, i => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, list.Count + 1, i => true));
+
             for (int i = 0; i < list.Count; i++)
             {
                 Predicate<int> predicate = value => value == i;
@@ -336,6 +343,11 @@ namespace Tvl.Collections.Trees.Test
             Random random = new Random();
             TreeList<int> list = new TreeList<int>(branchingFactor: 4);
             List<int> reference = new List<int>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(0, 0, i => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reference.FindLastIndex(0, 0, i => true));
+            Assert.Equal(-1, list.FindLastIndex(-1, 0, i => true));
+            Assert.Equal(-1, reference.FindLastIndex(-1, 0, i => true));
+
             for (int i = 0; i < 2 * 4 * 4; i++)
             {
                 int index = random.Next(list.Count + 1);
@@ -344,6 +356,13 @@ namespace Tvl.Collections.Trees.Test
             }
 
             Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, 0, null));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count, i => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, -1, i => true));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, list.Count + 1, i => true));
+
             for (int i = 0; i < list.Count; i++)
             {
                 Predicate<int> predicate = value => value == i;
@@ -666,6 +685,9 @@ namespace Tvl.Collections.Trees.Test
             var list = new TreeList<int>(4, Enumerable.Range(1, 10));
             var reference = new List<int>(Enumerable.Range(1, 10));
             Assert.Throws<ArgumentNullException>(() => list.FindLast(null));
+
+            Assert.Equal(0, list.FindLast(i => i < 0));
+            Assert.Equal(0, reference.FindLast(i => i < 0));
 
             Assert.Equal(10, list.FindLast(value => (value % 2) == 0));
             Assert.Equal(10, reference.FindLast(value => (value % 2) == 0));
