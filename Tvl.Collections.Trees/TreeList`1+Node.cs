@@ -122,7 +122,7 @@ namespace Tvl.Collections.Trees
                 if (count < 0)
                     throw new ArgumentOutOfRangeException(nameof(count));
                 if (index > root.Count - count)
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentException();
 
                 if (count == root.Count)
                     return Empty;
