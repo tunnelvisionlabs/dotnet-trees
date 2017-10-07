@@ -494,11 +494,6 @@ namespace Tvl.Collections.Trees
 
         public int LastIndexOf(T item)
         {
-            if (Count == 0)
-            {
-                return -1;
-            }
-
             return LastIndexOf(item, Count - 1, Count);
         }
 
@@ -509,14 +504,19 @@ namespace Tvl.Collections.Trees
 
         public int LastIndexOf(T item, int index, int count)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            if (count < 0)
+            if (Count == 0)
+            {
+                if (index != -1)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            else
+            {
+                if ((uint)index >= (uint)Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (count < 0 || index - count + 1 < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            if (count - 1 > index)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (index > Count)
-                throw new ArgumentOutOfRangeException();
 
             return _root.LastIndexOf(item, TreeSpan.FromReverseSpan(index, count));
         }

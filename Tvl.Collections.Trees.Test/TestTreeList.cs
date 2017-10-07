@@ -307,6 +307,31 @@ namespace Tvl.Collections.Trees.Test
                 // Test above current value
                 Assert.Equal(reference.BinarySearch(reference[i] + 1), list.BinarySearch(reference[i] + 1));
             }
+
+            TreeList<int> empty = new TreeList<int>();
+            Assert.Equal(~0, empty.BinarySearch(0));
+        }
+
+        [Fact]
+        public void TestListIndexOfInvalidOperations()
+        {
+            TreeList<int> empty = new TreeList<int>();
+            Assert.Equal(-1, empty.IndexOf(0));
+            Assert.Equal(-1, empty.IndexOf(0, 0));
+            Assert.Equal(-1, empty.IndexOf(0, 0, 0));
+
+            Assert.Equal(-1, empty.LastIndexOf(0));
+            Assert.Equal(-1, empty.LastIndexOf(0, -1));
+            Assert.Equal(-1, empty.LastIndexOf(0, -1, 0));
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, -1, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, -1, 1));
+
+            TreeList<int> single = new TreeList<int>(Enumerable.Range(1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 0, 2));
         }
 
         [Fact]
@@ -338,6 +363,9 @@ namespace Tvl.Collections.Trees.Test
                 int firstIndex = list.FindIndex(predicate);
                 Assert.Equal(reference.FindIndex(firstIndex + 1, predicate), list.FindIndex(firstIndex + 1, predicate));
             }
+
+            TreeList<int> empty = new TreeList<int>();
+            Assert.Equal(-1, empty.FindIndex(i => true));
         }
 
         [Fact]
@@ -399,6 +427,11 @@ namespace Tvl.Collections.Trees.Test
             stringList.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
             Assert.Equal(referenceStringList, stringList);
+
+            TreeList<int> empty = new TreeList<int>();
+            Assert.Empty(empty);
+            TreeList<string> stringEmpty = empty.ConvertAll(value => value.ToString());
+            Assert.Empty(stringEmpty);
         }
 
         [Fact]
@@ -425,6 +458,11 @@ namespace Tvl.Collections.Trees.Test
             list.TrimExcess();
             list.Validate(ValidationRules.RequirePacked);
             Assert.Equal(reference, list);
+
+            TreeList<int> empty = new TreeList<int>();
+            empty.Validate(ValidationRules.RequirePacked);
+            empty.TrimExcess();
+            empty.Validate(ValidationRules.RequirePacked);
         }
 
         [Fact]
@@ -448,6 +486,11 @@ namespace Tvl.Collections.Trees.Test
             list.Sort();
             reference.Sort();
             Assert.Equal(reference, list);
+
+            TreeList<int> empty = new TreeList<int>();
+            empty.Sort();
+            Assert.Empty(empty);
+            empty.Validate(ValidationRules.RequirePacked);
         }
 
         [Fact]
@@ -703,12 +746,6 @@ namespace Tvl.Collections.Trees.Test
 
             Assert.Equal(4, list.FindLast(value => value < 5));
             Assert.Equal(4, reference.FindLast(value => value < 5));
-        }
-
-        [Fact]
-        public void TestEmptyLastIndexOf()
-        {
-            Assert.Equal(-1, new TreeList<int>().LastIndexOf(0));
         }
 
         [Fact]

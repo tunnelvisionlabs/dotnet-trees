@@ -6,6 +6,7 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class TreeList<T>
     {
@@ -226,6 +227,7 @@ namespace Tvl.Collections.Trees
 
                 internal override Node FirstChild => null;
 
+                [ExcludeFromCodeCoverage]
                 internal override T this[int index]
                 {
                     get
@@ -239,6 +241,7 @@ namespace Tvl.Collections.Trees
                     }
                 }
 
+                [ExcludeFromCodeCoverage]
                 internal override (LeafNode leafNode, int offset) GetLeafNode(int index)
                 {
                     throw ExceptionUtilities.Unreachable;
@@ -266,16 +269,19 @@ namespace Tvl.Collections.Trees
                     return node;
                 }
 
+                [ExcludeFromCodeCoverage]
                 internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
                 {
                     throw ExceptionUtilities.Unreachable;
                 }
 
+                [ExcludeFromCodeCoverage]
                 internal override bool RemoveLast()
                 {
                     throw ExceptionUtilities.Unreachable;
                 }
 
+                [ExcludeFromCodeCoverage]
                 internal override bool RemoveAt(int index)
                 {
                     throw ExceptionUtilities.Unreachable;
