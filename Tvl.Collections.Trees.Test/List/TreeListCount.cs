@@ -15,9 +15,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: Calling count property of List,T is Value type.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
 
@@ -28,21 +25,12 @@ namespace Tvl.Collections.Trees.Test.List
                 myList.Add(element);
             }
 
-            if (myList.Count != count)
-            {
-                userMessage = " calling count property should return " + count;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(count, myList.Count);
         }
 
         [Fact(DisplayName = "PosTest2: Calling count property of List,T is reference type.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             string element = string.Empty;
@@ -52,13 +40,7 @@ namespace Tvl.Collections.Trees.Test.List
                 myList.Add(element);
             }
 
-            if (myList.Count != count)
-            {
-                userMessage = " calling count property should return " + count;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(count, myList.Count);
         }
     }
 }

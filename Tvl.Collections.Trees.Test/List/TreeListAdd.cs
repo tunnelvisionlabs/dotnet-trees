@@ -13,11 +13,8 @@ namespace Tvl.Collections.Trees.Test.List
     public class TreeListAdd
     {
         [Fact(DisplayName = "PosTest1: The item to be added is type of byte")]
-        public bool PosTest1()
+        public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             byte[] byteObject = new byte[1000];
             Generator.GetBytes(-55, byteObject);
             TreeList<byte> listObject = new TreeList<byte>();
@@ -28,74 +25,36 @@ namespace Tvl.Collections.Trees.Test.List
 
             for (int i = 0; i < 1000; i++)
             {
-                if (listObject[i] != byteObject[i])
-                {
-                    userMessage = "The result is not the value as expected,i is: " + i;
-                    retVal = false;
-                }
+                Assert.Equal(byteObject[i], listObject[i]);
             }
-
-            return retVal;
         }
 
         [Fact(DisplayName = "PosTest2: The item to be added is type of string")]
-        public bool PosTest2()
+        public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "Hello" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string str1 = "World";
             listObject.Add(str1);
-            if (listObject.Count != 2)
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            if (listObject[1] != "World")
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            return retVal;
+            Assert.Equal(2, listObject.Count);
+            Assert.Equal("World", listObject[1]);
         }
 
         [Fact(DisplayName = "PosTest3: The item to be added is a custom type")]
-        public bool PosTest3()
+        public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myClass = new MyClass();
             TreeList<MyClass> listObject = new TreeList<MyClass>();
             listObject.Add(myClass);
-            if (listObject[0] != myClass)
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            return retVal;
+            Assert.Equal(myClass, listObject[0]);
         }
 
         [Fact(DisplayName = "PosTest4: Add null object to the list")]
-        public bool PosTest4()
+        public void PosTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> listObject = new TreeList<string>();
             listObject.Add(null);
-            if (listObject[0] != null)
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            return retVal;
+            Assert.Null(listObject[0]);
         }
 
         public class MyClass

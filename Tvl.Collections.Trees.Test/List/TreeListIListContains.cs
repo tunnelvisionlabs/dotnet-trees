@@ -16,9 +16,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: Calling Contains method of IList,T is Value type.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
             int[] expectValue = new int[10];
@@ -31,21 +28,12 @@ namespace Tvl.Collections.Trees.Test.List
                 expectValue[i - 1] = (int)element;
             }
 
-            if (!myIList.Contains(element))
-            {
-                userMessage = " calling Contains method should return true.";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.True(myIList.Contains(element));
         }
 
         [Fact(DisplayName = "PosTest2: Calling Contains method of IList,T is reference type.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             string[] expectValue = new string[10];
@@ -58,13 +46,7 @@ namespace Tvl.Collections.Trees.Test.List
                 expectValue[i - 1] = element.ToString();
             }
 
-            if (!myIList.Contains(element))
-            {
-                userMessage = " calling Contains method should return true.";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.True(myIList.Contains(element));
         }
     }
 }

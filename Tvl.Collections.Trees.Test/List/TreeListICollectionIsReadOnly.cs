@@ -17,37 +17,19 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: In the default implementation of List, this property IsReadOnly always returns false.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             bool expectValue = false;
             bool returnValue = ((ICollection<int>)myList).IsReadOnly;
-            if (expectValue != returnValue)
-            {
-                userMessage = " Calling IsReadOnly property should return false";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(expectValue, returnValue);
         }
 
         [Fact(DisplayName = "PosTest2: In the user define implementation of List, this property IsReadOnly may return true.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyTestListICollection<int> myList = new MyTestListICollection<int>();
             bool expectValue = true;
             bool returnValue = ((ICollection<int>)myList).IsReadOnly;
-            if (expectValue != returnValue)
-            {
-                userMessage = " Calling IsReadOnly property should return true";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(expectValue, returnValue);
         }
 
         public class MyTestListICollection<T> : TreeList<T>, ICollection<T>

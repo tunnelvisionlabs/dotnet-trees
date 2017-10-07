@@ -15,9 +15,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: Calling ToArray method of List,T is Value type.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
 
@@ -32,22 +29,13 @@ namespace Tvl.Collections.Trees.Test.List
             for (int j = 0; j < myList.Count; j++)
             {
                 int current = myList[j];
-                if (actualArray[j] != current)
-                {
-                    userMessage = " current value should be " + actualArray[j];
-                    retVal = false;
-                }
+                Assert.Equal(actualArray[j], current);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest2: Calling ToArray method of List,T is reference type.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             string element = string.Empty;
@@ -61,14 +49,8 @@ namespace Tvl.Collections.Trees.Test.List
             for (int j = 0; j < myList.Count; j++)
             {
                 string current = myList[j];
-                if (actualArray[j] != current)
-                {
-                    userMessage = " current value should be " + actualArray[j];
-                    retVal = false;
-                }
+                Assert.Equal(actualArray[j], current);
             }
-
-            Assert.True(retVal, userMessage);
         }
     }
 }

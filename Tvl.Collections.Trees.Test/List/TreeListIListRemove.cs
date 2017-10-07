@@ -16,9 +16,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: Calling Remove method of IList,T is Value type.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
             IList myIList = myList;
@@ -34,21 +31,12 @@ namespace Tvl.Collections.Trees.Test.List
                 myIList.Remove(myIList[0]);
             }
 
-            if (myIList.Count != 0)
-            {
-                userMessage = "calling Remove method can not remove the specified item.";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Empty(myList);
         }
 
         [Fact(DisplayName = "PosTest2: Calling Remove method of IList,T is reference type.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             object element = null;
@@ -64,13 +52,7 @@ namespace Tvl.Collections.Trees.Test.List
                 myIList.Remove(myIList[0]);
             }
 
-            if (myIList.Count != 0)
-            {
-                userMessage = "calling Remove method can not remove the specified item.";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Empty(myIList);
         }
     }
 }

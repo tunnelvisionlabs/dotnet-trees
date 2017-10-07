@@ -16,9 +16,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: The generic type is int")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             int startIdx = GetInt32(0, 9);       // The starting index of the section to make a shallow copy
@@ -27,22 +24,13 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<int> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
             {
-                if (listResult[i] != iArray[i + startIdx])
-                {
-                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + iArray[i + startIdx];
-                    retVal = false;
-                }
+                Assert.Equal(iArray[i + startIdx], listResult[i]);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest2: The generic type is type of string")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             int startIdx = GetInt32(0, 4);      // The starting index of the section to make a shallow copy
@@ -51,22 +39,13 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<string> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
             {
-                if (listResult[i] != strArray[i + startIdx])
-                {
-                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + strArray[i + startIdx];
-                    retVal = false;
-                }
+                Assert.Equal(strArray[i + startIdx], listResult[i]);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest3: The generic type is a custom type")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myclass1 = new MyClass();
             MyClass myclass2 = new MyClass();
             MyClass myclass3 = new MyClass();
@@ -78,116 +57,42 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<MyClass> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
             {
-                if (listResult[i] != mc[i + startIdx])
-                {
-                    userMessage = "The result is not the value as expected,result is: " + listResult[i] + " expected value is: " + mc[i + startIdx];
-                    retVal = false;
-                }
+                Assert.Equal(mc[i + startIdx], listResult[i]);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest4: Copy no elements to the new list")]
         public void PosTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             TreeList<int> listResult = listObject.GetRange(5, 0);
-            if (listResult == null)
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            if (listResult.Count != 0)
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.NotNull(listResult);
+            Assert.Empty(listResult);
         }
 
         [Fact(DisplayName = "NegTest1: The index is a negative number")]
         public void NegTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                TreeList<int> listResult = listObject.GetRange(-1, 4);
-                userMessage = "The ArgumentOutOfRangeException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            Assert.Throws<ArgumentOutOfRangeException>(() => listObject.GetRange(-1, 4));
         }
 
         [Fact(DisplayName = "NegTest2: The count is a negative number")]
         public void NegTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                TreeList<int> listResult = listObject.GetRange(6, -4);
-                userMessage = "The ArgumentOutOfRangeException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            Assert.Throws<ArgumentOutOfRangeException>(() => listObject.GetRange(6, -4));
         }
 
         [Fact(DisplayName = "NegTest3: index and count do not denote a valid range of elements in the List")]
         public void NegTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                char[] iArray = { '#', ' ', '&', 'c', '1', '_', 'A' };
-                TreeList<char> listObject = new TreeList<char>(iArray);
-                TreeList<char> listResult = listObject.GetRange(4, 4);
-                userMessage = "The ArgumentException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            char[] iArray = { '#', ' ', '&', 'c', '1', '_', 'A' };
+            TreeList<char> listObject = new TreeList<char>(iArray);
+            Assert.Throws<ArgumentException>(() => listObject.GetRange(4, 4));
         }
 
         private int GetInt32(int minValue, int maxValue)

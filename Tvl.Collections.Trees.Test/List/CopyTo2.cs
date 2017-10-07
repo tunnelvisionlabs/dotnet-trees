@@ -14,11 +14,8 @@ namespace Tvl.Collections.Trees.Test.List
     public class CopyTo2
     {
         [Fact(DisplayName = "PosTest1: The list is type of int and get a random index")]
-        public bool PosTest1()
+        public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             int[] result = new int[100];
@@ -26,41 +23,25 @@ namespace Tvl.Collections.Trees.Test.List
             listObject.CopyTo(result, t);
             for (int i = 0; i < 10; i++)
             {
-                if (listObject[i] != result[i + t])
-                {
-                    userMessage = "The result is not the value as expected,i is: " + i;
-                    retVal = false;
-                }
+                Assert.Equal(listObject[i], result[i + t]);
             }
-
-            return retVal;
         }
 
         [Fact(DisplayName = "PosTest2: The list is type of string and copy the date to the array whose beginning index is zero")]
-        public bool PosTest2()
+        public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "Tom", "Jack", "Mike" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string[] result = new string[3];
             listObject.CopyTo(result, 0);
-            if ((result[0] != "Tom") || (result[1] != "Jack") || (result[2] != "Mike"))
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            return retVal;
+            Assert.Equal("Tom", result[0]);
+            Assert.Equal("Jack", result[1]);
+            Assert.Equal("Mike", result[2]);
         }
 
         [Fact(DisplayName = "PosTest3: The generic type is a custom type")]
-        public bool PosTest3()
+        public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myclass1 = new MyClass();
             MyClass myclass2 = new MyClass();
             MyClass myclass3 = new MyClass();
@@ -70,168 +51,65 @@ namespace Tvl.Collections.Trees.Test.List
             listObject.Add(myclass3);
             MyClass[] mc = new MyClass[3];
             listObject.CopyTo(mc, 0);
-            if ((mc[0] != myclass1) || (mc[1] != myclass2) || (mc[2] != myclass3))
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            return retVal;
+            Assert.Equal(myclass1, mc[0]);
+            Assert.Equal(myclass2, mc[1]);
+            Assert.Equal(myclass3, mc[2]);
         }
 
         [Fact(DisplayName = "PosTest4: Copy an empty list to the end of an array")]
-        public bool PosTest4()
+        public void PosTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<MyClass> listObject = new TreeList<MyClass>();
             MyClass[] mc = new MyClass[3];
             listObject.CopyTo(mc, 2);
             for (int i = 0; i < 3; i++)
             {
-                if (mc[i] != null)
-                {
-                    userMessage = "The result is not the value as expected";
-                    retVal = false;
-                }
+                Assert.Null(mc[i]);
             }
-
-            return retVal;
         }
 
         [Fact(DisplayName = "NegTest1: The array is a null reference")]
-        public bool NegTest1()
+        public void NegTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                listObject.CopyTo(null, 0);
-                userMessage = "The ArgumentNullException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentNullException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            return retVal;
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            Assert.Throws<ArgumentNullException>(() => listObject.CopyTo(null, 0));
         }
 
         [Fact(DisplayName = "NegTest2: The number of elements in the source List is greater than the number of elements that the destination array can contain")]
-        public bool NegTest2()
+        public void NegTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[1];
-                listObject.CopyTo(result, 0);
-                userMessage = "The ArgumentException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            return retVal;
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[1];
+            Assert.Throws<ArgumentException>(() => listObject.CopyTo(result, 0));
         }
 
         [Fact(DisplayName = "NegTest3: arrayIndex is equal to the length of array")]
-        public bool NegTest3()
+        public void NegTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[20];
-                listObject.CopyTo(result, 20);
-                userMessage = "The ArgumentException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            return retVal;
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[20];
+            Assert.Throws<ArgumentException>(() => listObject.CopyTo(result, 20));
         }
 
         [Fact(DisplayName = "NegTest4: arrayIndex is greater than the length of array")]
-        public bool NegTest4()
+        public void NegTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[20];
-                listObject.CopyTo(result, 300);
-                userMessage = "The ArgumentException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            return retVal;
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[20];
+            Assert.Throws<ArgumentException>(() => listObject.CopyTo(result, 300));
         }
 
         [Fact(DisplayName = "NegTest5: arrayIndex is less than 0")]
-        public bool NegTest5()
+        public void NegTest5()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] result = new int[20];
-                listObject.CopyTo(result, -1);
-                userMessage = "The ArgumentOutOfRangeException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            return retVal;
+            int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] result = new int[20];
+            Assert.Throws<ArgumentOutOfRangeException>(() => listObject.CopyTo(result, -1));
         }
 
         private int GetInt32(int minValue, int maxValue)

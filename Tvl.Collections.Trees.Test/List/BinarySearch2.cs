@@ -16,69 +16,36 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: The generic type is int and using custom IComparer")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             listObject.Sort();
             IntClass intClass = new IntClass();
             int i = GetInt32(0, 10);
-            int result = listObject.BinarySearch(i, intClass);
-            if (result != i)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(i, listObject.BinarySearch(i, intClass));
         }
 
         [Fact(DisplayName = "PosTest2: The generic type is a referece type of string and using the custom IComparer")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             StrClass strClass = new StrClass();
             listObject.Sort(strClass);
-            int result = listObject.BinarySearch("egg", strClass);
-            if (result != -2)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(-2, listObject.BinarySearch("egg", strClass));
         }
 
         [Fact(DisplayName = "PosTest3: There are many elements with the same value")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "key", "keys", "key", "key", "sky", "key" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             StrClass strClass = new StrClass();
-            int result = listObject.BinarySearch("key", strClass);
-            if (result < 0)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.True(listObject.BinarySearch("key", strClass) >= 0);
         }
 
         [Fact(DisplayName = "PosTest4: The generic type is custom type")]
         public void PosTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myclass1 = new MyClass(10);
             MyClass myclass2 = new MyClass(20);
             MyClass myclass3 = new MyClass(30);
@@ -86,42 +53,22 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
             MyClassIC myclassIC = new MyClassIC();
             listObject.Sort(myclassIC);
-            int result = listObject.BinarySearch(new MyClass(10), myclassIC);
-            if (result != 2)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(2, listObject.BinarySearch(new MyClass(10), myclassIC));
         }
 
         [Fact(DisplayName = "PosTest5: The item to be search is a null reference")]
         public void PosTest5()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             listObject.Sort();
             StrClass strClass = new StrClass();
-            int result = listObject.BinarySearch(null, strClass);
-            if (result != -1)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(-1, listObject.BinarySearch(null, strClass));
         }
 
         [Fact(DisplayName = "PosTest6: The IComparer is a null reference")]
         public void PosTest6()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myclass1 = new MyClass(10);
             MyClass myclass2 = new MyClass(20);
             MyClass myclass3 = new MyClass(30);
@@ -129,40 +76,15 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
             MyClassIC myclassIC = new MyClassIC();
             listObject.Sort();
-            int result = listObject.BinarySearch(new MyClass(10), null);
-            if (result != 0)
-            {
-                userMessage = "The result is not the value as expected,The result is: " + result;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(0, listObject.BinarySearch(new MyClass(10), null));
         }
 
         [Fact(DisplayName = "NegTest1: IComparable generic interface was not implemented")]
         public void NegTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                TestClass[] tc = new TestClass[2] { new TestClass(), new TestClass() };
-                TreeList<TestClass> listObject = new TreeList<TestClass>(tc);
-                int result = listObject.BinarySearch(new TestClass(), null);
-                userMessage = "The InvalidOperationException was not thrown as expected";
-                retVal = false;
-            }
-            catch (InvalidOperationException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            TestClass[] tc = new TestClass[2] { new TestClass(), new TestClass() };
+            TreeList<TestClass> listObject = new TreeList<TestClass>(tc);
+            Assert.Throws<InvalidOperationException>(() => listObject.BinarySearch(new TestClass(), null));
         }
 
         private int GetInt32(int minValue, int maxValue)

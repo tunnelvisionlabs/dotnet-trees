@@ -16,49 +16,28 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: The generic type is int")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             MyClass myClass = new MyClass();
             Action<int> action = new Action<int>(myClass.SumCalc);
             listObject.ForEach(action);
-            if (myClass.Sum != 40)
-            {
-                userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(40, myClass.Sum);
         }
 
         [Fact(DisplayName = "PosTest2: The generic type is type of string")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "Hello", "wor", "l", "d" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             MyClass myClass = new MyClass();
             Action<string> action = new Action<string>(myClass.JoinStr);
             listObject.ForEach(action);
-            if (myClass.Result != "Helloworld")
-            {
-                userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal("Helloworld", myClass.Result);
         }
 
         [Fact(DisplayName = "PosTest3: The generic type is custom type")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass2 myclass1 = new MyClass2('h');
             MyClass2 myclass2 = new MyClass2('=');
             MyClass2 myclass3 = new MyClass2('&');
@@ -69,41 +48,17 @@ namespace Tvl.Collections.Trees.Test.List
             listObject.ForEach(action);
             for (int i = 0; i < 3; i++)
             {
-                if (mc[i].Value != null)
-                {
-                    userMessage = "The result is not the value as expected,sum is: " + myClass.Sum;
-                    retVal = false;
-                }
+                Assert.Null(mc[i].Value);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "NegTest1: The action is a null reference")]
         public void NegTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                Action<int> action = null;
-                listObject.ForEach(action);
-                userMessage = "The ArgumentNullException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentNullException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            Action<int> action = null;
+            Assert.Throws<ArgumentNullException>(() => listObject.ForEach(action));
         }
 
         public class MyClass

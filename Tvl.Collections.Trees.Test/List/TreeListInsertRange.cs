@@ -16,56 +16,31 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: The generic type is int")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             int[] iArray = { 0, 1, 2, 3, 8, 9, 10, 11, 12, 13, 14 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             int[] insert = { 4, 5, 6, 7 };
             listObject.InsertRange(4, insert);
             for (int i = 0; i < 15; i++)
             {
-                if (listObject[i] != i)
-                {
-                    userMessage = "The result is not the value as expected,listObject is: " + listObject[i];
-                    retVal = false;
-                }
+                Assert.Equal(i, listObject[i]);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest2: Insert the collection to the beginning of the list")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "apple", "dog", "banana", "chocolate", "dog", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string[] insert = { "Hello", "World" };
             listObject.InsertRange(0, insert);
-            if (listObject.Count != 8)
-            {
-                userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
-                retVal = false;
-            }
-
-            if ((listObject[0] != "Hello") || (listObject[1] != "World"))
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(8, listObject.Count);
+            Assert.Equal("Hello", listObject[0]);
+            Assert.Equal("World", listObject[1]);
         }
 
         [Fact(DisplayName = "PosTest3: Insert custom class array to the end of the list")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             MyClass myclass1 = new MyClass();
             MyClass myclass2 = new MyClass();
             MyClass myclass3 = new MyClass();
@@ -79,131 +54,54 @@ namespace Tvl.Collections.Trees.Test.List
             {
                 if (i < 3)
                 {
-                    if (listObject[i] != mc[i])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    Assert.Equal(mc[i], listObject[i]);
                 }
                 else
                 {
-                    if (listObject[i] != insert[i - 3])
-                    {
-                        userMessage = "The result is not the value as expected,i is: " + i;
-                        retVal = false;
-                    }
+                    Assert.Equal(insert[i - 3], listObject[i]);
                 }
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest4: The collection has null reference element")]
         public void PosTest4()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             string[] strArray = { "apple", "dog", "banana", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string[] insert = new string[2] { null, null };
             int index = GetInt32(0, 4);
             listObject.InsertRange(index, insert);
-            if (listObject.Count != 6)
-            {
-                userMessage = "The result is not the value as expected,Count is: " + listObject.Count;
-                retVal = false;
-            }
-
-            if ((listObject[index] != null) || (listObject[index + 1] != null))
-            {
-                userMessage = "The result is not the value as expected";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.Equal(6, listObject.Count);
+            Assert.Null(listObject[index]);
+            Assert.Null(listObject[index + 1]);
         }
 
         [Fact(DisplayName = "NegTest1: The collection is a null reference")]
         public void NegTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                string[] strArray = { "apple", "dog", "banana", "food" };
-                TreeList<string> listObject = new TreeList<string>(strArray);
-                string[] insert = null;
-                int index = GetInt32(0, 4);
-                listObject.InsertRange(index, insert);
-                userMessage = "The ArgumentNullException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentNullException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            string[] strArray = { "apple", "dog", "banana", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            string[] insert = null;
+            int index = GetInt32(0, 4);
+            Assert.Throws<ArgumentNullException>(() => listObject.InsertRange(index, insert));
         }
 
         [Fact(DisplayName = "NegTest2: The index is negative")]
         public void NegTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] insert = { -0, 90, 100 };
-                listObject.InsertRange(-1, insert);
-                userMessage = "The ArgumentOutOfRangeException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] insert = { -0, 90, 100 };
+            Assert.Throws<ArgumentOutOfRangeException>(() => listObject.InsertRange(-1, insert));
         }
 
         [Fact(DisplayName = "NegTest3: The index is greater than the count of the list")]
         public void NegTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
-            try
-            {
-                int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
-                TreeList<int> listObject = new TreeList<int>(iArray);
-                int[] insert = { -0, 90, 100 };
-                listObject.InsertRange(11, insert);
-                userMessage = "The ArgumentOutOfRangeException was not thrown as expected";
-                retVal = false;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-            }
-            catch (Exception e)
-            {
-                userMessage = "Unexpected exception: " + e;
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
+            TreeList<int> listObject = new TreeList<int>(iArray);
+            int[] insert = { -0, 90, 100 };
+            Assert.Throws<ArgumentOutOfRangeException>(() => listObject.InsertRange(11, insert));
         }
 
         private int GetInt32(int minValue, int maxValue)

@@ -16,9 +16,6 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: Calling IndexOf method of IList,T is Value type.")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
             int[] expectValue = new int[10];
@@ -34,22 +31,13 @@ namespace Tvl.Collections.Trees.Test.List
             for (int j = 0; j < myIList.Count; j++)
             {
                 int current = myIList.IndexOf(myIList[j]);
-                if (current == -1)
-                {
-                    userMessage = "calling IndexOf method return an error number.";
-                    retVal = false;
-                }
+                Assert.NotEqual(-1, current);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest2: Calling IndexOf method of IList,T is reference type.")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             string[] expectValue = new string[10];
@@ -65,22 +53,13 @@ namespace Tvl.Collections.Trees.Test.List
             for (int j = 0; j < myIList.Count; j++)
             {
                 int current = myIList.IndexOf(myIList[j]);
-                if (current == -1)
-                {
-                    userMessage = "calling IndexOf method return an error number.";
-                    retVal = false;
-                }
+                Assert.NotEqual(-1, current);
             }
-
-            Assert.True(retVal, userMessage);
         }
 
         [Fact(DisplayName = "PosTest3: Calling IndexOf method of IList,T is reference type and the item is not exist in the List.")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
             string[] expectValue = new string[10];
@@ -96,14 +75,8 @@ namespace Tvl.Collections.Trees.Test.List
             for (int j = 0; j < myIList.Count; j++)
             {
                 int current = myIList.IndexOf(null);
-                if (current != -1)
-                {
-                    userMessage = "calling IndexOf method return an error number.";
-                    retVal = false;
-                }
+                Assert.Equal(-1, current);
             }
-
-            Assert.True(retVal, userMessage);
         }
     }
 }

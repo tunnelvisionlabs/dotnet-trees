@@ -15,49 +15,22 @@ namespace Tvl.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest1: The genaric type is a value type")]
         public void PosTest1()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<int> listObject = new TreeList<int>();
-            if (listObject == null)
-            {
-                userMessage = "The constructor does not work well";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.NotNull(listObject);
         }
 
         [Fact(DisplayName = "PosTest2: The generic type is a reference type")]
         public void PosTest2()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<string> listObject = new TreeList<string>();
-            if (listObject == null)
-            {
-                userMessage = "The constructor does not work well";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.NotNull(listObject);
         }
 
         [Fact(DisplayName = "PosTest3: The generic type is a custom type")]
         public void PosTest3()
         {
-            bool retVal = true;
-            string userMessage = string.Empty;
-
             TreeList<MyClass> listObject = new TreeList<MyClass>();
-            if (listObject == null)
-            {
-                userMessage = "The constructor does not work well";
-                retVal = false;
-            }
-
-            Assert.True(retVal, userMessage);
+            Assert.NotNull(listObject);
         }
 
         public class MyClass
