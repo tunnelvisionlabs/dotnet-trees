@@ -1,3 +1,60 @@
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Add(TKey key, TValue value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> pairs) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Add(System.Collections.Generic.KeyValuePair<TKey, TValue> item) -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Add(TKey key, TValue value) -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Builder() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Contains(System.Collections.Generic.KeyValuePair<TKey, TValue> item) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.ContainsKey(TKey key) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.ContainsValue(TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.GetValueOrDefault(TKey key) -> TValue
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.GetValueOrDefault(TKey key, TValue defaultValue) -> TValue
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.KeyComparer.get -> System.Collections.Generic.IComparer<TKey>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Keys.get -> System.Collections.Generic.IEnumerable<TKey>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Remove(System.Collections.Generic.KeyValuePair<TKey, TValue> item) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Remove(TKey key) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.RemoveRange(System.Collections.Generic.IEnumerable<TKey> keys) -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.ToImmutable() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.TryGetKey(TKey equalKey, out TKey actualKey) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.TryGetValue(TKey key, out TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.ValueComparer.get -> System.Collections.Generic.IEqualityComparer<TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.Values.get -> System.Collections.Generic.IEnumerable<TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.this[TKey key].get -> TValue
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder.this[TKey key].set -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Clear() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Contains(System.Collections.Generic.KeyValuePair<TKey, TValue> pair) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Enumerator
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.ImmutableSortedTreeDictionary() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.KeyComparer.get -> System.Collections.Generic.IComparer<TKey>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Keys.get -> System.Collections.Generic.IEnumerable<TKey>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Remove(TKey key) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.RemoveRange(System.Collections.Generic.IEnumerable<TKey> keys) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.SetItem(TKey key, TValue value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.SetItems(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.ToBuilder() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.TryGetKey(TKey equalKey, out TKey actualKey) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.ValueComparer.get -> System.Collections.Generic.IEqualityComparer<TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Values.get -> System.Collections.Generic.IEnumerable<TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.WithComparers(System.Collections.Generic.IComparer<TKey> keyComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.WithComparers(System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.this[TKey key].get -> TValue
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Add(T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
@@ -242,6 +299,21 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Peek() -> T
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Pop() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Pop(out T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Push(T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.Create<TKey, TValue>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.Create<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.Create<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateBuilder<TKey, TValue>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateBuilder<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateBuilder<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Builder
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateRange<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateRange<TKey, TValue>(System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.CreateRange<TKey, TValue>(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items, System.Collections.Generic.IComparer<TKey> keyComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TKey, TValue>(this System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items, System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TSource, TKey, TValue>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TKey> keySelector, System.Func<TSource, TValue> elementSelector) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TSource, TKey, TValue>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TKey> keySelector, System.Func<TSource, TValue> elementSelector, System.Collections.Generic.IComparer<TKey> keyComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary.ToImmutableSortedTreeDictionary<TSource, TKey, TValue>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TKey> keySelector, System.Func<TSource, TValue> elementSelector, System.Collections.Generic.IComparer<TKey> keyComparer, System.Collections.Generic.IEqualityComparer<TValue> valueComparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet.Create<T>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet.Create<T>(System.Collections.Generic.IComparer<T> comparer) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet.Create<T>(System.Collections.Generic.IComparer<T> comparer, T item) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
@@ -282,6 +354,7 @@ static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>(T item) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>(params T[] items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Empty.get -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
+static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeDictionary<TKey, TValue>
 static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>
 static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>
