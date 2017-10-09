@@ -20,13 +20,17 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public bool IsEmpty => throw null;
 
-        public IEnumerable<TKey> Keys => throw null;
+        public KeyCollection Keys => throw null;
 
-        public IEnumerable<TValue> Values => throw null;
+        public ValueCollection Values => throw null;
 
         ICollection<TKey> IDictionary<TKey, TValue>.Keys => throw null;
 
         ICollection<TValue> IDictionary<TKey, TValue>.Values => throw null;
+
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => throw null;
+
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => throw null;
 
         bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => throw null;
 
