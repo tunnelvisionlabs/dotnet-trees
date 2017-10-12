@@ -265,6 +265,12 @@ namespace Tvl.Collections.Trees.Test
             int[] expected = { Value };
             int[] actual = list.ToArray();
             Assert.Equal(expected, actual);
+
+            List<int> reference = new List<int>(list);
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(-1, item: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(-1, item: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(list.Count + 1, item: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(list.Count + 1, item: 0));
         }
 
         [Fact]

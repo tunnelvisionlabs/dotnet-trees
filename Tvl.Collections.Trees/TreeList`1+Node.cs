@@ -47,7 +47,7 @@ namespace Tvl.Collections.Trees
                 if (index < 0)
                     throw new ArgumentOutOfRangeException(nameof(index));
                 if (index > root.Count)
-                    throw new ArgumentException();
+                    throw new ArgumentOutOfRangeException(nameof(index));
 
                 Node splitNode = root.Insert(branchingFactor, index == root.Count, index, item);
                 if (splitNode == null)
