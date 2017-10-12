@@ -309,9 +309,15 @@ namespace Tvl.Collections.Trees.Test
             list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
 
-            // Add items to the middle (no longer packed)
+            // Add items to the middle
             list.InsertRange(list.Count / 2, Enumerable.Range(0, 20));
             reference.InsertRange(reference.Count / 2, Enumerable.Range(0, 20));
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+
+            // Add a small range near the beginning
+            list.InsertRange(1, Enumerable.Range(0, 1));
+            reference.InsertRange(1, Enumerable.Range(0, 1));
             list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
         }

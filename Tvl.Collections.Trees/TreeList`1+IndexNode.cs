@@ -197,7 +197,11 @@ namespace Tvl.Collections.Trees
                             // resulted in insertions prior to the last node)
                             if (pageIndex < insertionNode._nodeCount)
                             {
-                                // The split does not change the insertion node.
+                                // The split does not change the insertion node. Since insertion indexes increase, it
+                                // may be impossible for a single InsertRange operation to hit the case where the
+                                // insertion node doesn't change twice (i.e. this block could be unreachable, but not
+                                // yet proven). The equivalent case in LeafNode.InsertRange is hit by the existing
+                                // tests.
                                 pageIndex++;
                             }
                             else
