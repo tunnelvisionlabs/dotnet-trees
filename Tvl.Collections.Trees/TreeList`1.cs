@@ -592,7 +592,7 @@ namespace Tvl.Collections.Trees
             if (comparison == null)
                 throw new ArgumentNullException(nameof(comparison));
 
-            Sort(0, Count, new ComparisonComparer(comparison));
+            Sort(0, Count, new ComparisonComparer<T>(comparison));
         }
 
         public T[] ToArray()
@@ -632,18 +632,6 @@ namespace Tvl.Collections.Trees
             }
 
             _root.Validate(validationRules);
-        }
-
-        private sealed class ComparisonComparer : IComparer<T>
-        {
-            private readonly Comparison<T> _comparison;
-
-            public ComparisonComparer(Comparison<T> comparison)
-            {
-                _comparison = comparison;
-            }
-
-            public int Compare(T x, T y) => _comparison(x, y);
         }
     }
 }

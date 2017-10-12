@@ -556,24 +556,9 @@ namespace Tvl.Collections.Trees
                 {
                     // Avoid choosing page == lowPage because we won't have enough information to make progress
                     int page = lowPage + ((highPage - lowPage + 1) >> 1);
+                    Debug.Assert(page > firstPage, $"Assertion failed: {nameof(page)} > {nameof(firstPage)}");
 
-                    T value;
-                    if (page == firstPage)
-                    {
-                        LeafNode firstLeaf = _nodes[page].FirstLeaf;
-                        if (span.Start - _offsets[firstPage] < firstLeaf.Count)
-                        {
-                            value = firstLeaf[span.Start - _offsets[firstPage]];
-                        }
-                        else
-                        {
-                            value = _nodes[firstPage][span.Start - _offsets[firstPage]];
-                        }
-                    }
-                    else
-                    {
-                        value = _nodes[page].FirstLeaf[0];
-                    }
+                    T value = _nodes[page].FirstLeaf[0];
 
                     int c;
                     try
@@ -601,8 +586,7 @@ namespace Tvl.Collections.Trees
                     }
                 }
 
-                if (lowPage < 0 || lowPage >= _nodeCount)
-                    throw new NotImplementedException();
+                Debug.Assert(lowPage >= 0 && lowPage < _nodeCount, $"Assertion failed: {nameof(lowPage)} >= 0 && {nameof(lowPage)} < {nameof(_nodeCount)}");
 
                 int result = _nodes[lowPage].BinarySearch(MapSpanDownToChild(span, lowPage), item, comparer);
                 if (result < 0)

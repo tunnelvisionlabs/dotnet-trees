@@ -351,6 +351,13 @@ namespace Tvl.Collections.Trees.Test
                 Assert.Equal(reference.BinarySearch(reference[i] + 1), list.BinarySearch(reference[i] + 1));
             }
 
+            // Test case where an exception is thrown by the comparer
+            var expected = new NotSupportedException();
+            var exception = Assert.Throws<InvalidOperationException>(() => list.BinarySearch(0, new ComparisonComparer<int>((x, y) => throw expected)));
+            Assert.Same(expected, exception.InnerException);
+            exception = Assert.Throws<InvalidOperationException>(() => reference.BinarySearch(0, new ComparisonComparer<int>((x, y) => throw expected)));
+            Assert.Same(expected, exception.InnerException);
+
             TreeList<int> empty = new TreeList<int>();
             Assert.Equal(~0, empty.BinarySearch(0));
         }
@@ -398,6 +405,8 @@ namespace Tvl.Collections.Trees.Test
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, -1, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, list.Count + 1, i => true));
 
+            Assert.Equal(-1, list.FindIndex(_ => false));
+
             for (int i = 0; i < list.Count; i++)
             {
                 Predicate<int> predicate = value => value == i;
@@ -436,6 +445,9 @@ namespace Tvl.Collections.Trees.Test
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, -1, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, list.Count + 1, i => true));
+
+            Assert.Equal(-1, list.FindLastIndex(_ => false));
+            Assert.Equal(-1, list.FindLastIndex(list.Count - 1, list.Count / 2, _ => false));
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -507,6 +519,11 @@ namespace Tvl.Collections.Trees.Test
             empty.TrimExcess();
             empty.Validate(ValidationRules.RequirePacked);
 
+            TreeList<int> single = new TreeList<int>(Enumerable.Range(0, 1));
+            empty.Validate(ValidationRules.RequirePacked);
+            empty.TrimExcess();
+            empty.Validate(ValidationRules.RequirePacked);
+
             // Construct a poorly-packed list with several levels
             TreeList<int> binary = new TreeList<int>(branchingFactor: 2);
             for (int i = 0; i < 100; i++)
@@ -562,14 +579,43 @@ namespace Tvl.Collections.Trees.Test
             Assert.Throws<ArgumentOutOfRangeException>(() => list.Sort(0, -1, null));
             Assert.Throws<ArgumentException>(() => list.Sort(0, list.Count + 1, null));
 
-            list.Sort();
-            reference.Sort();
+            // Start by sorting just the first 3 elements
+            list.Sort(0, 3, null);
+            reference.Sort(0, 3, null);
+            list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
 
+            // Then sort 6 index pages worth
+            TreeList<int> tempList = new TreeList<int>(branchingFactor: 6, collection: list.Concat(list));
+            List<int> tempReference = new List<int>(reference.Concat(reference));
+            tempList.Validate(ValidationRules.RequirePacked);
+            tempList.Sort(0, 6 * 6, null);
+            tempList.Validate(ValidationRules.RequirePacked);
+            tempReference.Sort(0, 6 * 6, null);
+            Assert.Equal(tempReference, tempList);
+
+            // Then sort everything
+            list.Sort();
+            reference.Sort();
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+
+            // Test sorting an empty list
             TreeList<int> empty = new TreeList<int>();
             empty.Sort();
             Assert.Empty(empty);
             empty.Validate(ValidationRules.RequirePacked);
+
+            // Test sorting a list with all the same value
+            TreeList<int> sameValue = new TreeList<int>();
+            for (int i = 0; i < 100; i++)
+                sameValue.Add(1);
+
+            sameValue.Sort();
+            sameValue.Validate(ValidationRules.RequirePacked);
+            Assert.Equal(100, sameValue.Count);
+            for (int i = 0; i < sameValue.Count; i++)
+                Assert.Equal(1, sameValue[i]);
         }
 
         [Fact]
