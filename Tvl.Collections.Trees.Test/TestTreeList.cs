@@ -286,6 +286,37 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestInsertRange()
+        {
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+
+            // Add an initial range to each list
+            list.InsertRange(0, Enumerable.Range(0, 20));
+            reference.InsertRange(0, Enumerable.Range(0, 20));
+            list.Validate(ValidationRules.RequirePacked);
+            Assert.Equal(reference, list);
+
+            // Adding more items to the end keeps things packed
+            list.InsertRange(list.Count, Enumerable.Range(0, 20));
+            reference.InsertRange(reference.Count, Enumerable.Range(0, 20));
+            list.Validate(ValidationRules.RequirePacked);
+            Assert.Equal(reference, list);
+
+            // Add items to the beginning (no longer packed)
+            list.InsertRange(0, Enumerable.Range(0, 20));
+            reference.InsertRange(0, Enumerable.Range(0, 20));
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+
+            // Add items to the middle (no longer packed)
+            list.InsertRange(list.Count / 2, Enumerable.Range(0, 20));
+            reference.InsertRange(reference.Count / 2, Enumerable.Range(0, 20));
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+        }
+
+        [Fact]
         public void TestBinarySearchFullList()
         {
             TreeList<int> list = new TreeList<int>(branchingFactor: 4);

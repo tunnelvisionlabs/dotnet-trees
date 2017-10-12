@@ -163,8 +163,8 @@ namespace Tvl.Collections.Trees
             {
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
                 int previousCount = _nodes[pageIndex].Count;
-                Node splitChild = _nodes[pageIndex].InsertRange(branchingFactor, isAppend, index - _offsets[pageIndex], collection);
-                if (splitChild == null)
+                Node lastImpactedChild = _nodes[pageIndex].InsertRange(branchingFactor, isAppend, index - _offsets[pageIndex], collection);
+                if (lastImpactedChild == null)
                 {
                     int insertionCount = _nodes[pageIndex].Count - previousCount;
                     for (int i = pageIndex + 1; i < _nodeCount; i++)
@@ -174,7 +174,64 @@ namespace Tvl.Collections.Trees
                     return null;
                 }
 
-                throw new NotImplementedException();
+                for (int i = pageIndex + 1; i < _nodeCount; i++)
+                    _offsets[i] = _offsets[i - 1] + _nodes[i - 1].Count;
+
+                _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
+                pageIndex++;
+
+                IndexNode insertionNode = this;
+                Node lastIndexNode = null;
+                for (Node item = _nodes[pageIndex - 1].NextNode; true; item = item.NextNode)
+                {
+                    Debug.Assert(item != null, "Assertion failed: item != null");
+                    Debug.Assert(pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length, "Assertion failed: pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length");
+
+                    IndexNode newLastIndex = insertionNode.InsertIndex(branchingFactor, isAppend, pageIndex, item);
+                    if (newLastIndex != null)
+                    {
+                        // this insertion resulted in a split, so at minimum 'pageIndex' must be updated
+                        if (lastIndexNode != null && insertionNode != lastIndexNode)
+                        {
+                            // We were not inserting into the last node (an earlier split in the InsertRange operation
+                            // resulted in insertions prior to the last node)
+                            if (pageIndex < insertionNode._nodeCount)
+                            {
+                                // The split does not change the insertion node.
+                                pageIndex++;
+                            }
+                            else
+                            {
+                                pageIndex = pageIndex + 1 - insertionNode._nodeCount;
+                                insertionNode = newLastIndex;
+                            }
+                        }
+                        else if (pageIndex < insertionNode._nodeCount)
+                        {
+                            // The split resulted in a new last node, but no change in the insertion node.
+                            pageIndex++;
+                            lastIndexNode = newLastIndex;
+                        }
+                        else
+                        {
+                            // The split resulted in a new last node which becomes the new insertion node.
+                            pageIndex = pageIndex + 1 - insertionNode._nodeCount;
+                            lastIndexNode = newLastIndex;
+                            insertionNode = newLastIndex;
+                        }
+                    }
+                    else
+                    {
+                        pageIndex++;
+                    }
+
+                    if (item == lastImpactedChild)
+                    {
+                        break;
+                    }
+                }
+
+                return lastIndexNode;
             }
 
             internal override bool RemoveLast()
@@ -620,7 +677,7 @@ namespace Tvl.Collections.Trees
                 return TreeSpan.Intersect(mappedFullSpan, _nodes[childIndex].Span);
             }
 
-            private Node InsertIndex(int branchingFactor, bool isAppend, int index, Node node)
+            private IndexNode InsertIndex(int branchingFactor, bool isAppend, int index, Node node)
             {
                 if (_nodeCount < _nodes.Length)
                 {
