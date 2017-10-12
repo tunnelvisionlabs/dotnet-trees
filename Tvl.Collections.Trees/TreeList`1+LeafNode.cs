@@ -308,7 +308,7 @@ namespace Tvl.Collections.Trees
                         // No more items to copy
                         Debug.Assert(firstOffset > 0, $"Assertion failed: {nameof(firstOffset)} > 0");
                         first._count = firstOffset;
-                        for (int i = firstOffset + 1; i < first._data.Length; i++)
+                        for (int i = firstOffset; i < first._data.Length; i++)
                         {
                             first._data[i] = default;
                         }
