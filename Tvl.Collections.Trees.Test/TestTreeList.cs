@@ -506,6 +506,22 @@ namespace Tvl.Collections.Trees.Test
             empty.Validate(ValidationRules.RequirePacked);
             empty.TrimExcess();
             empty.Validate(ValidationRules.RequirePacked);
+
+            // Construct a poorly-packed list with several levels
+            TreeList<int> binary = new TreeList<int>(branchingFactor: 2);
+            for (int i = 0; i < 100; i++)
+                binary.Insert(0, i);
+
+            binary.TrimExcess();
+            binary.Validate(ValidationRules.RequirePacked);
+
+            // Construct a poorly-packed list with several levels
+            TreeList<int> ternary = new TreeList<int>(branchingFactor: 3, collection: Enumerable.Range(0, 100));
+            for (int i = 0; i < 100; i++)
+                ternary.Insert(ternary.Count / 2, i);
+
+            ternary.TrimExcess();
+            ternary.Validate(ValidationRules.RequirePacked);
         }
 
         [Fact]
