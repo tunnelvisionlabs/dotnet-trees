@@ -5,6 +5,7 @@ namespace Tvl.Collections.Trees.Test
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.Serialization;
 
     // To enable this for a process, add the following to the app.config for the project:
@@ -19,6 +20,7 @@ namespace Tvl.Collections.Trees.Test
     //    </trace>
     //  </system.diagnostics>
     // </configuration>
+    [ExcludeFromCodeCoverage]
     public sealed class ThrowingTraceListener : TraceListener
     {
         public override void Fail(string message, string detailMessage)
