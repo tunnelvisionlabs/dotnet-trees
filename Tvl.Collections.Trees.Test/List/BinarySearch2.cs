@@ -66,6 +66,18 @@ namespace Tvl.Collections.Trees.Test.List
             Assert.Equal(-1, listObject.BinarySearch(null, strClass));
         }
 
+        // Additional tests to cover code in StrClass not covered by previous tests
+        [Fact]
+        public void PosTest5Ext()
+        {
+            string[] strArray = { null, "banana", "chocolate", "dog", "food" };
+            TreeList<string> listObject = new TreeList<string>(strArray);
+            listObject.Sort();
+            StrClass strClass = new StrClass();
+            Assert.Equal(~1, listObject.BinarySearch(string.Empty, strClass));
+            Assert.Equal(0, listObject.BinarySearch(null, strClass));
+        }
+
         [Fact(DisplayName = "PosTest6: The IComparer is a null reference")]
         public void PosTest6()
         {
