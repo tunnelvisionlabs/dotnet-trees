@@ -22,7 +22,7 @@ namespace Tvl.Collections.Trees.Test.List
             }
 
             TreeList<int> listObject = new TreeList<int>(iArray);
-            int ob = GetInt32(0, 1000);
+            int ob = Generator.GetInt32(0, 1000);
             int result = listObject.LastIndexOf(ob);
             Assert.Equal(ob, result);
         }
@@ -73,21 +73,6 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<string> listObject = new TreeList<string>(strArray);
             int result = listObject.LastIndexOf(null);
             Assert.Equal(-1, result);
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass

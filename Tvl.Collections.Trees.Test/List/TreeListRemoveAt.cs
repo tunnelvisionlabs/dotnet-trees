@@ -18,7 +18,7 @@ namespace Tvl.Collections.Trees.Test.List
         {
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 10, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
-            int index = GetInt32(0, 10);
+            int index = Generator.GetInt32(0, 10);
             listObject.RemoveAt(index);
             Assert.DoesNotContain(iArray[index], listObject);
         }
@@ -64,21 +64,6 @@ namespace Tvl.Collections.Trees.Test.List
             char?[] chArray = { 'a', 'b', ' ', 'c', null };
             TreeList<char?> listObject = new TreeList<char?>(chArray);
             Assert.Throws<ArgumentOutOfRangeException>(() => listObject.RemoveAt(10));
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass

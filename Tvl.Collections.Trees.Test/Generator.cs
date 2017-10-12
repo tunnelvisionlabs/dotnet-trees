@@ -57,17 +57,32 @@ namespace Tvl.Collections.Trees.Test
         }
 
         // returns a non-negative Int32 between 0 and Int32.MaxValue
-        public static int GetInt32(int new_seed)
+        private static int GetInt32(int new_seed)
         {
             Seed = new_seed;
             return GetInt32();
         }
 
-        public static int GetInt32()
+        private static int GetInt32()
         {
             int i = _rand.Next();
             Debug.WriteLine("Random Int32 produced: " + i.ToString());
             return i;
+        }
+
+        public static int GetInt32(int minValue, int maxValue)
+        {
+            if (minValue == maxValue)
+            {
+                return minValue;
+            }
+
+            if (minValue < maxValue)
+            {
+                return minValue + (GetInt32(-55) % (maxValue - minValue));
+            }
+
+            return minValue;
         }
 
         // returns a non-negative Byte between 0 and Byte.MaxValue

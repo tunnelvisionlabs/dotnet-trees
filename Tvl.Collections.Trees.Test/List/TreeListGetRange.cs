@@ -18,8 +18,8 @@ namespace Tvl.Collections.Trees.Test.List
         {
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
-            int startIdx = GetInt32(0, 9);       // The starting index of the section to make a shallow copy
-            int endIdx = GetInt32(startIdx, 10); // The end index of the section to make a shallow copy
+            int startIdx = Generator.GetInt32(0, 9);       // The starting index of the section to make a shallow copy
+            int endIdx = Generator.GetInt32(startIdx, 10); // The end index of the section to make a shallow copy
             int count = endIdx - startIdx + 1;
             TreeList<int> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
@@ -33,8 +33,8 @@ namespace Tvl.Collections.Trees.Test.List
         {
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
-            int startIdx = GetInt32(0, 4);      // The starting index of the section to make a shallow copy
-            int endIdx = GetInt32(startIdx, 5); // The end index of the section to make a shallow copy
+            int startIdx = Generator.GetInt32(0, 4);      // The starting index of the section to make a shallow copy
+            int endIdx = Generator.GetInt32(startIdx, 5); // The end index of the section to make a shallow copy
             int count = endIdx - startIdx + 1;
             TreeList<string> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
@@ -51,8 +51,8 @@ namespace Tvl.Collections.Trees.Test.List
             MyClass myclass3 = new MyClass();
             MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
             TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
-            int startIdx = GetInt32(0, 2);      // The starting index of the section to make a shallow copy
-            int endIdx = GetInt32(startIdx, 3); // The end index of the section to make a shallow copy
+            int startIdx = Generator.GetInt32(0, 2);      // The starting index of the section to make a shallow copy
+            int endIdx = Generator.GetInt32(startIdx, 3); // The end index of the section to make a shallow copy
             int count = endIdx - startIdx + 1;
             TreeList<MyClass> listResult = listObject.GetRange(startIdx, count);
             for (int i = 0; i < count; i++)
@@ -93,21 +93,6 @@ namespace Tvl.Collections.Trees.Test.List
             char[] iArray = { '#', ' ', '&', 'c', '1', '_', 'A' };
             TreeList<char> listObject = new TreeList<char>(iArray);
             Assert.Throws<ArgumentException>(() => listObject.GetRange(4, 4));
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass

@@ -120,21 +120,6 @@ namespace Tvl.Collections.Trees.Test.List
             Assert.Throws<ArgumentException>(() => listObject.BinarySearch(6, 5, i, intClass));
         }
 
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
-        }
-
         public class MyClass : IComparable
         {
             private int _value;

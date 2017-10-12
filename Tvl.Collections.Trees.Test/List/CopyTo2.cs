@@ -19,7 +19,7 @@ namespace Tvl.Collections.Trees.Test.List
             int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             int[] result = new int[100];
-            int t = GetInt32(0, 90);
+            int t = Generator.GetInt32(0, 90);
             listObject.CopyTo(result, t);
             for (int i = 0; i < 10; i++)
             {
@@ -110,21 +110,6 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<int> listObject = new TreeList<int>(iArray);
             int[] result = new int[20];
             Assert.Throws<ArgumentOutOfRangeException>(() => listObject.CopyTo(result, -1));
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass

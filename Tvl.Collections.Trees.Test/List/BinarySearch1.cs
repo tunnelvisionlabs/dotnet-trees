@@ -19,7 +19,7 @@ namespace Tvl.Collections.Trees.Test.List
             int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
             TreeList<int> listObject = new TreeList<int>(iArray);
             listObject.Sort();
-            int i = GetInt32(0, 10);
+            int i = Generator.GetInt32(0, 10);
             Assert.Equal(i, listObject.BinarySearch(i));
         }
 
@@ -65,21 +65,6 @@ namespace Tvl.Collections.Trees.Test.List
             TestClass[] tc = new TestClass[2] { new TestClass(), new TestClass() };
             TreeList<TestClass> listObject = new TreeList<TestClass>(tc);
             Assert.Throws<InvalidOperationException>(() => listObject.BinarySearch(new TestClass()));
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass : IComparable

@@ -69,7 +69,7 @@ namespace Tvl.Collections.Trees.Test.List
             string[] strArray = { "apple", "dog", "banana", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string[] insert = new string[2] { null, null };
-            int index = GetInt32(0, 4);
+            int index = Generator.GetInt32(0, 4);
             listObject.InsertRange(index, insert);
             Assert.Equal(6, listObject.Count);
             Assert.Null(listObject[index]);
@@ -82,7 +82,7 @@ namespace Tvl.Collections.Trees.Test.List
             string[] strArray = { "apple", "dog", "banana", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
             string[] insert = null;
-            int index = GetInt32(0, 4);
+            int index = Generator.GetInt32(0, 4);
             Assert.Throws<ArgumentNullException>(() => listObject.InsertRange(index, insert));
         }
 
@@ -102,21 +102,6 @@ namespace Tvl.Collections.Trees.Test.List
             TreeList<int> listObject = new TreeList<int>(iArray);
             int[] insert = { -0, 90, 100 };
             Assert.Throws<ArgumentOutOfRangeException>(() => listObject.InsertRange(11, insert));
-        }
-
-        private int GetInt32(int minValue, int maxValue)
-        {
-            if (minValue == maxValue)
-            {
-                return minValue;
-            }
-
-            if (minValue < maxValue)
-            {
-                return minValue + (Generator.GetInt32(-55) % (maxValue - minValue));
-            }
-
-            return minValue;
         }
 
         public class MyClass
