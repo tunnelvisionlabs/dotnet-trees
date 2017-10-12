@@ -612,6 +612,8 @@ namespace Tvl.Collections.Trees.Test
             Assert.Equal(0, enumerator.Current);
             Assert.False(enumerator.MoveNext());
             Assert.Equal(0, enumerator.Current);
+            Assert.False(enumerator.MoveNext());
+            Assert.Equal(0, enumerator.Current);
 
             // Adding an item to the list invalidates it, but Current is still unchecked
             list.Add(1);
