@@ -503,6 +503,26 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestSplitOddSizeLeafNode()
+        {
+            TreeList<int> list = new TreeList<int>(branchingFactor: 3);
+            list.AddRange(Enumerable.Range(0, 20));
+            list.Insert(2, 0);
+            list.Validate(ValidationRules.None);
+        }
+
+        [Fact]
+        public void TestSplitOddSizeIndexNode()
+        {
+            TreeList<int> list = new TreeList<int>(branchingFactor: 3);
+            list.AddRange(Enumerable.Range(0, 100));
+
+            // Need to insert at index 2 of the index closest to leaves. This means we split the leaf at index 1.
+            list.Insert(5, 0);
+            list.Validate(ValidationRules.None);
+        }
+
+        [Fact]
         public void TestSort()
         {
             Random random = new Random();

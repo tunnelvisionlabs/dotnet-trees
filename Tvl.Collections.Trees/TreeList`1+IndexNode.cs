@@ -721,6 +721,19 @@ namespace Tvl.Collections.Trees
                     // split the node
                     IndexNode splitNode = new IndexNode(branchingFactor);
                     int splitPoint = _nodeCount / 2;
+
+                    bool forceNext = false;
+                    if ((_nodeCount + 1) / 2 > splitPoint && index > splitPoint)
+                    {
+                        // When splitting a node with an odd branching factor, prior to insertion one split node will
+                        // have (b-1)/2 nodes and the other will have (b+1)/2 nodes. Since the minimum number of nodes
+                        // after insertion is (b+1)/2, the split point uniquely determines the insertion point. This
+                        // block handles the case where the insertion point is index (b+1)/2 by forcing it to the first
+                        // node of the next page instead of adding it (where it fits) at the end of the first page.
+                        splitPoint++;
+                        forceNext = true;
+                    }
+
                     Array.Copy(_nodes, splitPoint, splitNode._nodes, 0, _nodeCount - splitPoint);
                     Array.Copy(_offsets, splitPoint, splitNode._offsets, 0, _nodeCount - splitPoint);
                     Array.Clear(_nodes, splitPoint, _nodeCount - splitPoint);
@@ -737,7 +750,7 @@ namespace Tvl.Collections.Trees
                     _count = adjustment;
 
                     // insert the new element into the correct half
-                    if (index <= splitPoint)
+                    if (!forceNext && index <= splitPoint)
                         InsertIndex(branchingFactor, false, index, node);
                     else
                         splitNode.InsertIndex(branchingFactor, false, index - splitPoint, node);
@@ -757,7 +770,7 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(_nodeCount >= 0 && _nodeCount <= _nodes.Length, $"Assertion failed: {nameof(_nodeCount)} >= 0 && {nameof(_nodeCount)} <= {nameof(_nodes)}.Length");
 
                 // Only the last node is allowed to have a reduced number of children
-                Debug.Assert(_nodeCount >= _nodes.Length / 2 || _next == null, $"Assertion failed: {nameof(_nodeCount)} >= {nameof(_nodes)}.Length / 2 || {nameof(_next)} == null");
+                Debug.Assert(_nodeCount >= (_nodes.Length + 1) / 2 || _next == null, $"Assertion failed: {nameof(_nodeCount)} >= ({nameof(_nodes)}.Length + 1) / 2 || {nameof(_next)} == null");
 
                 int sum = 0;
                 for (int i = 0; i < _nodeCount; i++)

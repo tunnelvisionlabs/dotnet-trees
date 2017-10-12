@@ -107,6 +107,19 @@ namespace Tvl.Collections.Trees
                     // split the node
                     LeafNode splitNode = new LeafNode(branchingFactor);
                     int splitPoint = _count / 2;
+
+                    bool forceNext = false;
+                    if ((_count + 1) / 2 > splitPoint && index > splitPoint)
+                    {
+                        // When splitting a node with an odd branching factor, prior to insertion one split node will
+                        // have (b-1)/2 nodes and the other will have (b+1)/2 nodes. Since the minimum number of nodes
+                        // after insertion is (b+1)/2, the split point uniquely determines the insertion point. This
+                        // block handles the case where the insertion point is index (b+1)/2 by forcing it to the first
+                        // node of the next page instead of adding it (where it fits) at the end of the first page.
+                        splitPoint++;
+                        forceNext = true;
+                    }
+
                     Array.Copy(_data, splitPoint, splitNode._data, 0, _count - splitPoint);
                     Array.Clear(_data, splitPoint, _count - splitPoint);
 
@@ -114,7 +127,7 @@ namespace Tvl.Collections.Trees
                     _count = splitPoint;
 
                     // insert the new element into the correct half
-                    if (index <= splitPoint)
+                    if (!forceNext && index <= splitPoint)
                     {
                         Insert(branchingFactor, false, index, item);
                     }
@@ -340,7 +353,7 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(_count >= 0 && _count <= _data.Length, $"Assertion failed: {nameof(_count)} >= 0 && {nameof(_count)} <= {nameof(_data)}.Length");
 
                 // Only the last node is allowed to have a reduced number of children
-                Debug.Assert(_count >= _data.Length / 2 || _next == null, $"Assertion failed: {nameof(_count)} >= {nameof(_data)}.Length / 2 || {nameof(_next)} == null");
+                Debug.Assert(_count >= (_data.Length + 1) / 2 || _next == null, $"Assertion failed: {nameof(_count)} >= ({nameof(_data)}.Length + 1) / 2 || {nameof(_next)} == null");
 
                 if (default(T) == null)
                 {
