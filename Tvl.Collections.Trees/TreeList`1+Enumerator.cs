@@ -66,7 +66,8 @@ namespace Tvl.Collections.Trees
                     // Need to get the first leaf node
                     (_leafNode, _leafIndex) = _list._root.GetLeafNode(_span.Start);
 
-                    // The leaf index will be incremented below; want the correct final result
+                    // The index and leaf index will be incremented below; want the correct final result
+                    _index = _span.Start - 1;
                     _leafIndex--;
                 }
                 else if (_leafIndex == _leafNode.Count - 1)
@@ -80,7 +81,6 @@ namespace Tvl.Collections.Trees
                 if (_index == _span.EndExclusive)
                 {
                     _index = int.MinValue;
-                    _current = default;
                     return false;
                 }
 

@@ -52,7 +52,7 @@ namespace Tvl.Collections.Trees
             {
                 Debug.Assert(index >= 0 && index < Count, $"Assertion failed: {nameof(index)} >= 0 && {nameof(index)} < {nameof(Count)}");
 
-                return (this, 0);
+                return (this, index);
             }
 
             internal override int IndexOf(T item, TreeSpan span)

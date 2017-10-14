@@ -99,8 +99,7 @@ namespace Tvl.Collections.Trees
                     return (FirstLeaf, 0);
 
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
-                var (leafNode, indexWithinPage) = _nodes[pageIndex].GetLeafNode(index);
-                return (leafNode, indexWithinPage + _offsets[pageIndex]);
+                return _nodes[pageIndex].GetLeafNode(index - _offsets[pageIndex]);
             }
 
             internal override int IndexOf(T item, TreeSpan span)

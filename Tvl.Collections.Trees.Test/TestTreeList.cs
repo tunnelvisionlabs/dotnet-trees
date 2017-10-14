@@ -815,7 +815,55 @@ namespace Tvl.Collections.Trees.Test
             ((IEnumerator<int>)enumerator).Reset();
             Assert.Equal(1, enumerator.Current);
             Assert.False(enumerator.MoveNext());
-            Assert.Equal(0, enumerator.Current);
+            Assert.Equal(1, enumerator.Current);
+        }
+
+        [Fact]
+        public void TestPartialEnumeration()
+        {
+            Random random = new Random(1);
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            // Test a subsection of the list
+            var listEnumerator = new TreeList<int>.Enumerator(list, TreeSpan.FromBounds(1, list.Count - 1));
+            IEnumerator<int> referenceEnumerator = reference.Skip(1).Take(reference.Count - 2).GetEnumerator();
+            TestEnumerators(referenceEnumerator, listEnumerator);
+
+            // Test the first half
+            listEnumerator = new TreeList<int>.Enumerator(list, TreeSpan.FromBounds(0, list.Count / 2));
+            referenceEnumerator = reference.Take(reference.Count / 2).GetEnumerator();
+            TestEnumerators(referenceEnumerator, listEnumerator);
+
+            // Test the last half
+            listEnumerator = new TreeList<int>.Enumerator(list, TreeSpan.FromBounds(list.Count / 2, list.Count));
+            referenceEnumerator = reference.Skip(reference.Count / 2).GetEnumerator();
+            TestEnumerators(referenceEnumerator, listEnumerator);
+
+            void TestEnumerators(IEnumerator<int> expected, TreeList<int>.Enumerator actual)
+            {
+                Assert.Equal(referenceEnumerator.Current, listEnumerator.Current);
+
+                while (true)
+                {
+                    if (!referenceEnumerator.MoveNext())
+                    {
+                        Assert.False(listEnumerator.MoveNext());
+                        break;
+                    }
+
+                    Assert.True(listEnumerator.MoveNext());
+                    Assert.Equal(referenceEnumerator.Current, listEnumerator.Current);
+                }
+
+                Assert.Equal(referenceEnumerator.Current, listEnumerator.Current);
+            }
         }
 
         [Fact]
@@ -838,7 +886,7 @@ namespace Tvl.Collections.Trees.Test
             Assert.True(enumerator.MoveNext());
             Assert.Equal(1, enumerator.Current);
             Assert.False(enumerator.MoveNext());
-            Assert.Equal(0, enumerator.Current);
+            Assert.Equal(1, enumerator.Current);
 
             enumerator.Reset();
             Assert.Equal(0, enumerator.Current);
@@ -849,7 +897,7 @@ namespace Tvl.Collections.Trees.Test
             Assert.True(enumerator.MoveNext());
             Assert.Equal(1, enumerator.Current);
             Assert.False(enumerator.MoveNext());
-            Assert.Equal(0, enumerator.Current);
+            Assert.Equal(1, enumerator.Current);
         }
 
         [Fact]
