@@ -32,14 +32,70 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
-        public void TestIListInterface()
+        public void TestDefaultComparer()
         {
-            TestIListInterfaceImpl(new SortedTreeList<int> { 600, 601 }, supportInsert: false, supportsNullValues: false);
-            TestIListInterfaceImpl(new SortedTreeList<int?> { 600, 601 }, supportInsert: false, supportsNullValues: true);
-            TestIListInterfaceImpl(new SortedTreeList<object> { 600, 601 }, supportInsert: false, supportsNullValues: true);
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>().Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>().Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>().Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(Enumerable.Empty<object>()).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(Enumerable.Empty<int>()).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(Enumerable.Empty<IComparable>()).Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(comparer: null).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(comparer: null).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(comparer: null).Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(Enumerable.Empty<object>(), comparer: null).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(Enumerable.Empty<int>(), comparer: null).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(Enumerable.Empty<IComparable>(), comparer: null).Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(4).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(4).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(4).Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(4, comparer: null).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(4, comparer: null).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(4, comparer: null).Comparer);
+
+            Assert.Same(Comparer<object>.Default, new SortedTreeList<object>(4, Enumerable.Empty<object>(), comparer: null).Comparer);
+            Assert.Same(Comparer<int>.Default, new SortedTreeList<int>(4, Enumerable.Empty<int>(), comparer: null).Comparer);
+            Assert.Same(Comparer<IComparable>.Default, new SortedTreeList<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: null).Comparer);
         }
 
-        private static void TestIListInterfaceImpl(IList list, bool supportInsert, bool supportsNullValues)
+        [Fact]
+        public void TestExplicitComparer()
+        {
+            var objComparer = new ComparisonComparer<object>((x, y) => 0);
+            var intComparer = new ComparisonComparer<int>((x, y) => 0);
+            var comparableComparer = new ComparisonComparer<IComparable>((x, y) => 0);
+
+            Assert.Same(objComparer, new SortedTreeList<object>(comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new SortedTreeList<int>(comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new SortedTreeList<IComparable>(comparer: comparableComparer).Comparer);
+
+            Assert.Same(objComparer, new SortedTreeList<object>(Enumerable.Empty<object>(), comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new SortedTreeList<int>(Enumerable.Empty<int>(), comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new SortedTreeList<IComparable>(Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
+
+            Assert.Same(objComparer, new SortedTreeList<object>(4, comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new SortedTreeList<int>(4, comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new SortedTreeList<IComparable>(4, comparer: comparableComparer).Comparer);
+
+            Assert.Same(objComparer, new SortedTreeList<object>(4, Enumerable.Empty<object>(), comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new SortedTreeList<int>(4, Enumerable.Empty<int>(), comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new SortedTreeList<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
+        }
+
+        [Fact]
+        public void TestIListInterface()
+        {
+            TestIListInterfaceImpl(new SortedTreeList<int> { 600, 601 }, supportsNullValues: false);
+            TestIListInterfaceImpl(new SortedTreeList<int?> { 600, 601 }, supportsNullValues: true);
+            TestIListInterfaceImpl(new SortedTreeList<object> { 600, 601 }, supportsNullValues: true);
+        }
+
+        private static void TestIListInterfaceImpl(IList list, bool supportsNullValues)
         {
             Assert.False(list.IsFixedSize);
             Assert.False(list.IsReadOnly);
@@ -59,24 +115,14 @@ namespace Tvl.Collections.Trees.Test
             Assert.Throws<ArgumentOutOfRangeException>(() => list[-1]);
             Assert.Throws<ArgumentOutOfRangeException>(() => list[list.Count]);
 
-            if (!supportInsert)
-            {
-                Assert.Throws<NotSupportedException>(() => list[-1] = 1);
-                Assert.Throws<NotSupportedException>(() => list[list.Count] = 1);
-                Assert.Throws<NotSupportedException>(() => list.Insert(-1, 602));
-                Assert.Throws<NotSupportedException>(() => list.Insert(list.Count + 1, 602));
-            }
+            Assert.Throws<NotSupportedException>(() => list[-1] = 1);
+            Assert.Throws<NotSupportedException>(() => list[list.Count] = 1);
+            Assert.Throws<NotSupportedException>(() => list.Insert(-1, 602));
+            Assert.Throws<NotSupportedException>(() => list.Insert(list.Count + 1, 602));
 
             Assert.NotEqual(list[1], list[0]);
 
-            if (supportInsert)
-            {
-                list.Insert(0, list[0]);
-            }
-            else
-            {
-                list.Add(list[0]);
-            }
+            list.Add(list[0]);
 
             Assert.Equal(list[1], list[0]);
 
@@ -105,21 +151,15 @@ namespace Tvl.Collections.Trees.Test
             else
             {
                 // In the face of two errors, verify consistent
-                if (!supportInsert)
-                {
-                    Assert.Throws<NotSupportedException>(() => list[list.Count] = null);
-                    Assert.Throws<NotSupportedException>(() => list.Insert(-1, null));
-                }
+                Assert.Throws<NotSupportedException>(() => list[list.Count] = null);
+                Assert.Throws<NotSupportedException>(() => list.Insert(-1, null));
 
                 Assert.Throws<ArgumentNullException>(() => list.Add(null));
                 Assert.Throws<ArgumentException>(() => list.Add(new object()));
 
-                if (!supportInsert)
-                {
-                    Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = null);
-                    Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = new object());
-                    Assert.Throws<NotSupportedException>(() => list.Insert(0, new object()));
-                }
+                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = null);
+                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = new object());
+                Assert.Throws<NotSupportedException>(() => list.Insert(0, new object()));
 
                 Assert.Equal(list.Count, list.Add(602));
             }
