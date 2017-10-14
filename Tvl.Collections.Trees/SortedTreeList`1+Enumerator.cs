@@ -11,15 +11,22 @@ namespace Tvl.Collections.Trees
     {
         public struct Enumerator : IEnumerator<T>
         {
-            public T Current => throw null;
+            private TreeList<T>.Enumerator _enumerator;
 
-            object IEnumerator.Current => throw null;
+            internal Enumerator(TreeList<T>.Enumerator enumerator)
+            {
+                _enumerator = enumerator;
+            }
 
-            public void Dispose() => throw null;
+            public T Current => _enumerator.Current;
 
-            public bool MoveNext() => throw null;
+            object IEnumerator.Current => Current;
 
-            void IEnumerator.Reset() => throw null;
+            public void Dispose() => ((IDisposable)_enumerator).Dispose();
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IEnumerator.Reset() => _enumerator.InternalReset();
         }
     }
 }

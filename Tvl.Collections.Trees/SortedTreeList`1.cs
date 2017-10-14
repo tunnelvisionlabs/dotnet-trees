@@ -6,140 +6,300 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public partial class SortedTreeList<T> : IList<T>, IReadOnlyList<T>, IList
     {
-        public SortedTreeList() => throw null;
+        private readonly IComparer<T> _comparer;
+        private readonly TreeList<T> _treeList;
 
-        public SortedTreeList(IEnumerable<T> collection) => throw null;
+        public SortedTreeList()
+            : this(default(IComparer<T>))
+        {
+        }
 
-        public SortedTreeList(IComparer<T> comparer) => throw null;
+        public SortedTreeList(IEnumerable<T> collection)
+            : this(collection, comparer: null)
+        {
+        }
 
-        public SortedTreeList(IEnumerable<T> collection, IComparer<T> comparer) => throw null;
+        public SortedTreeList(IComparer<T> comparer)
+        {
+            _comparer = comparer ?? Comparer<T>.Default;
+            _treeList = new TreeList<T>();
+        }
 
-        public SortedTreeList(int branchingFactor) => throw null;
+        public SortedTreeList(IEnumerable<T> collection, IComparer<T> comparer)
+            : this(comparer)
+        {
+            AddRange(collection);
+        }
 
-        public SortedTreeList(int branchingFactor, IComparer<T> comparer) => throw null;
+        public SortedTreeList(int branchingFactor)
+            : this(branchingFactor, comparer: null)
+        {
+        }
 
-        public SortedTreeList(int branchingFactor, IEnumerable<T> collection, IComparer<T> comparer) => throw null;
+        public SortedTreeList(int branchingFactor, IComparer<T> comparer)
+        {
+            _comparer = comparer ?? Comparer<T>.Default;
+            _treeList = new TreeList<T>(branchingFactor);
+        }
 
-        public IComparer<T> Comparer => throw null;
+        public SortedTreeList(int branchingFactor, IEnumerable<T> collection, IComparer<T> comparer)
+            : this(branchingFactor, comparer)
+        {
+            AddRange(collection);
+        }
 
-        public int Count => throw null;
+        public IComparer<T> Comparer => _comparer;
 
-        bool ICollection<T>.IsReadOnly => throw null;
+        public int Count => _treeList.Count;
 
-        bool IList.IsReadOnly => throw null;
+        bool ICollection<T>.IsReadOnly => false;
 
-        bool IList.IsFixedSize => throw null;
+        bool IList.IsReadOnly => false;
 
-        bool ICollection.IsSynchronized => throw null;
+        bool IList.IsFixedSize => false;
 
-        object ICollection.SyncRoot => throw null;
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => ((ICollection)_treeList).SyncRoot;
 
         public T this[int index]
         {
-            get => throw null;
+            get => _treeList[index];
         }
 
         T IList<T>.this[int index]
         {
-            get => throw null;
+            get => this[index];
             set => throw new NotSupportedException();
         }
 
         object IList.this[int index]
         {
-            get => throw null;
+            get => this[index];
             set => throw new NotSupportedException();
         }
 
-        public int BinarySearch(T item) => throw null;
+        public int BinarySearch(T item) => _treeList.BinarySearch(item, _comparer);
 
-        public int BinarySearch(int index, int count, T item) => throw null;
+        public int BinarySearch(int index, int count, T item) => _treeList.BinarySearch(index, count, item, _comparer);
 
-        public int IndexOf(T item) => throw null;
+        public int IndexOf(T item) => IndexOf(item, 0, Count);
 
-        public int IndexOf(T item, int index) => throw null;
+        public int IndexOf(T item, int index) => IndexOf(item, index, Count - index);
 
-        public int IndexOf(T item, int index, int count) => throw null;
+        public int IndexOf(T item, int index, int count)
+        {
+            var comparer = new CoercingComparer(_comparer, 1);
+            int result = _treeList.BinarySearch(index, count, item, comparer);
+            if (!comparer.FoundMatch)
+                return -1;
 
-        void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
+            return ~result;
+        }
 
-        public bool Remove(T item) => throw null;
+        public bool Remove(T item)
+        {
+            int index = IndexOf(item);
+            if (index < 0)
+                return false;
 
-        public void RemoveAt(int index) => throw null;
+            RemoveAt(index);
+            return true;
+        }
 
-        public void RemoveRange(int index, int count) => throw null;
+        public void RemoveAt(int index) => _treeList.RemoveAt(index);
 
-        public int RemoveAll(Predicate<T> match) => throw null;
+        public void RemoveRange(int index, int count) => _treeList.RemoveRange(index, count);
 
-        public void Add(T item) => throw null;
+        public int RemoveAll(Predicate<T> match) => _treeList.RemoveAll(match);
 
-        public void AddRange(IEnumerable<T> collection) => throw null;
+        public void Add(T item)
+        {
+            var comparer = new CoercingComparer(_comparer, -1);
+            int result = _treeList.BinarySearch(item, comparer);
+            _treeList.Insert(~result, item);
+        }
 
-        public void Clear() => throw null;
+        public void AddRange(IEnumerable<T> collection)
+        {
+            foreach (T item in collection)
+                Add(item);
+        }
 
-        public bool Contains(T item) => throw null;
+        public void Clear() => _treeList.Clear();
 
-        public void CopyTo(T[] array) => throw null;
+        public bool Contains(T item) => _treeList.BinarySearch(item) >= 0;
 
-        public void CopyTo(T[] array, int arrayIndex) => throw null;
+        public void CopyTo(T[] array) => _treeList.CopyTo(array);
 
-        public void CopyTo(int index, T[] array, int arrayIndex, int count) => throw null;
+        public void CopyTo(T[] array, int arrayIndex) => _treeList.CopyTo(array, arrayIndex);
 
-        public Enumerator GetEnumerator() => throw null;
+        public void CopyTo(int index, T[] array, int arrayIndex, int count) => _treeList.CopyTo(index, array, arrayIndex, count);
 
-        public bool Exists(Predicate<T> match) => throw null;
+        public Enumerator GetEnumerator() => new Enumerator(_treeList.GetEnumerator());
 
-        public T Find(Predicate<T> match) => throw null;
+        public bool Exists(Predicate<T> match) => _treeList.Exists(match);
 
-        public SortedTreeList<T> FindAll(Predicate<T> match) => throw null;
+        public T Find(Predicate<T> match) => _treeList.Find(match);
 
-        public int FindIndex(Predicate<T> match) => throw null;
+        public SortedTreeList<T> FindAll(Predicate<T> match) => new SortedTreeList<T>(_treeList.FindAll(match), _comparer);
 
-        public int FindIndex(int startIndex, Predicate<T> match) => throw null;
+        public int FindIndex(Predicate<T> match) => _treeList.FindIndex(match);
 
-        public int FindIndex(int startIndex, int count, Predicate<T> match) => throw null;
+        public int FindIndex(int startIndex, Predicate<T> match) => _treeList.FindIndex(startIndex, match);
 
-        public T FindLast(Predicate<T> match) => throw null;
+        public int FindIndex(int startIndex, int count, Predicate<T> match) => _treeList.FindIndex(startIndex, count, match);
 
-        public int FindLastIndex(Predicate<T> match) => throw null;
+        public T FindLast(Predicate<T> match) => _treeList.FindLast(match);
 
-        public int FindLastIndex(int startIndex, Predicate<T> match) => throw null;
+        public int FindLastIndex(Predicate<T> match) => _treeList.FindLastIndex(match);
 
-        public int FindLastIndex(int startIndex, int count, Predicate<T> match) => throw null;
+        public int FindLastIndex(int startIndex, Predicate<T> match) => _treeList.FindLastIndex(startIndex, match);
 
-        public int LastIndexOf(T item) => throw null;
+        public int FindLastIndex(int startIndex, int count, Predicate<T> match) => _treeList.FindLastIndex(startIndex, count, match);
 
-        public int LastIndexOf(T item, int index) => throw null;
+        public int LastIndexOf(T item)
+        {
+            if (Count == 0)
+                return -1;
 
-        public int LastIndexOf(T item, int index, int count) => throw null;
+            return LastIndexOf(item, Count - 1, Count);
+        }
 
-        public void ForEach(Action<T> action) => throw null;
+        public int LastIndexOf(T item, int index) => LastIndexOf(item, index, index + 1);
 
-        public SortedTreeList<T> GetRange(int index, int count) => throw null;
+        public int LastIndexOf(T item, int index, int count)
+        {
+            var comparer = new CoercingComparer(_comparer, -1);
+            int result = _treeList.BinarySearch(index - count + 1, count, item, comparer);
+            if (!comparer.FoundMatch)
+                return -1;
 
-        public T[] ToArray() => throw null;
+            return ~result - 1;
+        }
 
-        public void TrimExcess() => throw null;
+        public void ForEach(Action<T> action) => _treeList.ForEach(action);
 
-        public bool TrueForAll(Predicate<T> match) => throw null;
+        public SortedTreeList<T> GetRange(int index, int count) => new SortedTreeList<T>(_treeList.GetRange(index, count), _comparer);
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+        public T[] ToArray() => _treeList.ToArray();
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+        public void TrimExcess() => _treeList.TrimExcess();
 
-        int IList.Add(object value) => throw null;
+        public bool TrueForAll(Predicate<T> match) => _treeList.TrueForAll(match);
 
-        bool IList.Contains(object value) => throw null;
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
-        int IList.IndexOf(object value) => throw null;
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        void IList.Insert(int index, object value) => throw new NotSupportedException();
+        int IList.Add(object value)
+        {
+            if (value == null && default(T) != null)
+                throw new ArgumentNullException(nameof(value));
 
-        void IList.Remove(object value) => throw null;
+            try
+            {
+                Add((T)value);
+            }
+            catch (InvalidCastException)
+            {
+                throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
+            }
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+            return Count - 1;
+        }
+
+        bool IList.Contains(object value)
+        {
+            if (value == null)
+            {
+                if (default(T) == null)
+                    return Contains(default);
+            }
+            else if (value is T)
+            {
+                return Contains((T)value);
+            }
+
+            return false;
+        }
+
+        int IList.IndexOf(object value)
+        {
+            if (value == null)
+            {
+                if (default(T) == null)
+                    return IndexOf(default);
+            }
+            else if (value is T)
+            {
+                return IndexOf((T)value);
+            }
+
+            return -1;
+        }
+
+        void IList<T>.Insert(int index, T item)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IList.Insert(int index, object value)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IList.Remove(object value)
+        {
+            int index = ((IList)this).IndexOf(value);
+            if (index >= 0)
+                RemoveAt(index);
+        }
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_treeList).CopyTo(array, index);
+
+        internal void Validate(ValidationRules validationRules)
+        {
+            Debug.Assert(_comparer != null, $"Assertion failed: _comparer != null");
+            Debug.Assert(_treeList != null, $"Assertion failed: _treeList != null");
+
+            _treeList.Validate(validationRules);
+
+            for (int i = 0; i < Count - 1; i++)
+            {
+                Debug.Assert(_comparer.Compare(this[i], this[i + 1]) <= 0, "Assertion failed: _comparer.Compare(this[i], this[i + 1]) <= 0");
+                Debug.Assert(_comparer.Compare(this[i + 1], this[i]) >= 0, "Assertion failed: _comparer.Compare(this[i + 1], this[i]) >= 0");
+            }
+        }
+
+        private sealed class CoercingComparer : IComparer<T>
+        {
+            private readonly IComparer<T> _underlyingComparer;
+            private readonly int _coerceResult;
+            private bool _foundMatch;
+
+            public CoercingComparer(IComparer<T> underlyingComparer, int coerceResult)
+            {
+                _underlyingComparer = underlyingComparer;
+                _coerceResult = coerceResult;
+            }
+
+            public bool FoundMatch => _foundMatch;
+
+            public int Compare(T x, T y)
+            {
+                int result = _underlyingComparer.Compare(x, y);
+                if (result != 0)
+                    return result;
+
+                // if we get here from a binary search, it means we found the item we searched for
+                _foundMatch = true;
+                return _coerceResult;
+            }
+        }
     }
 }

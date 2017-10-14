@@ -89,7 +89,9 @@ namespace Tvl.Collections.Trees
                 return true;
             }
 
-            void IEnumerator.Reset()
+            void IEnumerator.Reset() => InternalReset();
+
+            internal void InternalReset()
             {
                 if (_list._version != _version)
                     throw new InvalidOperationException();

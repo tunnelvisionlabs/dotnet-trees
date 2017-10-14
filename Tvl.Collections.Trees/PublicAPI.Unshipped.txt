@@ -13,7 +13,6 @@ Tvl.Collections.Trees.SortedTreeList<T>.Count.get -> int
 Tvl.Collections.Trees.SortedTreeList<T>.Enumerator
 Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.Current.get -> T
 Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.SortedTreeList<T>.Exists(System.Predicate<T> match) -> bool
 Tvl.Collections.Trees.SortedTreeList<T>.Find(System.Predicate<T> match) -> T
