@@ -194,20 +194,16 @@ namespace Tvl.Collections.Trees
                         {
                             // We were not inserting into the last node (an earlier split in the InsertRange operation
                             // resulted in insertions prior to the last node)
-                            if (pageIndex < insertionNode._nodeCount)
-                            {
-                                // The split does not change the insertion node. Since insertion indexes increase, it
-                                // may be impossible for a single InsertRange operation to hit the case where the
-                                // insertion node doesn't change twice (i.e. this block could be unreachable, but not
-                                // yet proven). The equivalent case in LeafNode.InsertRange is hit by the existing
-                                // tests.
-                                pageIndex++;
-                            }
-                            else
-                            {
-                                pageIndex = pageIndex + 1 - insertionNode._nodeCount;
-                                insertionNode = newLastIndex;
-                            }
+                            //
+                            // When we reach this point, a previous index insertion caused a split which did not change
+                            // the insertion node. Afterwards, we continued inserting and have now reached a point where
+                            // the page is splitting a second time. It is impossible for this split to be caused by an
+                            // insertion in the first half of the list. The primary difference between this situation
+                            // and similar code in LeafNode is the first insertion index - for LeafNode it is possible
+                            // to start inserting at index 0, but for IndexNode the first possible insertion is index 1.
+                            Debug.Assert(pageIndex >= insertionNode._nodeCount, $"Assertion failed: {nameof(pageIndex)} >= {nameof(insertionNode)}._nodeCount");
+                            pageIndex = pageIndex + 1 - insertionNode._nodeCount;
+                            insertionNode = newLastIndex;
                         }
                         else if (pageIndex < insertionNode._nodeCount)
                         {
