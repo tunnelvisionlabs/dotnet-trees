@@ -508,7 +508,7 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
                 Debug.Assert(match != null, $"Assertion failed: {nameof(match)} != null");
 
-                for (int i = FindLowerBound(_offsets, _nodeCount, span.Start); i < Count; i++)
+                for (int i = FindLowerBound(_offsets, _nodeCount, span.Start); i < _nodeCount; i++)
                 {
                     TreeSpan mappedSpan = MapSpanDownToChild(span, i);
                     if (mappedSpan.IsEmpty)
