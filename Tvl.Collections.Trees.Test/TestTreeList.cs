@@ -363,21 +363,82 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
-        public void TestListIndexOfInvalidOperations()
+        public void TestIndexOf()
         {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.IndexOf(list[0], -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.IndexOf(list[0], 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.IndexOf(list[0], 0, list.Count + 1));
+
+            Assert.Equal(-1, list.IndexOf(-1));
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Assert.Equal(reference.IndexOf(i), list.IndexOf(i));
+
+                int firstIndex = list.IndexOf(i);
+                Assert.Equal(reference.IndexOf(i, firstIndex + 1), list.IndexOf(i, firstIndex + 1));
+            }
+
             TreeList<int> empty = new TreeList<int>();
             Assert.Equal(-1, empty.IndexOf(0));
-            Assert.Equal(-1, empty.IndexOf(0, 0));
-            Assert.Equal(-1, empty.IndexOf(0, 0, 0));
+        }
 
-            Assert.Equal(-1, empty.LastIndexOf(0));
-            Assert.Equal(-1, empty.LastIndexOf(0, -1));
-            Assert.Equal(-1, empty.LastIndexOf(0, -1, 0));
+        [Fact]
+        public void TestLastIndexOf()
+        {
+            Random random = new Random();
+            TreeList<int> list = new TreeList<int>(branchingFactor: 4);
+            List<int> reference = new List<int>();
+            Assert.Equal(-1, list.LastIndexOf(0, -1, 0));
+            Assert.Equal(-1, reference.LastIndexOf(0, -1, 0));
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, 0, 0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, -1, -1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => empty.LastIndexOf(0, -1, 1));
+            // LastIndexOf does not validate anything for empty collections
+            Assert.Equal(-1, list.LastIndexOf(0, 0, 0));
+            Assert.Equal(-1, reference.LastIndexOf(0, 0, 0));
+            Assert.Equal(-1, list.LastIndexOf(0, -40, -50));
+            Assert.Equal(-1, reference.LastIndexOf(0, -40, -50));
+            Assert.Equal(-1, list.LastIndexOf(0, 40, 50));
+            Assert.Equal(-1, reference.LastIndexOf(0, 40, 50));
 
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                list.Insert(index, i);
+                reference.Insert(index, i);
+            }
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count - 1, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count - 1, list.Count + 1));
+
+            Assert.Equal(-1, list.LastIndexOf(-1));
+            Assert.Equal(-1, list.LastIndexOf(-1, list.Count - 1, list.Count / 2));
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                Assert.Equal(reference.LastIndexOf(i), list.LastIndexOf(i));
+
+                int lastIndex = list.LastIndexOf(i);
+                if (lastIndex < 1)
+                    continue;
+
+                Assert.Equal(reference.LastIndexOf(i, lastIndex - 1), list.LastIndexOf(i, lastIndex - 1));
+            }
+        }
+
+        [Fact]
+        public void TestLastIndexOfInvalidOperations()
+        {
             TreeList<int> single = new TreeList<int>(Enumerable.Range(1, 1));
             Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 1, 0));
             Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 0, -1));

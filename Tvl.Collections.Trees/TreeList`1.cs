@@ -506,14 +506,18 @@ namespace Tvl.Collections.Trees
         {
             if (Count == 0)
             {
-                if (index != -1)
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                // index and count are not validated for empty lists. This strange behavior matches the behavior for
+                // List<T>.
+                return -1;
             }
-            else
-            {
-                if ((uint)index >= (uint)Count)
-                    throw new ArgumentOutOfRangeException(nameof(index));
-            }
+
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            if ((uint)index >= (uint)Count)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             if (count < 0 || index - count + 1 < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
