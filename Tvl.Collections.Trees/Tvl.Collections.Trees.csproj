@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard1.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.0;netstandard1.3</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,6 +21,10 @@
 
   <ItemGroup>
     <PackageReference Include="PublicApiAnalyzer" Version="1.0.0-beta001" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
