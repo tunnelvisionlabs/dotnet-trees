@@ -520,9 +520,9 @@ namespace Tvl.Collections.Trees.Test
             empty.Validate(ValidationRules.RequirePacked);
 
             TreeList<int> single = new TreeList<int>(Enumerable.Range(0, 1));
-            empty.Validate(ValidationRules.RequirePacked);
-            empty.TrimExcess();
-            empty.Validate(ValidationRules.RequirePacked);
+            single.Validate(ValidationRules.RequirePacked);
+            single.TrimExcess();
+            single.Validate(ValidationRules.RequirePacked);
 
             // Construct a poorly-packed list with several levels
             TreeList<int> binary = new TreeList<int>(branchingFactor: 2);
