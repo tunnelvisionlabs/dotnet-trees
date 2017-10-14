@@ -283,7 +283,9 @@ namespace Tvl.Collections.Trees
                     return false;
                 }
 
-                Node expectedNext = pageIndex == _nodeCount - 1 ? _next?._nodes[0] : _nodes[pageIndex + 1];
+                // _next cannot be null if (pageIndex == _nodeCount - 1), because there is no way we needed to rebalance
+                // the children nodes for that case. This method would have already returned above.
+                Node expectedNext = pageIndex == _nodeCount - 1 ? _next._nodes[0] : _nodes[pageIndex + 1];
                 Node nextChild = _nodes[pageIndex].NextNode;
                 bool removedChild = nextChild != expectedNext;
                 if (!removedChild)
@@ -651,11 +653,7 @@ namespace Tvl.Collections.Trees
 
             private TreeSpan MapSpanDownToChild(TreeSpan span, int childIndex)
             {
-                Debug.Assert(childIndex >= 0 && childIndex <= _nodeCount, $"Assertion failed: {nameof(childIndex)} >= 0 && {nameof(childIndex)} <= {nameof(_nodeCount)}");
-                if (childIndex == _nodeCount)
-                {
-                    return new TreeSpan(Count, 0);
-                }
+                Debug.Assert(childIndex >= 0 && childIndex < _nodeCount, $"Assertion failed: {nameof(childIndex)} >= 0 && {nameof(childIndex)} < {nameof(_nodeCount)}");
 
                 // Offset the input span
                 TreeSpan mappedFullSpan = span.Offset(-_offsets[childIndex]);

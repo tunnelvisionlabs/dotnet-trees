@@ -254,11 +254,10 @@ namespace Tvl.Collections.Trees
                     return -1;
                 }
 
+                [ExcludeFromCodeCoverage]
                 internal override int LastIndexOf(T item, TreeSpan span)
                 {
-                    Debug.Assert(span.IsSubspanOf(Span), $"Assertion failed: {nameof(span)}.IsSubspanOf({nameof(Span)})");
-
-                    return -1;
+                    throw ExceptionUtilities.Unreachable;
                 }
 
                 internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
