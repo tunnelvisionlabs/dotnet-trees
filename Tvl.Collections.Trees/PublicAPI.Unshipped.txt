@@ -1,3 +1,53 @@
+Tvl.Collections.Trees.SortedTreeList<T>
+Tvl.Collections.Trees.SortedTreeList<T>.Add(T item) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.AddRange(System.Collections.Generic.IEnumerable<T> collection) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.BinarySearch(T item) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.BinarySearch(int index, int count, T item) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.Clear() -> void
+Tvl.Collections.Trees.SortedTreeList<T>.Comparer.get -> System.Collections.Generic.IComparer<T>
+Tvl.Collections.Trees.SortedTreeList<T>.Contains(T item) -> bool
+Tvl.Collections.Trees.SortedTreeList<T>.CopyTo(T[] array) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.CopyTo(T[] array, int arrayIndex) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.CopyTo(int index, T[] array, int arrayIndex, int count) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.Count.get -> int
+Tvl.Collections.Trees.SortedTreeList<T>.Enumerator
+Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.Current.get -> T
+Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.Dispose() -> void
+Tvl.Collections.Trees.SortedTreeList<T>.Enumerator.MoveNext() -> bool
+Tvl.Collections.Trees.SortedTreeList<T>.Exists(System.Predicate<T> match) -> bool
+Tvl.Collections.Trees.SortedTreeList<T>.Find(System.Predicate<T> match) -> T
+Tvl.Collections.Trees.SortedTreeList<T>.FindAll(System.Predicate<T> match) -> Tvl.Collections.Trees.SortedTreeList<T>
+Tvl.Collections.Trees.SortedTreeList<T>.FindIndex(System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, int count, System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.FindLast(System.Predicate<T> match) -> T
+Tvl.Collections.Trees.SortedTreeList<T>.FindLastIndex(System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, int count, System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.ForEach(System.Action<T> action) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.GetEnumerator() -> Tvl.Collections.Trees.SortedTreeList<T>.Enumerator
+Tvl.Collections.Trees.SortedTreeList<T>.GetRange(int index, int count) -> Tvl.Collections.Trees.SortedTreeList<T>
+Tvl.Collections.Trees.SortedTreeList<T>.IndexOf(T item) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.IndexOf(T item, int index) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.IndexOf(T item, int index, int count) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item, int index) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item, int index, int count) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.Remove(T item) -> bool
+Tvl.Collections.Trees.SortedTreeList<T>.RemoveAll(System.Predicate<T> match) -> int
+Tvl.Collections.Trees.SortedTreeList<T>.RemoveAt(int index) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.RemoveRange(int index, int count) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList() -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IComparer<T> comparer) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T> collection) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IComparer<T> comparer) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IComparer<T> comparer) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IComparer<T> comparer) -> void
+Tvl.Collections.Trees.SortedTreeList<T>.ToArray() -> T[]
+Tvl.Collections.Trees.SortedTreeList<T>.TrimExcess() -> void
+Tvl.Collections.Trees.SortedTreeList<T>.TrueForAll(System.Predicate<T> match) -> bool
+Tvl.Collections.Trees.SortedTreeList<T>.this[int index].get -> T
 Tvl.Collections.Trees.TreeList<T>
 Tvl.Collections.Trees.TreeList<T>.Add(T item) -> void
 Tvl.Collections.Trees.TreeList<T>.AddRange(System.Collections.Generic.IEnumerable<T> collection) -> void
