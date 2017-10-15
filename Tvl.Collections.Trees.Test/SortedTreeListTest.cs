@@ -380,6 +380,63 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestCopyTo()
+        {
+            var list = new SortedTreeList<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
+            var reference = new List<int>(Enumerable.Range(0, 100));
+
+            int[] listArray = new int[list.Count * 2];
+            int[] referenceArray = new int[reference.Count * 2];
+
+            list.CopyTo(listArray);
+            reference.CopyTo(referenceArray);
+            Assert.Equal(referenceArray, listArray);
+
+            list.CopyTo(listArray, 0);
+            Assert.Equal(referenceArray, listArray);
+
+            list.CopyTo(listArray, list.Count / 2);
+            reference.CopyTo(referenceArray, reference.Count / 2);
+            Assert.Equal(referenceArray, listArray);
+        }
+
+        [Fact]
+        public void TestForEach()
+        {
+            var list = new SortedTreeList<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
+            var reference = new List<int>(Enumerable.Range(0, 100));
+
+            Assert.Throws<ArgumentNullException>("action", () => list.ForEach(null));
+            Assert.Throws<ArgumentNullException>(() => reference.ForEach(null));
+
+            var listOutput = new List<int>();
+            var referenceOutput = new List<int>();
+
+            list.ForEach(listOutput.Add);
+            reference.ForEach(referenceOutput.Add);
+            Assert.Equal(referenceOutput, listOutput);
+        }
+
+        [Fact]
+        public void TestGetRange()
+        {
+            var list = new SortedTreeList<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
+            var reference = new List<int>(Enumerable.Range(0, 100));
+
+            SortedTreeList<int> subList = list.GetRange(10, 80);
+            List<int> subReference = reference.GetRange(10, 80);
+            Assert.Equal(subReference, subList);
+
+            // Verify that changes to the original list do not affect previous calls to GetRange
+            int[] values = subList.ToArray();
+            list.Add(list[list.Count / 2]);
+            reference.Insert((reference.Count / 2) + 1, reference[reference.Count / 2]);
+            Assert.Equal(reference, list);
+            Assert.Equal(values, subList);
+            Assert.Equal(values, subReference);
+        }
+
+        [Fact]
         public void TestBinarySearchFullList()
         {
             SortedTreeList<int> list = new SortedTreeList<int>(branchingFactor: 4);
