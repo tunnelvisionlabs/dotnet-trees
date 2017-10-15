@@ -6,6 +6,7 @@ namespace Tvl.Collections.Trees.Test
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using Tvl.Collections.Trees;
     using Xunit;
     using ICollection = System.Collections.ICollection;
@@ -92,7 +93,7 @@ namespace Tvl.Collections.Trees.Test
         {
             TestIListInterfaceImpl(new SortedTreeList<int> { 600, 601 }, supportsNullValues: false);
             TestIListInterfaceImpl(new SortedTreeList<int?> { 600, 601 }, supportsNullValues: true);
-            TestIListInterfaceImpl(new SortedTreeList<object> { 600, 601 }, supportsNullValues: true);
+            TestIListInterfaceImpl(new SortedTreeList<ValueType> { 600, 601 }, supportsNullValues: true);
         }
 
         private static void TestIListInterfaceImpl(IList list, bool supportsNullValues)
@@ -104,12 +105,12 @@ namespace Tvl.Collections.Trees.Test
             Assert.Equal(601, list[1]);
 
             Assert.True(list.Contains(600));
-            ////Assert.False(list.Contains("Text"));
+            Assert.False(list.Contains("Text"));
             Assert.False(list.Contains(null));
 
             Assert.Equal(0, list.IndexOf(600));
             Assert.Equal(1, list.IndexOf(601));
-            ////Assert.Equal(-1, list.IndexOf("Text"));
+            Assert.Equal(-1, list.IndexOf("Text"));
             Assert.Equal(-1, list.IndexOf(null));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list[-1]);
@@ -128,7 +129,7 @@ namespace Tvl.Collections.Trees.Test
 
             int originalCount = list.Count;
             list.Remove(null);
-            ////list.Remove("Text");
+            list.Remove("Text");
             Assert.Equal(originalCount, list.Count);
 
             object removedItem = list[0];
@@ -163,6 +164,36 @@ namespace Tvl.Collections.Trees.Test
 
                 Assert.Equal(list.Count, list.Add(602));
             }
+
+            Assert.NotEmpty(list);
+            list.Clear();
+            Assert.Empty(list);
+        }
+
+        [Fact]
+        public void TestRemoveRange()
+        {
+            var list = new SortedTreeList<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
+            var reference = new List<int>(Enumerable.Range(0, 100));
+
+            list.RemoveRange(10, 80);
+            reference.RemoveRange(10, 80);
+            Assert.Equal(reference, list);
+
+            list.RemoveRange(0, list.Count);
+            reference.RemoveRange(0, reference.Count);
+            Assert.Equal(reference, list);
+            Assert.Empty(list);
+        }
+
+        [Fact]
+        public void TestIListTInterface()
+        {
+            IList<int> list = new SortedTreeList<int>(Enumerable.Range(0, 10));
+            Assert.False(list.IsReadOnly);
+            Assert.Equal(0, list[0]);
+
+            Assert.Throws<NotSupportedException>(() => list.Insert(0, 0));
         }
 
         [Fact]
@@ -301,6 +332,51 @@ namespace Tvl.Collections.Trees.Test
 
             int[] actual = list.ToArray();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TestInsertionLocation()
+        {
+            var comparer = new ComparisonComparer<StrongBox<int>>((x, y) => x.Value - y.Value);
+            var list = new SortedTreeList<StrongBox<int>>(branchingFactor: 4, comparer: comparer);
+            for (int i = 0; i < 1000; i++)
+            {
+                var value = new StrongBox<int>(Generator.GetInt32(0, 200));
+                int index = list.LastIndexOf(value);
+                if (index < 0)
+                {
+                    // No item with this value already exists
+                    index = list.FindLastIndex(box => box.Value < value.Value);
+                }
+                else
+                {
+                    Assert.Equal(list[index].Value, value.Value);
+                }
+
+                if (index < list.Count - 1)
+                {
+                    Assert.True(list[index + 1].Value > value.Value);
+                }
+
+                // The item is inserted after the previous last item with this value (or the last item less than it)
+                list.Add(value);
+                Assert.Same(list[index + 1], value);
+                Assert.Equal(index + 1, list.LastIndexOf(new StrongBox<int>(value.Value)));
+
+                // Check IndexOf as well
+                int firstInstance = list.IndexOf(new StrongBox<int>(value.Value));
+                Assert.True(firstInstance >= 0 && firstInstance < list.Count);
+                Assert.Equal(value.Value, list[firstInstance].Value);
+                Assert.True(firstInstance == 0 || list[firstInstance - 1].Value < value.Value);
+
+                // Check BinarySearch consistency
+                int binarySearch = list.BinarySearch(new StrongBox<int>(value.Value));
+                Assert.True(binarySearch >= firstInstance && binarySearch <= index + 1);
+                Assert.Equal(firstInstance, list.BinarySearch(0, firstInstance + 1, new StrongBox<int>(value.Value)));
+                Assert.Equal(~firstInstance, list.BinarySearch(0, firstInstance, new StrongBox<int>(value.Value)));
+                Assert.Equal(index + 1, list.BinarySearch(index + 1, list.Count - index - 1, new StrongBox<int>(value.Value)));
+                Assert.Equal(~(index + 2), list.BinarySearch(index + 2, list.Count - index - 2, new StrongBox<int>(value.Value)));
+            }
         }
 
         [Fact]
