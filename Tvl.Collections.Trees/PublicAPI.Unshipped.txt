@@ -95,7 +95,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Count.get -> int
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
@@ -106,10 +105,8 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Count.get -> in
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.KeyCollection() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Remove(TKey item) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Keys.get -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Remove(TKey key) -> bool
@@ -130,10 +127,8 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Count.get -> 
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Dispose() -> void
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Values.get -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].get -> TValue
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].set -> void

@@ -6,102 +6,312 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using IDictionary = System.Collections.IDictionary;
 
     public partial class TreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
     {
-        public TreeDictionary() => throw null;
+        private readonly IEqualityComparer<TKey> _comparer;
+        private readonly TreeSet<KeyValuePair<TKey, TValue>> _treeSet;
 
-        public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection) => throw null;
+        public TreeDictionary()
+            : this(default(IEqualityComparer<TKey>))
+        {
+        }
 
-        public TreeDictionary(IEqualityComparer<TKey> comparer) => throw null;
+        public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+            : this(collection, comparer: null)
+        {
+        }
 
-        public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer) => throw null;
+        public TreeDictionary(IEqualityComparer<TKey> comparer)
+        {
+            _comparer = comparer ?? EqualityComparer<TKey>.Default;
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(new KeyComparer(_comparer));
+        }
 
-        public TreeDictionary(int branchingFactor) => throw null;
+        public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)
+            : this(comparer)
+        {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
 
-        public TreeDictionary(int branchingFactor, IEqualityComparer<TKey> comparer) => throw null;
+            foreach (KeyValuePair<TKey, TValue> pair in collection)
+            {
+                Add(pair.Key, pair.Value);
+            }
+        }
 
-        public TreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer) => throw null;
+        public TreeDictionary(int branchingFactor)
+            : this(branchingFactor, comparer: default)
+        {
+        }
 
-        public IEqualityComparer<TKey> Comparer => throw null;
+        public TreeDictionary(int branchingFactor, IEqualityComparer<TKey> comparer)
+        {
+            _comparer = comparer ?? EqualityComparer<TKey>.Default;
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyComparer(_comparer));
+        }
 
-        public int Count => throw null;
+        public TreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)
+            : this(branchingFactor, comparer)
+        {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
 
-        public KeyCollection Keys => throw null;
+            foreach (KeyValuePair<TKey, TValue> pair in collection)
+            {
+                Add(pair.Key, pair.Value);
+            }
+        }
 
-        public ValueCollection Values => throw null;
+        public IEqualityComparer<TKey> Comparer => _comparer;
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys => throw null;
+        public int Count => _treeSet.Count;
 
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => throw null;
+        public KeyCollection Keys => new KeyCollection(this);
 
-        ICollection IDictionary.Keys => throw null;
+        public ValueCollection Values => new ValueCollection(this);
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values => throw null;
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
 
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => throw null;
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
-        ICollection IDictionary.Values => throw null;
+        ICollection IDictionary.Keys => Keys;
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => throw null;
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
 
-        bool IDictionary.IsFixedSize => throw null;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
-        bool IDictionary.IsReadOnly => throw null;
+        ICollection IDictionary.Values => Values;
 
-        bool ICollection.IsSynchronized => throw null;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
-        object ICollection.SyncRoot => throw null;
+        bool IDictionary.IsFixedSize => false;
+
+        bool IDictionary.IsReadOnly => false;
+
+        bool ICollection.IsSynchronized => false;
+
+        object ICollection.SyncRoot => ((ICollection)_treeSet).SyncRoot;
 
         public TValue this[TKey key]
         {
-            get => throw null;
-            set => throw null;
+            get
+            {
+                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> value))
+                    throw new KeyNotFoundException();
+
+                return value.Value;
+            }
+
+            set
+            {
+                _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
+                _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
+            }
         }
 
         object IDictionary.this[object key]
         {
-            get => throw null;
-            set => throw null;
+            get
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+
+                if (key is TKey typedKey && TryGetValue(typedKey, out TValue value))
+                {
+                    return value;
+                }
+
+                return null;
+            }
+
+            set
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (value == null && default(TValue) != null)
+                    throw new ArgumentException(nameof(value));
+
+                try
+                {
+                    var typedKey = (TKey)key;
+                    try
+                    {
+                        this[typedKey] = (TValue)value;
+                    }
+                    catch (InvalidCastException)
+                    {
+                        throw new ArgumentException(nameof(value));
+                    }
+                }
+                catch (InvalidCastException)
+                {
+                    throw new ArgumentException(nameof(key));
+                }
+            }
         }
 
-        public bool ContainsKey(TKey key) => throw null;
+        public bool ContainsKey(TKey key) => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default));
 
-        public bool ContainsValue(TValue value) => throw null;
+        public bool ContainsValue(TValue value) => _treeSet.Any(pair => EqualityComparer<TValue>.Default.Equals(pair.Value, value));
 
-        public bool TryGetValue(TKey key, out TValue value) => throw null;
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> pair))
+            {
+                value = default;
+                return false;
+            }
 
-        public Enumerator GetEnumerator() => throw null;
+            value = pair.Value;
+            return true;
+        }
 
-        public void Add(TKey key, TValue value) => throw null;
+        public Enumerator GetEnumerator() => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
 
-        public bool TryAdd(TKey key, TValue value) => throw null;
+        public void Add(TKey key, TValue value)
+        {
+            if (!TryAdd(key, value))
+                throw new ArgumentException();
+        }
 
-        public void Clear() => throw null;
+        public bool TryAdd(TKey key, TValue value) => _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
 
-        public bool Remove(TKey key) => throw null;
+        public void Clear() => _treeSet.Clear();
 
-        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => throw null;
+        public bool Remove(TKey key) => _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => throw null;
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => throw null;
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+        {
+            return TryGetValue(item.Key, out TValue value)
+                && EqualityComparer<TValue>.Default.Equals(value, item.Value);
+        }
 
-        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => throw null;
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => _treeSet.CopyTo(array, arrayIndex);
 
-        IDictionaryEnumerator IDictionary.GetEnumerator() => throw null;
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+        IDictionaryEnumerator IDictionary.GetEnumerator() => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.DictionaryEntry);
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => throw null;
+        IEnumerator IEnumerable.GetEnumerator() => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
 
-        void IDictionary.Add(object key, object value) => throw null;
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
+        {
+            if (!TryGetValue(item.Key, out TValue value) || !EqualityComparer<TValue>.Default.Equals(value, item.Value))
+                return false;
 
-        bool IDictionary.Contains(object key) => throw null;
+            Remove(item.Key);
+            return true;
+        }
 
-        void IDictionary.Remove(object key) => throw null;
+        void IDictionary.Add(object key, object value)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+            if (value == null && default(TValue) != null)
+                throw new ArgumentException(nameof(value));
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+            try
+            {
+                var typedKey = (TKey)key;
+                try
+                {
+                    Add(typedKey, (TValue)value);
+                }
+                catch (InvalidCastException)
+                {
+                    throw new ArgumentException(nameof(value));
+                }
+            }
+            catch (InvalidCastException)
+            {
+                throw new ArgumentException(nameof(key));
+            }
+        }
+
+        bool IDictionary.Contains(object key)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            return key is TKey typedKey && ContainsKey(typedKey);
+        }
+
+        void IDictionary.Remove(object key)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            if (key is TKey typedKey)
+                Remove(typedKey);
+        }
+
+        void ICollection.CopyTo(Array array, int index)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (array.Rank != 1)
+                throw new ArgumentException(nameof(array));
+            if (array.GetLowerBound(0) != 0)
+                throw new ArgumentException();
+            if (index < 0 || index > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (array.Length - index < Count)
+                throw new ArgumentException();
+
+            if (array is KeyValuePair<TKey, TValue>[] pairs)
+            {
+                ICollection<KeyValuePair<TKey, TValue>> collection = this;
+                collection.CopyTo(pairs, index);
+            }
+            else if (array is DictionaryEntry[] dictionaryEntryArray)
+            {
+                int i = index;
+                foreach (KeyValuePair<TKey, TValue> pair in this)
+                {
+                    dictionaryEntryArray[i] = new DictionaryEntry(pair.Key, pair.Value);
+                    i++;
+                }
+            }
+            else if (array is object[] objects)
+            {
+                int i = index;
+                foreach (KeyValuePair<TKey, TValue> pair in this)
+                {
+                    objects[i] = pair;
+                    i++;
+                }
+            }
+            else
+            {
+                throw new ArgumentException(nameof(array));
+            }
+        }
+
+        private sealed class KeyComparer : IEqualityComparer<KeyValuePair<TKey, TValue>>
+        {
+            private readonly IEqualityComparer<TKey> _comparer;
+
+            internal KeyComparer(IEqualityComparer<TKey> comparer)
+            {
+                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
+                _comparer = comparer;
+            }
+
+            public bool Equals(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
+            {
+                return _comparer.Equals(x.Key, y.Key);
+            }
+
+            public int GetHashCode(KeyValuePair<TKey, TValue> obj)
+            {
+                return _comparer.GetHashCode(obj.Key);
+            }
+        }
     }
 }
