@@ -20,7 +20,8 @@ namespace Tvl.Collections.Trees
 
         public SortedTreeSet(IEnumerable<T> collection)
         {
-            _sortedList = new SortedTreeList<T>(collection);
+            _sortedList = new SortedTreeList<T>();
+            UnionWith(collection);
         }
 
         public SortedTreeSet(IComparer<T> comparer)
@@ -131,13 +132,13 @@ namespace Tvl.Collections.Trees
                 while (i < Count && j < sortedSet.Count)
                 {
                     int comparison = Comparer.Compare(_sortedList[i], sortedSet._sortedList[j]);
-                    if (i == 0)
+                    if (comparison == 0)
                     {
                         // Keep the item
                         i++;
                         j++;
                     }
-                    else if (i < 0)
+                    else if (comparison < 0)
                     {
                         _sortedList.RemoveAt(i);
                     }
@@ -324,14 +325,12 @@ namespace Tvl.Collections.Trees
                 Enumerator y = sortedSet.GetEnumerator();
                 while (true)
                 {
-                    if (!x.MoveNext())
+                    bool hasX = x.MoveNext();
+                    bool hasY = y.MoveNext();
+                    Debug.Assert(hasX == hasY, $"Assertion failed: {nameof(hasX)} == {nameof(hasY)}");
+                    if (!hasX)
                     {
-                        return y.MoveNext();
-                    }
-
-                    if (!y.MoveNext())
-                    {
-                        return false;
+                        return true;
                     }
 
                     if (Comparer.Compare(x.Current, y.Current) != 0)
@@ -455,6 +454,17 @@ namespace Tvl.Collections.Trees
             return (uniqueCount, unfoundCount);
         }
 
+        internal void Validate(ValidationRules validationRules)
+        {
+            _sortedList.Validate(validationRules);
+
+            for (int i = 0; i < Count - 1; i++)
+            {
+                Debug.Assert(Comparer.Compare(_sortedList[i], _sortedList[i + 1]) < 0, "Assertion failed: Comparer.Compare(_sortedList[i], _sortedList[i + 1]) < 0");
+                Debug.Assert(Comparer.Compare(_sortedList[i + 1], _sortedList[i]) > 0, "Assertion failed: Comparer.Compare(_sortedList[i + 1], _sortedList[i]) > 0");
+            }
+        }
+
 #pragma warning disable SA1206 // Declaration keywords should follow order
         private ref struct BitHelper
 #pragma warning restore SA1206 // Declaration keywords should follow order
@@ -471,11 +481,10 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
 
                 int bitArrayIndex = bitPosition / 32;
-                if (bitArrayIndex < _span.Length)
-                {
-                    // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
-                    _span[bitArrayIndex] |= 1 << (bitPosition & 31);
-                }
+                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
+
+                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
+                _span[bitArrayIndex] |= 1 << (bitPosition & 31);
             }
 
             internal bool IsMarked(int bitPosition)
@@ -483,8 +492,7 @@ namespace Tvl.Collections.Trees
                 Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
 
                 int bitArrayIndex = bitPosition / 32;
-                if (bitArrayIndex >= _span.Length)
-                    return false;
+                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
 
                 // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
                 return (_span[bitArrayIndex] & (1 << (bitPosition & 31))) != 0;
@@ -495,27 +503,16 @@ namespace Tvl.Collections.Trees
         {
             public static readonly IEqualityComparer<SortedTreeSet<T>> Default = new SortedTreeSetEqualityComparer();
 
-            private readonly IComparer<T> _comparer;
+            private readonly IComparer<T> _comparer = Comparer<T>.Default;
             private readonly IEqualityComparer<T> _equalityComparer;
 
             private SortedTreeSetEqualityComparer()
-                : this(null, null)
-            {
-            }
-
-            public SortedTreeSetEqualityComparer(IComparer<T> comparer)
-                : this(comparer, null)
+                : this(null)
             {
             }
 
             public SortedTreeSetEqualityComparer(IEqualityComparer<T> memberEqualityComparer)
-                : this(null, memberEqualityComparer)
             {
-            }
-
-            public SortedTreeSetEqualityComparer(IComparer<T> comparer, IEqualityComparer<T> memberEqualityComparer)
-            {
-                _comparer = comparer ?? Comparer<T>.Default;
                 _equalityComparer = memberEqualityComparer ?? EqualityComparer<T>.Default;
             }
 
