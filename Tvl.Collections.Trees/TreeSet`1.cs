@@ -33,6 +33,9 @@ namespace Tvl.Collections.Trees
         public TreeSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
             : this(comparer)
         {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
+
             UnionWith(collection);
         }
 
@@ -50,6 +53,9 @@ namespace Tvl.Collections.Trees
         public TreeSet(int branchingFactor, IEnumerable<T> collection, IEqualityComparer<T> comparer)
             : this(branchingFactor, comparer)
         {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
+
             UnionWith(collection);
         }
 

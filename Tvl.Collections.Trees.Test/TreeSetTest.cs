@@ -4,7 +4,6 @@
 namespace Tvl.Collections.Trees.Test
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -19,11 +18,16 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
-        public void TestCollectionConstructor()
+        public void TestCollectionConstructors()
         {
-            Assert.Throws<ArgumentNullException>(() => new TreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(branchingFactor: 4, collection: null, comparer: null));
 
             var set = new TreeSet<int>(new[] { 1, 1 });
+            Assert.Single(set);
+            Assert.Equal(new[] { 1 }, set);
+
+            set = new TreeSet<int>(branchingFactor: 4, new[] { 1, 1 }, comparer: null);
             Assert.Single(set);
             Assert.Equal(new[] { 1 }, set);
         }
