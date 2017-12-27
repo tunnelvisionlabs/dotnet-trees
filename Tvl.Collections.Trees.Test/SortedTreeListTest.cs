@@ -19,6 +19,8 @@ namespace Tvl.Collections.Trees.Test
         {
             SortedTreeList<int> list = new SortedTreeList<int>();
             Assert.Empty(list);
+
+            Assert.Throws<ArgumentNullException>(() => new SortedTreeList<int>(collection: null));
         }
 
         [Fact]
@@ -332,6 +334,22 @@ namespace Tvl.Collections.Trees.Test
 
             int[] actual = list.ToArray();
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TestAddRange()
+        {
+            int[] expected = { 600, 601, 602, 603, 700, 701, 702, 703, 800, 801, 802, 803 };
+
+            SortedTreeList<int> list = new SortedTreeList<int>(branchingFactor: 3);
+            list.AddRange(expected);
+
+            Assert.Equal(expected.Length, list.Count);
+
+            int[] actual = list.ToArray();
+            Assert.Equal(expected, actual);
+
+            Assert.Throws<ArgumentNullException>(() => list.AddRange(null));
         }
 
         [Fact]
