@@ -84,6 +84,10 @@ namespace Tvl.Collections.Trees
 
         public bool Contains(T item) => _sortedList.Contains(item);
 
+        internal int IndexOf(T item) => _sortedList.IndexOf(item);
+
+        internal int FindIndex(Predicate<T> match) => _sortedList.FindIndex(match);
+
         public void CopyTo(T[] array) => _sortedList.CopyTo(array);
 
         public void CopyTo(T[] array, int arrayIndex) => _sortedList.CopyTo(array, arrayIndex);

@@ -141,7 +141,7 @@ namespace Tvl.Collections.Trees
 
         public void Clear() => _treeList.Clear();
 
-        public bool Contains(T item) => _treeList.BinarySearch(item) >= 0;
+        public bool Contains(T item) => _treeList.BinarySearch(item, _comparer) >= 0;
 
         public void CopyTo(T[] array) => _treeList.CopyTo(array);
 
