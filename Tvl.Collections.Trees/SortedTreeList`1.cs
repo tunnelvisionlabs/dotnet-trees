@@ -132,6 +132,9 @@ namespace Tvl.Collections.Trees
 
         public void AddRange(IEnumerable<T> collection)
         {
+            if (collection == null)
+                throw new ArgumentNullException(nameof(collection));
+
             foreach (T item in collection)
                 Add(item);
         }
