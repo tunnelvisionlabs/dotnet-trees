@@ -133,7 +133,7 @@ namespace Tvl.Collections.Trees
                 if (key == null)
                     throw new ArgumentNullException(nameof(key));
                 if (value == null && default(TValue) != null)
-                    throw new ArgumentException(nameof(value));
+                    throw new ArgumentException(nameof(value), nameof(value));
 
                 try
                 {
@@ -144,12 +144,12 @@ namespace Tvl.Collections.Trees
                     }
                     catch (InvalidCastException)
                     {
-                        throw new ArgumentException(nameof(value));
+                        throw new ArgumentException(nameof(value), nameof(value));
                     }
                 }
                 catch (InvalidCastException)
                 {
-                    throw new ArgumentException(nameof(key));
+                    throw new ArgumentException(nameof(key), nameof(key));
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace Tvl.Collections.Trees
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
             if (value == null && default(TValue) != null)
-                throw new ArgumentException(nameof(value));
+                throw new ArgumentException(nameof(value), nameof(value));
 
             try
             {
@@ -225,12 +225,12 @@ namespace Tvl.Collections.Trees
                 }
                 catch (InvalidCastException)
                 {
-                    throw new ArgumentException(nameof(value));
+                    throw new ArgumentException(nameof(value), nameof(value));
                 }
             }
             catch (InvalidCastException)
             {
-                throw new ArgumentException(nameof(key));
+                throw new ArgumentException(nameof(key), nameof(key));
             }
         }
 
@@ -280,11 +280,18 @@ namespace Tvl.Collections.Trees
             }
             else if (array is object[] objects)
             {
-                int i = index;
-                foreach (KeyValuePair<TKey, TValue> pair in this)
+                try
                 {
-                    objects[i] = pair;
-                    i++;
+                    int i = index;
+                    foreach (KeyValuePair<TKey, TValue> pair in this)
+                    {
+                        objects[i] = pair;
+                        i++;
+                    }
+                }
+                catch (ArrayTypeMismatchException)
+                {
+                    throw new ArgumentException(nameof(array), nameof(array));
                 }
             }
             else
