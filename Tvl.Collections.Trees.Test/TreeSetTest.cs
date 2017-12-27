@@ -9,113 +9,96 @@ namespace Tvl.Collections.Trees.Test
     using System.Linq;
     using Xunit;
 
-    public class SortedTreeSetTest : AbstractSetTest
+    public class TreeSetTest : AbstractSetTest
     {
         [Fact]
         public void TestTreeSetConstructor()
         {
-            SortedTreeSet<int> set = new SortedTreeSet<int>();
+            TreeSet<int> set = new TreeSet<int>();
             Assert.Empty(set);
         }
 
         [Fact]
         public void TestCollectionConstructor()
         {
-            Assert.Throws<ArgumentNullException>(() => new SortedTreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>(() => new TreeSet<int>(collection: null));
 
-            var set = new SortedTreeSet<int>(new[] { 1, 1 });
+            var set = new TreeSet<int>(new[] { 1, 1 });
             Assert.Single(set);
-            Assert.Equal(1, set.Min);
-            Assert.Equal(1, set.Max);
+            Assert.Equal(new[] { 1 }, set);
         }
 
         [Fact]
         public void TestTreeSetBranchingFactorConstructor()
         {
-            SortedTreeSet<int> set = new SortedTreeSet<int>(8);
+            TreeSet<int> set = new TreeSet<int>(8);
             Assert.Empty(set);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SortedTreeSet<int>(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SortedTreeSet<int>(0));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new SortedTreeSet<int>(1));
-        }
-
-        [Fact]
-        public void TestEmptySetMinMax()
-        {
-            TestEmptySetMinMaxImpl<int>();
-            TestEmptySetMinMaxImpl<int?>();
-            TestEmptySetMinMaxImpl<object>();
-            TestEmptySetMinMaxImpl<IEqualityComparer>();
-        }
-
-        private void TestEmptySetMinMaxImpl<T>()
-        {
-            var set = new SortedTreeSet<T>();
-            Assert.Equal(default, set.Min);
-            Assert.Equal(default, set.Max);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new TreeSet<int>(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new TreeSet<int>(0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new TreeSet<int>(1));
         }
 
         [Fact]
         public void TestDefaultComparer()
         {
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>().Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>().Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>().Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>().Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>().Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>().Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(Enumerable.Empty<object>()).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(Enumerable.Empty<int>()).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(Enumerable.Empty<IComparable>()).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(Enumerable.Empty<object>()).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(Enumerable.Empty<int>()).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(Enumerable.Empty<IComparable>()).Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(comparer: null).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(comparer: null).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(comparer: null).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(comparer: null).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(comparer: null).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(comparer: null).Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(Enumerable.Empty<object>(), comparer: null).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(Enumerable.Empty<int>(), comparer: null).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(Enumerable.Empty<IComparable>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(Enumerable.Empty<object>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(Enumerable.Empty<int>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(Enumerable.Empty<IComparable>(), comparer: null).Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(4).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(4).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(4).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(4).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(4).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(4).Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(4, comparer: null).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(4, comparer: null).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(4, comparer: null).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(4, comparer: null).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(4, comparer: null).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(4, comparer: null).Comparer);
 
-            Assert.Same(Comparer<object>.Default, new SortedTreeSet<object>(4, Enumerable.Empty<object>(), comparer: null).Comparer);
-            Assert.Same(Comparer<int>.Default, new SortedTreeSet<int>(4, Enumerable.Empty<int>(), comparer: null).Comparer);
-            Assert.Same(Comparer<IComparable>.Default, new SortedTreeSet<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<object>.Default, new TreeSet<object>(4, Enumerable.Empty<object>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<int>.Default, new TreeSet<int>(4, Enumerable.Empty<int>(), comparer: null).Comparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, new TreeSet<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: null).Comparer);
         }
 
         [Fact]
         public void TestExplicitComparer()
         {
-            var objComparer = new ComparisonComparer<object>((x, y) => 0);
-            var intComparer = new ComparisonComparer<int>((x, y) => 0);
-            var comparableComparer = new ComparisonComparer<IComparable>((x, y) => 0);
+            var objComparer = ZeroHashCodeEqualityComparer<object>.Default;
+            var intComparer = ZeroHashCodeEqualityComparer<int>.Default;
+            var comparableComparer = ZeroHashCodeEqualityComparer<IComparable>.Default;
 
-            Assert.Same(objComparer, new SortedTreeSet<object>(comparer: objComparer).Comparer);
-            Assert.Same(intComparer, new SortedTreeSet<int>(comparer: intComparer).Comparer);
-            Assert.Same(comparableComparer, new SortedTreeSet<IComparable>(comparer: comparableComparer).Comparer);
+            Assert.Same(objComparer, new TreeSet<object>(comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new TreeSet<int>(comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new TreeSet<IComparable>(comparer: comparableComparer).Comparer);
 
-            Assert.Same(objComparer, new SortedTreeSet<object>(Enumerable.Empty<object>(), comparer: objComparer).Comparer);
-            Assert.Same(intComparer, new SortedTreeSet<int>(Enumerable.Empty<int>(), comparer: intComparer).Comparer);
-            Assert.Same(comparableComparer, new SortedTreeSet<IComparable>(Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
+            Assert.Same(objComparer, new TreeSet<object>(Enumerable.Empty<object>(), comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new TreeSet<int>(Enumerable.Empty<int>(), comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new TreeSet<IComparable>(Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
 
-            Assert.Same(objComparer, new SortedTreeSet<object>(4, comparer: objComparer).Comparer);
-            Assert.Same(intComparer, new SortedTreeSet<int>(4, comparer: intComparer).Comparer);
-            Assert.Same(comparableComparer, new SortedTreeSet<IComparable>(4, comparer: comparableComparer).Comparer);
+            Assert.Same(objComparer, new TreeSet<object>(4, comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new TreeSet<int>(4, comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new TreeSet<IComparable>(4, comparer: comparableComparer).Comparer);
 
-            Assert.Same(objComparer, new SortedTreeSet<object>(4, Enumerable.Empty<object>(), comparer: objComparer).Comparer);
-            Assert.Same(intComparer, new SortedTreeSet<int>(4, Enumerable.Empty<int>(), comparer: intComparer).Comparer);
-            Assert.Same(comparableComparer, new SortedTreeSet<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
+            Assert.Same(objComparer, new TreeSet<object>(4, Enumerable.Empty<object>(), comparer: objComparer).Comparer);
+            Assert.Same(intComparer, new TreeSet<int>(4, Enumerable.Empty<int>(), comparer: intComparer).Comparer);
+            Assert.Same(comparableComparer, new TreeSet<IComparable>(4, Enumerable.Empty<IComparable>(), comparer: comparableComparer).Comparer);
         }
 
         [Fact]
         public void TestICollectionTInterface()
         {
-            ICollection<int> set = new SortedTreeSet<int>(Enumerable.Range(0, 10));
+            ICollection<int> set = new TreeSet<int>(Enumerable.Range(0, 10));
             Assert.False(set.IsReadOnly);
 
             Assert.Equal(10, set.Count);
@@ -133,9 +116,9 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestICollectionInterface()
         {
-            TestICollectionInterfaceImpl(new SortedTreeSet<int> { 600, 601 }, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new SortedTreeSet<int?> { 600, 601 }, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new SortedTreeSet<object> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new TreeSet<int> { 600, 601 }, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new TreeSet<int?> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new TreeSet<object> { 600, 601 }, supportsNullValues: true);
 
             // Run the same set of tests on SortedSet<T> to ensure consistent behavior
             TestICollectionInterfaceImpl(new SortedSet<int> { 600, 601 }, supportsNullValues: false);
@@ -154,9 +137,12 @@ namespace Tvl.Collections.Trees.Test
             {
                 var copy = new object[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(new object[1, collection.Count], 0));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(object), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, Assert.Null);
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, Assert.Null);
 
                 collection.CopyTo(copy, 0);
@@ -178,9 +164,12 @@ namespace Tvl.Collections.Trees.Test
             {
                 var copy = new int[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[1, collection.Count], 0));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, item => Assert.Equal(0, item));
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, item => Assert.Equal(0, item));
 
                 collection.CopyTo(copy, 0);
@@ -201,11 +190,12 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestCopyToValidation()
         {
-            SortedTreeSet<int> set = new SortedTreeSet<int>(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("dest", () => set.CopyTo(null, 0, set.Count));
-            Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => set.CopyTo(new int[set.Count], -1, set.Count));
-            Assert.Throws<ArgumentOutOfRangeException>("length", () => set.CopyTo(new int[set.Count], 0, -1));
+            TreeSet<int> set = new TreeSet<int>(Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>("array", () => set.CopyTo(null, 0, set.Count));
+            Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => set.CopyTo(new int[set.Count], -1, set.Count));
+            Assert.Throws<ArgumentOutOfRangeException>("count", () => set.CopyTo(new int[set.Count], 0, -1));
             Assert.Throws<ArgumentException>(string.Empty, () => set.CopyTo(new int[set.Count], 1, set.Count));
+            Assert.Throws<ArgumentException>(() => set.CopyTo(new int[set.Count], 0, set.Count + 1));
         }
 
         [Fact]
@@ -213,11 +203,11 @@ namespace Tvl.Collections.Trees.Test
         {
             const int Value = 600;
 
-            SortedTreeSet<int> set = new SortedTreeSet<int>();
+            TreeSet<int> set = new TreeSet<int>();
             Assert.Empty(set);
             set.Add(Value);
             Assert.Single(set);
-            Assert.Equal(Value, set.Min);
+            Assert.Equal(Value, set.First());
             int[] expected = { Value };
             int[] actual = set.ToArray();
             Assert.Equal(expected, actual);
@@ -226,7 +216,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestAddStaysPacked()
         {
-            SortedTreeSet<int> set = new SortedTreeSet<int>(branchingFactor: 4);
+            TreeSet<int> set = new TreeSet<int>(branchingFactor: 4);
             for (int i = 0; i < 2 * 4 * 4; i++)
                 set.Add(i);
 
@@ -238,11 +228,10 @@ namespace Tvl.Collections.Trees.Test
         {
             int[] expected = { 600, 601, 602, 603, 700, 701, 702, 703, 800, 801, 802, 803 };
 
-            SortedTreeSet<int> set = new SortedTreeSet<int>(branchingFactor: 3);
+            TreeSet<int> set = new TreeSet<int>(branchingFactor: 3);
             foreach (var item in expected)
             {
                 set.Add(item);
-                Assert.Equal(item, set.Max);
             }
 
             Assert.Equal(expected.Length, set.Count);
@@ -254,7 +243,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestClear()
         {
-            var set = new SortedTreeSet<int>(branchingFactor: 3);
+            var set = new TreeSet<int>(branchingFactor: 3);
 
             set.Clear();
             Assert.Empty(set);
@@ -269,7 +258,7 @@ namespace Tvl.Collections.Trees.Test
         public void TestContains()
         {
             Random random = new Random();
-            SortedTreeSet<int> set = new SortedTreeSet<int>(branchingFactor: 4);
+            TreeSet<int> set = new TreeSet<int>(branchingFactor: 4);
             for (int i = 0; i < 2 * 4 * 4; i++)
             {
                 int value = random.Next(set.Count + 1);
@@ -287,7 +276,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestCopyTo()
         {
-            var set = new SortedTreeSet<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
+            var set = new TreeSet<int>(branchingFactor: 4, collection: Enumerable.Range(0, 100), comparer: null);
             var reference = new SortedSet<int>(Enumerable.Range(0, 100));
 
             int[] listArray = new int[set.Count * 2];
@@ -309,7 +298,7 @@ namespace Tvl.Collections.Trees.Test
         public void TestTrimExcess()
         {
             Random random = new Random();
-            SortedTreeSet<int> set = new SortedTreeSet<int>(branchingFactor: 4);
+            TreeSet<int> set = new TreeSet<int>(branchingFactor: 4);
             SortedSet<int> reference = new SortedSet<int>();
             for (int i = 0; i < 2 * 4 * 4; i++)
             {
@@ -330,18 +319,18 @@ namespace Tvl.Collections.Trees.Test
             set.Validate(ValidationRules.RequirePacked);
             Assert.Equal(reference, set);
 
-            SortedTreeSet<int> empty = new SortedTreeSet<int>();
+            TreeSet<int> empty = new TreeSet<int>();
             empty.Validate(ValidationRules.RequirePacked);
             empty.TrimExcess();
             empty.Validate(ValidationRules.RequirePacked);
 
-            SortedTreeSet<int> single = new SortedTreeSet<int>(Enumerable.Range(0, 1));
+            TreeSet<int> single = new TreeSet<int>(Enumerable.Range(0, 1));
             single.Validate(ValidationRules.RequirePacked);
             single.TrimExcess();
             single.Validate(ValidationRules.RequirePacked);
 
             // Construct a poorly-packed list with several levels
-            SortedTreeSet<int> binary = new SortedTreeSet<int>(branchingFactor: 2);
+            TreeSet<int> binary = new TreeSet<int>(branchingFactor: 2);
             for (int i = 99; i >= 0; i--)
                 binary.Add(i);
 
@@ -349,7 +338,7 @@ namespace Tvl.Collections.Trees.Test
             binary.Validate(ValidationRules.RequirePacked);
 
             // Construct a poorly-packed list with several levels
-            SortedTreeSet<int> ternary = new SortedTreeSet<int>(branchingFactor: 3, collection: Enumerable.Range(0, 100), comparer: null);
+            TreeSet<int> ternary = new TreeSet<int>(branchingFactor: 3, collection: Enumerable.Range(0, 100), comparer: null);
             for (int i = 99; i >= 0; i--)
                 ternary.Add(i);
 
@@ -360,7 +349,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestTryGetValue()
         {
-            var set = new SortedTreeSet<string>(StringComparer.OrdinalIgnoreCase);
+            var set = new TreeSet<string>(StringComparer.OrdinalIgnoreCase);
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
@@ -377,7 +366,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestEnumerator()
         {
-            var set = new SortedTreeSet<int>();
+            var set = new TreeSet<int>();
             var enumerator = set.GetEnumerator();
             Assert.Equal(0, enumerator.Current);
             Assert.False(enumerator.MoveNext());
@@ -405,7 +394,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestIEnumeratorT()
         {
-            var set = new SortedTreeSet<int>();
+            var set = new TreeSet<int>();
             IEnumerator<int> enumerator = set.GetEnumerator();
             Assert.Equal(0, enumerator.Current);
             Assert.False(enumerator.MoveNext());
@@ -439,7 +428,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestRemoveValue()
         {
-            var set = new SortedTreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
+            var set = new TreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
             Assert.False(set.Remove(-1));
             Assert.Equal(10, set.Count);
             Assert.True(set.Remove(3));
@@ -449,7 +438,7 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestRemoveWhere()
         {
-            var set = new SortedTreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
+            var set = new TreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
             Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null));
 
             Assert.Equal(5, set.RemoveWhere(i => (i % 2) == 0));
@@ -461,13 +450,13 @@ namespace Tvl.Collections.Trees.Test
         [Fact]
         public void TestSetComparer()
         {
-            IEqualityComparer<SortedTreeSet<int>> setComparer = SortedTreeSet<int>.CreateSetComparer();
-            Assert.True(setComparer.Equals(SortedTreeSet<int>.CreateSetComparer()));
+            IEqualityComparer<TreeSet<int>> setComparer = TreeSet<int>.CreateSetComparer();
+            Assert.True(setComparer.Equals(TreeSet<int>.CreateSetComparer()));
             Assert.False(setComparer.Equals(null));
-            Assert.Equal(setComparer.GetHashCode(), SortedTreeSet<int>.CreateSetComparer().GetHashCode());
+            Assert.Equal(setComparer.GetHashCode(), TreeSet<int>.CreateSetComparer().GetHashCode());
 
-            var set = new SortedTreeSet<int>();
-            var other = new SortedTreeSet<int>();
+            var set = new TreeSet<int>();
+            var other = new TreeSet<int>();
 
             // Test behavior with nulls
             Assert.True(setComparer.Equals(null, null));
@@ -491,7 +480,7 @@ namespace Tvl.Collections.Trees.Test
 
             // Test behavior with non-empty sets with different comparers
             set.Clear();
-            other = new SortedTreeSet<int>(ReversingComparer<int>.Default);
+            other = new TreeSet<int>(ZeroHashCodeEqualityComparer<int>.Default);
             set.UnionWith(Enumerable.Range(0, 10));
             Assert.False(setComparer.Equals(set, other));
             other.UnionWith(Enumerable.Range(0, 5));
@@ -499,46 +488,11 @@ namespace Tvl.Collections.Trees.Test
             other.UnionWith(Enumerable.Range(5, 5));
             Assert.True(setComparer.Equals(set, other));
             Assert.Equal(setComparer.GetHashCode(set), setComparer.GetHashCode(other));
-
-            // The IEqualityComparer<T> only exists for alignment with Comparer<T>.Default for type T
-            Assert.Equal(SortedTreeSet<string>.CreateSetComparer(), SortedTreeSet<string>.CreateSetComparer(StringComparer.OrdinalIgnoreCase));
-            Assert.Equal(SortedTreeSet<string>.CreateSetComparer(StringComparer.OrdinalIgnoreCase), SortedTreeSet<string>.CreateSetComparer(StringComparer.OrdinalIgnoreCase));
-        }
-
-        [Fact]
-        public void TestSetComparerSpecialCases()
-        {
-            Assert.Same(SortedTreeSet<string>.CreateSetComparer(), SortedTreeSet<string>.CreateSetComparer());
-            Assert.Same(SortedTreeSet<string>.CreateSetComparer(), SortedTreeSet<string>.CreateSetComparer(null));
-            Assert.Same(SortedTreeSet<string>.CreateSetComparer(), SortedTreeSet<string>.CreateSetComparer(EqualityComparer<string>.Default));
-        }
-
-        [Fact]
-        public void TestReversingComparer()
-        {
-            Assert.Equal(0, ReversingComparer<int>.Default.Compare(0, 0));
-            Assert.Equal(Comparer<int>.Default.Compare(1, 3), -ReversingComparer<int>.Default.Compare(1, 3));
-            Assert.Equal(StringComparer.OrdinalIgnoreCase.Compare("a", "B"), -new ReversingComparer<string>(StringComparer.OrdinalIgnoreCase).Compare("a", "B"));
-            Assert.Equal(0, new ReversingComparer<string>(StringComparer.OrdinalIgnoreCase).Compare("a", "A"));
         }
 
         protected override ISet<T> CreateSet<T>()
         {
-            return new SortedTreeSet<T>(branchingFactor: 4);
-        }
-
-        private sealed class ReversingComparer<T> : IComparer<T>
-        {
-            public static readonly ReversingComparer<T> Default = new ReversingComparer<T>(null);
-
-            private readonly IComparer<T> _comparer;
-
-            public ReversingComparer(IComparer<T> comparer)
-            {
-                _comparer = comparer ?? Comparer<T>.Default;
-            }
-
-            public int Compare(T x, T y) => -_comparer.Compare(x, y);
+            return new TreeSet<T>(branchingFactor: 4);
         }
     }
 }
