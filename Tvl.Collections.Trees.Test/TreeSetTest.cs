@@ -4,7 +4,6 @@
 namespace Tvl.Collections.Trees.Test
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using Xunit;
@@ -19,13 +18,34 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
-        public void TestCollectionConstructor()
+        public void TestCollectionConstructors()
         {
-            Assert.Throws<ArgumentNullException>(() => new TreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(branchingFactor: 4, collection: null, comparer: null));
 
             var set = new TreeSet<int>(new[] { 1, 1 });
             Assert.Single(set);
             Assert.Equal(new[] { 1 }, set);
+
+            set = new TreeSet<int>(branchingFactor: 4, new[] { 1, 1 }, comparer: null);
+            Assert.Single(set);
+            Assert.Equal(new[] { 1 }, set);
+        }
+
+        [Fact]
+        public void TestCollectionConstructorUsesCorrectComparer()
+        {
+            var instance1 = new object();
+            var instance2 = new object();
+            var objectSet = new TreeSet<object>(new[] { instance1, instance2, instance1 }, ZeroHashCodeEqualityComparer<object>.Default);
+            Assert.Equal(2, objectSet.Count);
+            Assert.Equal(new[] { instance1, instance2 }, objectSet);
+
+            // This test covers a case where an incorrect delegating comparer was used in the constructor which
+            // specified an explicit branching factor.
+            objectSet = new TreeSet<object>(branchingFactor: 4, new[] { instance1, instance2, instance1 }, ZeroHashCodeEqualityComparer<object>.Default);
+            Assert.Equal(2, objectSet.Count);
+            Assert.Equal(new[] { instance1, instance2 }, objectSet);
         }
 
         [Fact]
