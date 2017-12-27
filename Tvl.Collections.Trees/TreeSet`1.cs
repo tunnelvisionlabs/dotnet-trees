@@ -457,7 +457,7 @@ namespace Tvl.Collections.Trees
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
             if (array.Rank != 1)
-                throw new ArgumentException();
+                throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", nameof(array));
             if (array.GetLowerBound(0) != 0)
                 throw new ArgumentException();
             if (index < 0)

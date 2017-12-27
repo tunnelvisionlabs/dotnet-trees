@@ -126,67 +126,6 @@ namespace Tvl.Collections.Trees.Test
             TestICollectionInterfaceImpl(new SortedSet<object> { 600, 601 }, supportsNullValues: true);
         }
 
-        private static void TestICollectionInterfaceImpl(ICollection collection, bool supportsNullValues)
-        {
-            Assert.False(collection.IsSynchronized);
-
-            Assert.IsType<object>(collection.SyncRoot);
-            Assert.Same(collection.SyncRoot, collection.SyncRoot);
-
-            if (supportsNullValues)
-            {
-                var copy = new object[collection.Count];
-
-                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(new object[1, collection.Count], 0));
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(object), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
-                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, Assert.Null);
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
-                Assert.All(copy, Assert.Null);
-
-                collection.CopyTo(copy, 0);
-                Assert.Equal(600, copy[0]);
-                Assert.Equal(601, copy[1]);
-
-                copy = new object[collection.Count + 2];
-                collection.CopyTo(copy, 1);
-                Assert.Null(copy[0]);
-                Assert.Equal(600, copy[1]);
-                Assert.Equal(601, copy[2]);
-                Assert.Null(copy[3]);
-
-                // TODO: One of these applies to int?, while the other applies to object. Need to resolve.
-                ////Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
-                ////Assert.Throws<InvalidCastException>(() => collection.CopyTo(new string[collection.Count], 0));
-            }
-            else
-            {
-                var copy = new int[collection.Count];
-
-                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[1, collection.Count], 0));
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
-                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, item => Assert.Equal(0, item));
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
-                Assert.All(copy, item => Assert.Equal(0, item));
-
-                collection.CopyTo(copy, 0);
-                Assert.Equal(600, copy[0]);
-                Assert.Equal(601, copy[1]);
-
-                copy = new int[collection.Count + 2];
-                collection.CopyTo(copy, 1);
-                Assert.Equal(0, copy[0]);
-                Assert.Equal(600, copy[1]);
-                Assert.Equal(601, copy[2]);
-                Assert.Equal(0, copy[3]);
-
-                Assert.Throws<ArgumentException>(() => collection.CopyTo(new string[collection.Count], 0));
-            }
-        }
-
         [Fact]
         public void TestCopyToValidation()
         {
