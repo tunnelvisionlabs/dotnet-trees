@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Xunit;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -19,3 +20,6 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("73541434-2511-441c-bbaf-05044be33019")]
+
+// Disable test parallelization since GeneratorTest manipulates mutable shared data
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
