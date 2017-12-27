@@ -109,7 +109,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Disp
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.IsReadOnly.get -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.KeyCollection() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Remove(TKey item) -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Keys.get -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
@@ -134,7 +133,6 @@ Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Di
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
-Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.IsReadOnly.get -> bool
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.Values.get -> Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
 Tvl.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].get -> TValue

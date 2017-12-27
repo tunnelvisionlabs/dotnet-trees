@@ -13,7 +13,7 @@ namespace Tvl.Collections.Trees
         {
             public int Count => throw null;
 
-            public bool IsReadOnly => throw null;
+            bool ICollection<TValue>.IsReadOnly => throw null;
 
             bool ICollection.IsSynchronized => throw null;
 
