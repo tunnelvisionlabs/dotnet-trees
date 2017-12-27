@@ -3,17 +3,16 @@
 
 namespace Tvl.Collections.Trees
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
-    public partial class SortedTreeList<T>
+    public partial class SortedTreeSet<T>
     {
         public struct Enumerator : IEnumerator<T>
         {
-            private TreeList<T>.Enumerator _enumerator;
+            private SortedTreeList<T>.Enumerator _enumerator;
 
-            internal Enumerator(TreeList<T>.Enumerator enumerator)
+            internal Enumerator(SortedTreeList<T>.Enumerator enumerator)
             {
                 _enumerator = enumerator;
             }
@@ -22,7 +21,7 @@ namespace Tvl.Collections.Trees
 
             object IEnumerator.Current => Current;
 
-            public void Dispose() => ((IDisposable)_enumerator).Dispose();
+            public void Dispose() => _enumerator.Dispose();
 
             public bool MoveNext() => _enumerator.MoveNext();
 

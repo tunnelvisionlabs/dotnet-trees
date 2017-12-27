@@ -117,11 +117,17 @@ namespace Tvl.Collections.Trees
 
         public int RemoveAll(Predicate<T> match) => _treeList.RemoveAll(match);
 
-        public void Add(T item)
+        public void Add(T item) => Add(item, addIfPresent: true);
+
+        internal bool Add(T item, bool addIfPresent)
         {
-            var comparer = new CoercingComparer(_comparer, -1);
+            var comparer = addIfPresent ? new CoercingComparer(_comparer, -1) : _comparer;
             int result = _treeList.BinarySearch(item, comparer);
+            if (result >= 0)
+                return false;
+
             _treeList.Insert(~result, item);
+            return true;
         }
 
         public void AddRange(IEnumerable<T> collection)
