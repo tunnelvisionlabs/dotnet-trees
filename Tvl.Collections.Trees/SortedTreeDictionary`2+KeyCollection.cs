@@ -6,36 +6,97 @@ namespace Tvl.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public partial class SortedTreeDictionary<TKey, TValue>
     {
         public partial struct KeyCollection : ICollection<TKey>, IReadOnlyCollection<TKey>, ICollection
         {
-            public int Count => throw null;
+            private readonly SortedTreeDictionary<TKey, TValue> _dictionary;
 
-            bool ICollection<TKey>.IsReadOnly => throw null;
+            internal KeyCollection(SortedTreeDictionary<TKey, TValue> dictionary)
+            {
+                Debug.Assert(dictionary != null, $"Assertion failed: {nameof(dictionary)} != null");
+                _dictionary = dictionary;
+            }
 
-            object ICollection.SyncRoot => throw null;
+            public int Count => _dictionary.Count;
 
-            bool ICollection.IsSynchronized => throw null;
+            bool ICollection<TKey>.IsReadOnly => false;
+
+            bool ICollection.IsSynchronized => false;
+
+            object ICollection.SyncRoot => ((ICollection)_dictionary).SyncRoot;
 
             void ICollection<TKey>.Add(TKey item) => throw new NotSupportedException();
 
-            public void Clear() => throw null;
+            public void Clear() => _dictionary.Clear();
 
-            public bool Contains(TKey item) => throw null;
+            public bool Contains(TKey item) => _dictionary.ContainsKey(item);
 
-            public void CopyTo(TKey[] array, int arrayIndex) => throw null;
+            public void CopyTo(TKey[] array, int arrayIndex)
+            {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if (arrayIndex < 0 || arrayIndex > array.Length)
+                    throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+                if (array.Length - arrayIndex < _dictionary.Count)
+                    throw new ArgumentException();
 
-            public Enumerator GetEnumerator() => throw null;
+                int i = arrayIndex;
+                foreach (TKey key in this)
+                {
+                    array[i] = key;
+                    i++;
+                }
+            }
 
-            public bool Remove(TKey item) => throw null;
+            public Enumerator GetEnumerator() => new Enumerator(_dictionary.GetEnumerator());
 
-            void ICollection.CopyTo(Array array, int index) => throw null;
+            public bool Remove(TKey item) => _dictionary.Remove(item);
 
-            IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator() => throw null;
+            void ICollection.CopyTo(Array array, int index)
+            {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if (array.Rank != 1)
+                    throw new ArgumentException();
+                if (array.GetLowerBound(0) != 0)
+                    throw new ArgumentException();
+                if (index < 0 || index > array.Length)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (array.Length - index < _dictionary.Count)
+                    throw new ArgumentException();
 
-            IEnumerator IEnumerable.GetEnumerator() => throw null;
+                if (array is TKey[] keys)
+                {
+                    CopyTo(keys, index);
+                }
+                else if (array is object[] objects)
+                {
+                    try
+                    {
+                        int i = index;
+                        foreach (TKey key in this)
+                        {
+                            objects[i] = key;
+                            i++;
+                        }
+                    }
+                    catch (ArrayTypeMismatchException)
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
+
+            IEnumerator<TKey> IEnumerable<TKey>.GetEnumerator() => GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
     }
 }
