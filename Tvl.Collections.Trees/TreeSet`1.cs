@@ -456,6 +456,12 @@ namespace Tvl.Collections.Trees
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
+            if (array.Rank != 1)
+                throw new ArgumentException();
+            if (array.GetLowerBound(0) != 0)
+                throw new ArgumentException();
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
             if (array.Length - index < Count)
                 throw new ArgumentException("Not enough space is available in the destination array.", nameof(index));
 
