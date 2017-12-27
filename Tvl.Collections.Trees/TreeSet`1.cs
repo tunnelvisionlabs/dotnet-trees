@@ -8,6 +8,7 @@ namespace Tvl.Collections.Trees
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading;
 
     public partial class TreeSet<T> : ISet<T>, IReadOnlyCollection<T>, ICollection
     {
@@ -47,7 +48,7 @@ namespace Tvl.Collections.Trees
         public TreeSet(int branchingFactor, IEqualityComparer<T> comparer)
         {
             _comparer = comparer ?? EqualityComparer<T>.Default;
-            _sortedList = new SortedTreeList<(int hashCode, T value)>(branchingFactor);
+            _sortedList = new SortedTreeList<(int hashCode, T value)>(branchingFactor, WrapperComparer.Instance);
         }
 
         public TreeSet(int branchingFactor, IEnumerable<T> collection, IEqualityComparer<T> comparer)
@@ -358,7 +359,31 @@ namespace Tvl.Collections.Trees
             return false;
         }
 
-        public bool Remove(T item) => _sortedList.Remove((_comparer.GetHashCode(item), item));
+        public bool Remove(T item)
+        {
+            int hashCode = _comparer.GetHashCode(item);
+
+            // Find the index of the first item with this hash code
+            int index = _sortedList.IndexOf((hashCode, item));
+            if (index >= 0)
+            {
+                // Find the item if it exists
+                for (int i = index; i < Count; i++)
+                {
+                    (int hashCode, T value) bucket = _sortedList[i];
+                    if (bucket.hashCode != hashCode)
+                        return false;
+
+                    if (_comparer.Equals(bucket.value, item))
+                    {
+                        _sortedList.RemoveAt(i);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         public int RemoveWhere(Predicate<T> match)
         {
@@ -513,6 +538,29 @@ namespace Tvl.Collections.Trees
                 int hashCode = _comparer.GetHashCode(item);
 
                 int index = _sortedList.IndexOf((hashCode, item));
+                if (index >= 0)
+                {
+                    // Find the duplicate value if it exists
+                    for (int i = index; i < Count; i++)
+                    {
+                        (int hashCode, T value) bucket = _sortedList[i];
+                        if (bucket.hashCode != hashCode)
+                        {
+                            index = -1;
+                            break;
+                        }
+
+                        if (_comparer.Equals(bucket.value, item))
+                        {
+                            index = i;
+                            break;
+                        }
+
+                        // Fast path didn't match the item of interest
+                        index = -1;
+                    }
+                }
+
                 if (index >= 0)
                 {
                     if (!bitHelper.IsMarked(index))

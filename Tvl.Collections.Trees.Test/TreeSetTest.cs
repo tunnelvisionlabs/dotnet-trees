@@ -33,6 +33,22 @@ namespace Tvl.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestCollectionConstructorUsesCorrectComparer()
+        {
+            var instance1 = new object();
+            var instance2 = new object();
+            var objectSet = new TreeSet<object>(new[] { instance1, instance2, instance1 }, ZeroHashCodeEqualityComparer<object>.Default);
+            Assert.Equal(2, objectSet.Count);
+            Assert.Equal(new[] { instance1, instance2 }, objectSet);
+
+            // This test covers a case where an incorrect delegating comparer was used in the constructor which
+            // specified an explicit branching factor.
+            objectSet = new TreeSet<object>(branchingFactor: 4, new[] { instance1, instance2, instance1 }, ZeroHashCodeEqualityComparer<object>.Default);
+            Assert.Equal(2, objectSet.Count);
+            Assert.Equal(new[] { instance1, instance2 }, objectSet);
+        }
+
+        [Fact]
         public void TestTreeSetBranchingFactorConstructor()
         {
             TreeSet<int> set = new TreeSet<int>(8);

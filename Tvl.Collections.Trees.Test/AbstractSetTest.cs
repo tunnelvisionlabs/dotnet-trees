@@ -13,6 +13,17 @@ namespace Tvl.Collections.Trees.Test
     public abstract class AbstractSetTest
     {
         [Fact]
+        public void TestUnionWith()
+        {
+            ISet<int> set = CreateSet<int>();
+            Assert.Throws<ArgumentNullException>(() => set.UnionWith(null));
+
+            set.UnionWith(Enumerable.Range(0, 7));
+            set.UnionWith(Enumerable.Range(5, 5));
+            Assert.Equal(Enumerable.Range(0, 10), set);
+        }
+
+        [Fact]
         public void TestExceptWith()
         {
             ISet<int> set = CreateSet<int>();
@@ -64,11 +75,13 @@ namespace Tvl.Collections.Trees.Test
         public void TestSymmetricExceptWith()
         {
             ISet<int> set = CreateSet<int>();
+            ISet<int> second = CreateSet<int>();
             Assert.Throws<ArgumentNullException>(() => set.SymmetricExceptWith(null));
 
             // Test behavior when the current set is empty
             set.SymmetricExceptWith(new[] { 1, 5, 3 });
-            Assert.Equal(new[] { 1, 3, 5 }, set);
+            second.UnionWith(new[] { 1, 5, 3 });
+            Assert.Equal(second.ToArray(), set);
 
             // Test SymmetricExceptWith self
             Assert.NotEmpty(set);

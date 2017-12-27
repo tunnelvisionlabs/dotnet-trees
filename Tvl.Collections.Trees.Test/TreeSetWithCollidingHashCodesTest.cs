@@ -71,6 +71,29 @@ namespace Tvl.Collections.Trees.Test
             Assert.Equal(new[] { 3, 4, 5 }, set);
         }
 
+        [Fact]
+        public void TestRemoveEdgeCase()
+        {
+            var equalityComparer = EqualityComparer<int>.Default;
+            Func<int, int> getHashCode = value => Math.Abs(value) < 5 ? 0 : 1;
+            var set = new TreeSet<int>(branchingFactor: 4, comparer: new SubsetHashCodeEqualityComparer<int>(equalityComparer, getHashCode));
+
+            set.UnionWith(Enumerable.Range(0, 10));
+            Assert.True(set.Remove(4));
+            Assert.False(set.Remove(4));
+        }
+
+        [Fact]
+        public void TestSetEqualsEdgeCase()
+        {
+            var equalityComparer = EqualityComparer<int>.Default;
+            Func<int, int> getHashCode = value => Math.Abs(value) < 5 ? 0 : 1;
+            var set = new TreeSet<int>(branchingFactor: 4, comparer: new SubsetHashCodeEqualityComparer<int>(equalityComparer, getHashCode));
+
+            set.UnionWith(new[] { 1, 3, 7, 9 });
+            Assert.False(set.SetEquals(new[] { 1, 4, 7, 9 }));
+        }
+
         protected override ISet<T> CreateSet<T>()
         {
             return new TreeSet<T>(branchingFactor: 4, comparer: ZeroHashCodeEqualityComparer<T>.Default);
