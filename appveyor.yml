@@ -16,4 +16,4 @@ test_script:
 cache:
   - packages -> **\packages.config
 artifacts:
-- path: '**\*.nupkg'
+- path: 'TunnelVisionLabs.Collections.Trees\**\*.nupkg'
