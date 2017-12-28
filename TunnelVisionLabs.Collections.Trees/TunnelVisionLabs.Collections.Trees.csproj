@@ -3,6 +3,10 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.0;netstandard1.3</TargetFrameworks>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
   </PropertyGroup>
 
   <PropertyGroup>
