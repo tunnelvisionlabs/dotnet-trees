@@ -13,13 +13,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Build.targets = Directory.Build.targets
 		LICENSE = LICENSE
 		README.md = README.md
-		Tvl.Collections.Trees.Internal.ruleset = Tvl.Collections.Trees.Internal.ruleset
-		Tvl.Collections.Trees.ruleset = Tvl.Collections.Trees.ruleset
+		TunnelVisionLabs.Collections.Trees.Internal.ruleset = TunnelVisionLabs.Collections.Trees.Internal.ruleset
+		TunnelVisionLabs.Collections.Trees.ruleset = TunnelVisionLabs.Collections.Trees.ruleset
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvl.Collections.Trees", "Tvl.Collections.Trees\Tvl.Collections.Trees.csproj", "{07F2676C-75F3-424C-A18C-ABD723B5BCD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TunnelVisionLabs.Collections.Trees", "TunnelVisionLabs.Collections.Trees\TunnelVisionLabs.Collections.Trees.csproj", "{07F2676C-75F3-424C-A18C-ABD723B5BCD9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tvl.Collections.Trees.Test", "Tvl.Collections.Trees.Test\Tvl.Collections.Trees.Test.csproj", "{73541434-2511-441C-BBAF-05044BE33019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TunnelVisionLabs.Collections.Trees.Test", "TunnelVisionLabs.Collections.Trees.Test\TunnelVisionLabs.Collections.Trees.Test.csproj", "{73541434-2511-441C-BBAF-05044BE33019}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5838E255-240E-441B-B3D9-259C3DE9E108}"
 	ProjectSection(SolutionItems) = preProject

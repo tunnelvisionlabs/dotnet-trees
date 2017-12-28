@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>..\Tvl.Collections.Trees.Internal.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\TunnelVisionLabs.Collections.Trees.Internal.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Tvl.Collections.Trees\Tvl.Collections.Trees.csproj" />
+    <ProjectReference Include="..\TunnelVisionLabs.Collections.Trees\TunnelVisionLabs.Collections.Trees.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,6 @@ Efficient implementations of standard .NET collection interfaces using tree data
 
 :warning: The following will only be active following the first public preview release.
 
-* [Binaries (NuGet)](https://www.nuget.org/packages/Tvl.Collections.Trees)
+* [Binaries (NuGet)](https://www.nuget.org/packages/TunnelVisionLabs.Collections.Trees)
 * [Release Notes](https://github.com/tunnelvisionlabs/dotnet-trees/releases)
 * [License](https://github.com/tunnelvisionlabs/dotnet-trees/blob/master/LICENSE)

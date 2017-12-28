@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for Tvl.Collections.Trees" Description="Code analysis rules for Tvl.Collections.Trees.csproj." ToolsVersion="14.0">
+<RuleSet Name="Rules for TunnelVisionLabs.Collections.Trees" Description="Code analysis rules for TunnelVisionLabs.Collections.Trees.csproj." ToolsVersion="14.0">
   <Rules AnalyzerId="AsyncUsageAnalyzers" RuleNamespace="AsyncUsageAnalyzers">
     <Rule Id="UseConfigureAwait" Action="Warning" />
   </Rules>

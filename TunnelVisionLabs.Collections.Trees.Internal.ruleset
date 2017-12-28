@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for Tvl.Collections.Trees internal-only projects" Description="Code analysis rules for Tvl.Collections.Trees internal-only projects." ToolsVersion="14.0">
-  <Include Path="Tvl.Collections.Trees.ruleset" Action="Default" />
+<RuleSet Name="Rules for TunnelVisionLabs.Collections.Trees internal-only projects" Description="Code analysis rules for TunnelVisionLabs.Collections.Trees internal-only projects." ToolsVersion="14.0">
+  <Include Path="TunnelVisionLabs.Collections.Trees.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.CodeAnalysis.CSharp" RuleNamespace="Microsoft.CodeAnalysis.CSharp">
     <Rule Id="CS1573" Action="Hidden" />
     <Rule Id="CS1591" Action="Hidden" />

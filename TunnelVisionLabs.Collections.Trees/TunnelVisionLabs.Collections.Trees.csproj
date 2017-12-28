@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CodeAnalysisRuleSet>..\Tvl.Collections.Trees.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\TunnelVisionLabs.Collections.Trees.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile Condition="'$(KeyConfiguration)' == 'Final'">..\build\keys\Tvl.Collections.Trees.snk</AssemblyOriginatorKeyFile>
-    <AssemblyOriginatorKeyFile Condition="'$(KeyConfiguration)' != 'Final'">..\build\keys\Tvl.Collections.Trees.dev.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition="'$(KeyConfiguration)' == 'Final'">..\build\keys\TunnelVisionLabs.Collections.Trees.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition="'$(KeyConfiguration)' != 'Final'">..\build\keys\TunnelVisionLabs.Collections.Trees.dev.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(KeyConfiguration)' != 'Final'">
