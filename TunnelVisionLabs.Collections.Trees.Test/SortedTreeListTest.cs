@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-namespace Tvl.Collections.Trees.Test
+namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using Tvl.Collections.Trees;
+    using TunnelVisionLabs.Collections.Trees;
     using Xunit;
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;

@@ -4,7 +4,7 @@
 // This file contains tests for Contains...
 #pragma warning disable xUnit2017 // Do not use Contains() to check if a value exists in a collection
 
-namespace Tvl.Collections.Trees.Test.List
+namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System.Collections.Generic;
     using Xunit;

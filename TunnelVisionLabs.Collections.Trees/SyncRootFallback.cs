@@ -3,7 +3,7 @@
 
 #if !NETSTANDARD1_0
 
-namespace Tvl.Collections.Trees
+namespace TunnelVisionLabs.Collections.Trees
 {
     using System.Collections;
     using System.Diagnostics;
