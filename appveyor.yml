@@ -11,7 +11,7 @@ build:
   project: dotnet-trees.sln
   verbosity: minimal
 test_script:
-- .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"C:\projects\dotnet-trees\Tvl.Collections.Trees.Test\bin\%configuration%\net452\Tvl.Collections.Trees.Test.dll -noshadow -appveyor" -returntargetcode -filter:"+[Tvl*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*\*Designer.cs -hideskipped:All -output:.\trees_coverage.xml
+- .\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"%xunit20%\xunit.console.x86.exe" -targetargs:"C:\projects\dotnet-trees\TunnelVisionLabs.Collections.Trees.Test\bin\%configuration%\net452\TunnelVisionLabs.Collections.Trees.Test.dll -noshadow -appveyor" -returntargetcode -filter:"+[TunnelVisionLabs*]*" -excludebyattribute:*.ExcludeFromCodeCoverage* -excludebyfile:*\*Designer.cs -hideskipped:All -output:.\trees_coverage.xml
 - .\packages\Codecov.1.0.3\tools\codecov.exe -n "%configuration%" -f "trees_coverage.xml" --flag "%configuration%"
 cache:
   - packages -> **\packages.config

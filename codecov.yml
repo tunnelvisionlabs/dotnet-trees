@@ -14,10 +14,10 @@ comment:
 flags:
   production:
     paths:
-      - Tvl.Collections.Trees/
+      - TunnelVisionLabs.Collections.Trees/
   test:
     paths:
-      - Tvl.Collections.Trees.Test/
+      - TunnelVisionLabs.Collections.Trees.Test/
   # Filter results to only show debug reports until the accuracy problems with
   # the report merge process are fixed.
   Release:

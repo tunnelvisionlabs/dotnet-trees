@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Description>Efficient implementations of standard .NET collection interfaces using tree data structures.</Description>
-    <Product>Tvl.Collections.Trees</Product>
+    <Product>TunnelVisionLabs.Collections.Trees</Product>
     <Company>Tunnel Vision Laboratories, LLC</Company>
     <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
