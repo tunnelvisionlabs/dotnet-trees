@@ -3,7 +3,6 @@
 
 namespace TunnelVisionLabs.Collections.Trees
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -11,15 +10,24 @@ namespace TunnelVisionLabs.Collections.Trees
     {
         public struct Enumerator : IEnumerator<T>
         {
-            public T Current => throw null;
+            private TreeList<T>.Enumerator _enumerator;
 
-            object IEnumerator.Current => throw null;
+            internal Enumerator(TreeList<T>.Enumerator enumerator)
+            {
+                _enumerator = enumerator;
+            }
 
-            public void Dispose() => throw null;
+            public T Current => _enumerator.Current;
 
-            public bool MoveNext() => throw null;
+            object IEnumerator.Current => _enumerator.Current;
 
-            void IEnumerator.Reset() => throw null;
+            public void Dispose() => _enumerator.Dispose();
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IEnumerator.Reset() => InternalReset();
+
+            internal void InternalReset() => _enumerator.InternalReset();
         }
     }
 }
