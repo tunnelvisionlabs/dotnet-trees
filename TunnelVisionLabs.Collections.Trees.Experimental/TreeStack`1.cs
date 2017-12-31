@@ -10,42 +10,83 @@ namespace TunnelVisionLabs.Collections.Trees
 
     public partial class TreeStack<T> : IReadOnlyCollection<T>, ICollection
     {
-        public TreeStack() => throw null;
+        private readonly TreeList<T> _treeList;
 
-        public TreeStack(int branchingFactor) => throw null;
+        public TreeStack()
+        {
+            _treeList = new TreeList<T>();
+        }
 
-        public int Count => throw null;
+        public TreeStack(int branchingFactor)
+        {
+            _treeList = new TreeList<T>(branchingFactor);
+        }
 
-        bool ICollection.IsSynchronized => throw null;
+        public int Count => _treeList.Count;
 
-        object ICollection.SyncRoot => throw null;
+        bool ICollection.IsSynchronized => false;
 
-        public void Clear() => throw null;
+        object ICollection.SyncRoot => ((ICollection)_treeList).SyncRoot;
 
-        public bool Contains(T item) => throw null;
+        public void Clear() => _treeList.Clear();
 
-        public void CopyTo(T[] array, int arrayIndex) => throw null;
+        public bool Contains(T item) => _treeList.Contains(item);
 
-        public Enumerator GetEnumerator() => throw null;
+        public void CopyTo(T[] array, int arrayIndex) => _treeList.CopyTo(array, arrayIndex);
 
-        public T Peek() => throw null;
+        public Enumerator GetEnumerator() => new Enumerator(_treeList.GetEnumerator());
 
-        public T Pop() => throw null;
+        public T Peek()
+        {
+            if (!TryPeek(out T result))
+                throw new InvalidOperationException();
 
-        public void Push(T item) => throw null;
+            return result;
+        }
 
-        public T[] ToArray() => throw null;
+        public T Pop()
+        {
+            if (!TryPop(out T result))
+                throw new InvalidOperationException();
 
-        public void TrimExcess() => throw null;
+            return result;
+        }
 
-        public bool TryPeek(out T result) => throw null;
+        public void Push(T item) => _treeList.Insert(0, item);
 
-        public bool TryPop(out T result) => throw null;
+        public T[] ToArray() => _treeList.ToArray();
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+        public void TrimExcess() => _treeList.TrimExcess();
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+        public bool TryPeek(out T result)
+        {
+            if (_treeList.Count == 0)
+            {
+                result = default;
+                return false;
+            }
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+            result = _treeList[0];
+            return true;
+        }
+
+        public bool TryPop(out T result)
+        {
+            if (_treeList.Count == 0)
+            {
+                result = default;
+                return false;
+            }
+
+            result = _treeList[0];
+            _treeList.RemoveAt(0);
+            return true;
+        }
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_treeList).CopyTo(array, index);
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
