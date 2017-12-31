@@ -26,6 +26,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5838E2
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{967D7720-9E37-401C-8447-AC8A6F65B986}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.ps1 = build\build.ps1
+		build\check-key.ps1 = build\check-key.ps1
+		build\keys.ps1 = build\keys.ps1
+		build\opencover-report.ps1 = build\opencover-report.ps1
+		build\push.ps1 = build\push.ps1
+		build\version.ps1 = build\version.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +56,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5838E255-240E-441B-B3D9-259C3DE9E108} = {E1A56671-AEC2-433C-9396-7EF9BE756463}
+		{967D7720-9E37-401C-8447-AC8A6F65B986} = {E1A56671-AEC2-433C-9396-7EF9BE756463}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {40194822-31E5-4F5A-9FE6-4205C6FBB6DD}
