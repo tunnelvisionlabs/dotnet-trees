@@ -10,7 +10,7 @@
 
     <Version>1.0.0.0</Version>
     <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0-dev</InformationalVersion>
+    <InformationalVersion>1.0.0-alpha002</InformationalVersion>
     <PackageVersion>$(InformationalVersion)</PackageVersion>
     <Authors>sharwell</Authors>
   </PropertyGroup>
