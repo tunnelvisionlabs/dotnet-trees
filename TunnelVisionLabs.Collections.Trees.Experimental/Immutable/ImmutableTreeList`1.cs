@@ -120,9 +120,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
             if (Count - index < count)
-                throw new ArgumentException();
+                throw new ArgumentOutOfRangeException();
             if (array.Length - arrayIndex < count)
-                throw new ArgumentException("Not enough space is available in the destination array.", string.Empty);
+                throw new ArgumentOutOfRangeException(string.Empty, "Not enough space is available in the destination array.");
 
             for (int i = 0; i < count; i++)
             {
@@ -499,8 +499,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 throw new ArgumentNullException(nameof(array));
             if (array.Rank != 1)
                 throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", nameof(array));
+            if (array.GetLowerBound(0) != 0)
+                throw new ArgumentException();
+            if (index < 0 || index > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
             if (array.Length - index < Count)
-                throw new ArgumentException("Not enough space is available in the destination array.", nameof(index));
+                throw new ArgumentOutOfRangeException("Not enough space is available in the destination array.", nameof(index));
 
             try
             {
@@ -510,10 +514,6 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
             }
             catch (ArrayTypeMismatchException)
-            {
-                throw new ArgumentException("Invalid array type");
-            }
-            catch (InvalidCastException)
             {
                 throw new ArgumentException("Invalid array type");
             }

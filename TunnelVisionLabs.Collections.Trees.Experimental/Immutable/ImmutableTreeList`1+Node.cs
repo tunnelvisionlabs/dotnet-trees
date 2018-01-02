@@ -96,6 +96,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     }
                 }
 
+                if (root.Count == 0)
+                    return Empty;
+
                 return root;
             }
 

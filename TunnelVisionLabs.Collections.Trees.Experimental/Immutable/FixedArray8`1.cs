@@ -187,26 +187,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         internal void Copy(int sourceIndex, Array destinationArray, int destinationIndex, int count)
         {
-            if (destinationArray is T[] array)
+            for (int i = 0; i < count; i++)
             {
-                for (int i = 0; i < count; i++)
-                {
-                    array[i + destinationIndex] = this[i + sourceIndex];
-                }
-            }
-            else
-            {
-                try
-                {
-                    for (int i = 0; i < count; i++)
-                    {
-                        destinationArray.SetValue(this[i + sourceIndex], i + destinationIndex);
-                    }
-                }
-                catch (InvalidCastException)
-                {
-                    throw new ArgumentException("Invalid array type");
-                }
+                destinationArray.SetValue(this[i + sourceIndex], i + destinationIndex);
             }
         }
 
