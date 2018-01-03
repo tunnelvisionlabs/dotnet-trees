@@ -677,6 +677,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(100, sameValue.Count);
             for (int i = 0; i < sameValue.Count; i++)
                 Assert.Equal(1, sameValue[i]);
+
+            // Test sorting a list with interleaved 1's and 0's
+            TreeList<int> interleaved = new TreeList<int>(branchingFactor: 4, new[] { 1, 0, 1, 0, 1, 0, 1, 0 });
+            interleaved.Sort();
+            Assert.Equal(new[] { 0, 0, 0, 0, 1, 1, 1, 1 }, interleaved);
         }
 
         [Fact]
