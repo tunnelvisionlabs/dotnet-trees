@@ -136,9 +136,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new object[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, Assert.Null);
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, Assert.Null);
 
                 collection.CopyTo(copy, 0);
@@ -160,9 +160,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new int[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, item => Assert.Equal(0, item));
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, item => Assert.Equal(0, item));
 
                 collection.CopyTo(copy, 0);
@@ -201,13 +201,22 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestCopyToValidation()
         {
             TreeList<int> list = new TreeList<int>(Enumerable.Range(0, 10));
+            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(null));
             Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(0, null, 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("srcIndex", () => list.CopyTo(-1, new int[list.Count], 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => list.CopyTo(0, new int[list.Count], -1, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("length", () => list.CopyTo(0, new int[list.Count], 0, -1));
             Assert.Throws<ArgumentException>(null, () => list.CopyTo(1, new int[list.Count], 0, list.Count));
             Assert.Throws<ArgumentException>(string.Empty, () => list.CopyTo(0, new int[list.Count], 1, list.Count));
-       }
+
+            ICollection collection = list;
+            Assert.Throws<ArgumentNullException>("dest", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(new int[collection.Count], -1));
+            Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(Array.CreateInstance(typeof(int), new[] { list.Count }, new[] { 1 }), 0));
+            Assert.Throws<ArgumentException>(string.Empty, () => collection.CopyTo(new int[collection.Count], collection.Count + 1));
+            Assert.Throws<ArgumentException>(null, () => collection.CopyTo(new int[list.Count, 1], 0));
+            collection.CopyTo(Array.CreateInstance(typeof(int), new[] { list.Count }, new[] { 1 }), 1);
+        }
 
         [Fact]
         public void TestAdd()

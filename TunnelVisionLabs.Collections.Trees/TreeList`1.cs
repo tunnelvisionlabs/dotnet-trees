@@ -230,14 +230,14 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        void ICollection.CopyTo(Array array, int index)
+        void ICollection.CopyTo(Array dest, int index)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
-            if (array.Rank != 1)
-                throw new ArgumentException("Only single dimensional arrays are supported for the requested action.", nameof(array));
-            if (array.Length - index < Count)
-                throw new ArgumentException("Not enough space is available in the destination array.", nameof(index));
+            if (dest == null)
+                throw new ArgumentNullException(nameof(dest));
+            if (dest.Rank != 1)
+                throw new ArgumentException("Only single dimensional arrays are supported for the requested action.");
+            if (dest.Length + dest.GetLowerBound(0) - index < Count)
+                throw new ArgumentException("Not enough space is available in the destination array.", string.Empty);
 
             try
             {
@@ -245,7 +245,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 LeafNode leaf = _root.FirstLeaf;
                 while (leaf != null)
                 {
-                    leaf.CopyToArray(array, offset);
+                    leaf.CopyToArray(dest, offset);
                     offset += leaf.Count;
                     leaf = leaf.Next;
                 }

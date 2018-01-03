@@ -222,9 +222,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new object[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, Assert.Null);
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, Assert.Null);
 
                 collection.CopyTo(copy, 0);
@@ -246,9 +246,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new int[collection.Count];
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => copy.CopyTo(copy, -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
                 Assert.All(copy, item => Assert.Equal(0, item));
-                Assert.Throws<ArgumentException>(() => copy.CopyTo(copy, 1));
+                Assert.Throws<ArgumentException>(() => collection.CopyTo(copy, 1));
                 Assert.All(copy, item => Assert.Equal(0, item));
 
                 collection.CopyTo(copy, 0);
