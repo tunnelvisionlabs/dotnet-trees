@@ -11,7 +11,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;
 
-    public class TestTreeList
+    public class TreeListTest
     {
         [Fact]
         public void TestTreeListConstructor()
