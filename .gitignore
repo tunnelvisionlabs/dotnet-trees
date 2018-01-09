@@ -11,3 +11,4 @@ obj/
 # Created by the build script
 build/nuget/
 .nuget/nuget.exe
+/TunnelVisionLabs.Collections.Trees.Benchmarks/BenchmarkDotNet.Artifacts/*
