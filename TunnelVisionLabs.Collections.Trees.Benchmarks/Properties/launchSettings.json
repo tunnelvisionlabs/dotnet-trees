@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Benchmark (All)": {
+      "commandName": "Project",
+      "commandLineArgs": "*"
+    },
+    "Benchmark (Interactive)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,16 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\TunnelVisionLabs.Collections.Trees.Internal.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\build\keys\UnitTestingKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.10.11" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\TunnelVisionLabs.Collections.Trees\TunnelVisionLabs.Collections.Trees.csproj" />
     <ProjectReference Include="..\TunnelVisionLabs.Collections.Trees.Experimental\TunnelVisionLabs.Collections.Trees.Experimental.csproj" />
   </ItemGroup>
+
 </Project>
