@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{967D7720
 		build\version.ps1 = build\version.ps1
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TunnelVisionLabs.Collections.Trees.Experimental", "TunnelVisionLabs.Collections.Trees.Experimental\TunnelVisionLabs.Collections.Trees.Experimental.csproj", "{DCFAA8D1-2CE6-484D-82C2-171F745CCC2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{73541434-2511-441C-BBAF-05044BE33019}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73541434-2511-441C-BBAF-05044BE33019}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73541434-2511-441C-BBAF-05044BE33019}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCFAA8D1-2CE6-484D-82C2-171F745CCC2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCFAA8D1-2CE6-484D-82C2-171F745CCC2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCFAA8D1-2CE6-484D-82C2-171F745CCC2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCFAA8D1-2CE6-484D-82C2-171F745CCC2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

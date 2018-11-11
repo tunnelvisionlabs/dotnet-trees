@@ -17,3 +17,4 @@ cache:
   - packages -> **\packages.config
 artifacts:
 - path: 'TunnelVisionLabs.Collections.Trees\**\*.nupkg'
+- path: 'TunnelVisionLabs.Collections.Trees.Experimental\**\*.nupkg'
