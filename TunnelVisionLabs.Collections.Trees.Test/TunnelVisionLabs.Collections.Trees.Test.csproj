@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TunnelVisionLabs.Collections.Trees\TunnelVisionLabs.Collections.Trees.csproj" />
+    <ProjectReference Include="..\TunnelVisionLabs.Collections.Trees.Experimental\TunnelVisionLabs.Collections.Trees.Experimental.csproj" />
   </ItemGroup>
 
 </Project>
