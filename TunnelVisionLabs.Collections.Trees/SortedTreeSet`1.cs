@@ -469,9 +469,7 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-#pragma warning disable SA1206 // Declaration keywords should follow order
         private ref struct BitHelper
-#pragma warning restore SA1206 // Declaration keywords should follow order
         {
             private readonly Span<int> _span;
 
