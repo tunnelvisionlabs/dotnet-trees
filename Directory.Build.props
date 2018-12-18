@@ -2,15 +2,6 @@
 <Project>
 
   <PropertyGroup>
-    <Description>Efficient implementations of standard .NET collection interfaces using tree data structures.</Description>
-    <Product>TunnelVisionLabs.Collections.Trees</Product>
-    <Company>Tunnel Vision Laboratories, LLC</Company>
-    <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <Authors>sharwell</Authors>
-  </PropertyGroup>
-
-  <PropertyGroup>
     <LangVersion>7.2</LangVersion>
     <Features>strict</Features>
   </PropertyGroup>
@@ -65,9 +56,18 @@
     </AdditionalFiles>
   </ItemGroup>
 
-  <!-- Versioning -->
+  <!-- Versioning and packaging -->
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13" PrivateAssets="all" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <Description>Efficient implementations of standard .NET collection interfaces using tree data structures.</Description>
+    <Product>TunnelVisionLabs.Collections.Trees</Product>
+    <Company>Tunnel Vision Laboratories, LLC</Company>
+    <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Authors>sharwell</Authors>
+  </PropertyGroup>
 
 </Project>
