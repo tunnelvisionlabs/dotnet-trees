@@ -7,11 +7,6 @@
     <Company>Tunnel Vision Laboratories, LLC</Company>
     <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-
-    <Version>1.0.0.0</Version>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0-dev</InformationalVersion>
-    <PackageVersion>$(InformationalVersion)</PackageVersion>
     <Authors>sharwell</Authors>
   </PropertyGroup>
 
@@ -68,6 +63,11 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
+  </ItemGroup>
+
+  <!-- Versioning -->
+  <ItemGroup>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
