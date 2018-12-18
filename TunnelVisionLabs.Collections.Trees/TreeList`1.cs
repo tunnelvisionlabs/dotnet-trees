@@ -10,7 +10,7 @@ namespace TunnelVisionLabs.Collections.Trees
     using System.Linq;
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
     using System.Threading;
 #endif
 
@@ -19,7 +19,7 @@ namespace TunnelVisionLabs.Collections.Trees
         private readonly int _branchingFactor;
         private Node _root = Node.Empty;
         private int _version;
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
         private object _syncRoot;
 #endif
 
@@ -76,7 +76,7 @@ namespace TunnelVisionLabs.Collections.Trees
         {
             get
             {
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
                 if (_syncRoot == null)
                     Interlocked.CompareExchange(ref _syncRoot, new object(), null);
 
