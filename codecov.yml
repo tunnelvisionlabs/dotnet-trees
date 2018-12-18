@@ -9,7 +9,7 @@ coverage:
       default: false
 
 comment:
-  layout: "diff, flags, files, footer"
+  layout: "diff"
 
 flags:
   production:
