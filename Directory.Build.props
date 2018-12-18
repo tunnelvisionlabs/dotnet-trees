@@ -68,6 +68,9 @@
     <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>sharwell</Authors>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <IncludeSource>true</IncludeSource>
   </PropertyGroup>
 
 </Project>
