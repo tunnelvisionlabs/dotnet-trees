@@ -15,6 +15,7 @@ flags:
   production:
     paths:
       - TunnelVisionLabs.Collections.Trees/
+      - TunnelVisionLabs.Collections.Trees.Experimental/
   test:
     paths:
       - TunnelVisionLabs.Collections.Trees.Test/
