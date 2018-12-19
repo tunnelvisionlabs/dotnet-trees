@@ -9,12 +9,13 @@ coverage:
       default: false
 
 comment:
-  layout: "diff, flags, files, footer"
+  layout: "diff"
 
 flags:
   production:
     paths:
       - TunnelVisionLabs.Collections.Trees/
+      - TunnelVisionLabs.Collections.Trees.Experimental/
   test:
     paths:
       - TunnelVisionLabs.Collections.Trees.Test/
