@@ -133,14 +133,14 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestICollectionInterface()
         {
-            TestICollectionInterfaceImpl(new SortedTreeSet<int> { 600, 601 }, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new SortedTreeSet<int?> { 600, 601 }, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new SortedTreeSet<object> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedTreeSet<int> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new SortedTreeSet<int?> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedTreeSet<object> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: true);
 
             // Run the same set of tests on SortedSet<T> to ensure consistent behavior
-            TestICollectionInterfaceImpl(new SortedSet<int> { 600, 601 }, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new SortedSet<int?> { 600, 601 }, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new SortedSet<object> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedSet<int> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new SortedSet<int?> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedSet<object> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: true);
         }
 
         [Fact]

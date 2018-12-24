@@ -201,22 +201,29 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestICollectionInterface()
         {
-            TestICollectionInterfaceImpl(new SortedTreeList<int> { 600, 601 }, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new SortedTreeList<int?> { 600, 601 }, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new SortedTreeList<object> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedTreeList<int> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new SortedTreeList<int?> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new SortedTreeList<object> { 600, 601 }, isOwnSyncRoot: true, supportsNullValues: true);
 
             // Run the same set of tests on List<T> to ensure consistent behavior
-            TestICollectionInterfaceImpl(new List<int> { 600, 601 }, supportsNullValues: false);
-            TestICollectionInterfaceImpl(new List<int?> { 600, 601 }, supportsNullValues: true);
-            TestICollectionInterfaceImpl(new List<object> { 600, 601 }, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new List<int> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: false);
+            TestICollectionInterfaceImpl(new List<int?> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: true);
+            TestICollectionInterfaceImpl(new List<object> { 600, 601 }, isOwnSyncRoot: false, supportsNullValues: true);
         }
 
-        private static void TestICollectionInterfaceImpl(ICollection collection, bool supportsNullValues)
+        private static void TestICollectionInterfaceImpl(ICollection collection, bool isOwnSyncRoot, bool supportsNullValues)
         {
             Assert.False(collection.IsSynchronized);
 
-            Assert.IsType<object>(collection.SyncRoot);
-            Assert.Same(collection.SyncRoot, collection.SyncRoot);
+            if (isOwnSyncRoot)
+            {
+                Assert.Same(collection, collection.SyncRoot);
+            }
+            else
+            {
+                Assert.IsType<object>(collection.SyncRoot);
+                Assert.Same(collection.SyncRoot, collection.SyncRoot);
+            }
 
             if (supportsNullValues)
             {

@@ -94,7 +94,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => ((ICollection)_treeSet).SyncRoot;
+        object ICollection.SyncRoot => this;
 
         public TValue this[TKey key]
         {

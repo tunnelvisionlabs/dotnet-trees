@@ -244,7 +244,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 Assert.NotNull(collection);
                 Assert.False(collection.IsSynchronized);
-                Assert.Same(dictionary.SyncRoot, collection.SyncRoot);
+                Assert.Same(dictionary, collection.SyncRoot);
 
                 Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
