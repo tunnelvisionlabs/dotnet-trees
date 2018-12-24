@@ -64,7 +64,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => ((ICollection)_treeList).SyncRoot;
+        object ICollection.SyncRoot => this;
 
         public T this[int index]
         {

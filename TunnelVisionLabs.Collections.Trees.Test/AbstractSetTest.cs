@@ -320,12 +320,19 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
         protected abstract ISet<T> CreateSet<T>();
 
-        protected static void TestICollectionInterfaceImpl(ICollection collection, bool supportsNullValues)
+        protected static void TestICollectionInterfaceImpl(ICollection collection, bool isOwnSyncRoot, bool supportsNullValues)
         {
             Assert.False(collection.IsSynchronized);
 
-            Assert.IsType<object>(collection.SyncRoot);
-            Assert.Same(collection.SyncRoot, collection.SyncRoot);
+            if (isOwnSyncRoot)
+            {
+                Assert.Same(collection, collection.SyncRoot);
+            }
+            else
+            {
+                Assert.IsType<object>(collection.SyncRoot);
+                Assert.Same(collection.SyncRoot, collection.SyncRoot);
+            }
 
             if (supportsNullValues)
             {

@@ -68,7 +68,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => ((ICollection)_sortedList).SyncRoot;
+        object ICollection.SyncRoot => this;
 
         public static IEqualityComparer<TreeSet<T>> CreateSetComparer()
         {
