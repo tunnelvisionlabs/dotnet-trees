@@ -8,6 +8,7 @@ TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Count.get 
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.IndexOfKey(TKey key) -> int
@@ -20,8 +21,10 @@ TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollect
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.KeyCollection() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection.Remove(TKey item) -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Keys.get -> TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.KeyCollection
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Remove(TKey key) -> bool
@@ -42,8 +45,10 @@ TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueColle
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.Values.get -> TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.ValueCollection
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.this[TKey key].get -> TValue
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.this[TKey key].set -> void
@@ -62,6 +67,7 @@ TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Exists(System.Predicate<T> match) -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Find(System.Predicate<T> match) -> T
@@ -109,6 +115,7 @@ TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Enumerator
@@ -144,6 +151,7 @@ TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
@@ -154,8 +162,10 @@ TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Co
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.KeyCollection() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Remove(TKey item) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Keys.get -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Remove(TKey key) -> bool
@@ -176,8 +186,10 @@ TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Values.get -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].get -> TValue
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.this[TKey key].set -> void
@@ -197,6 +209,7 @@ TunnelVisionLabs.Collections.Trees.TreeList<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeList<T>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Exists(System.Predicate<T> match) -> bool
 TunnelVisionLabs.Collections.Trees.TreeList<T>.Find(System.Predicate<T> match) -> T
@@ -250,6 +263,7 @@ TunnelVisionLabs.Collections.Trees.TreeSet<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator.Enumerator() -> void
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.ExceptWith(System.Collections.Generic.IEnumerable<T> other) -> void
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeSet<T>.Enumerator
