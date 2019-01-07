@@ -26,7 +26,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         bool ICollection.IsSynchronized => false;
 
-        object ICollection.SyncRoot => ((ICollection)_treeList).SyncRoot;
+        object ICollection.SyncRoot => this;
 
         public void Clear() => _treeList.Clear();
 
@@ -88,5 +88,10 @@ namespace TunnelVisionLabs.Collections.Trees
         IEnumerator<T> IEnumerable<T>.GetEnumerator() => GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        internal void Validate(ValidationRules validationRules)
+        {
+            _treeList.Validate(validationRules);
+        }
     }
 }
