@@ -307,6 +307,26 @@ TunnelVisionLabs.Collections.Trees.TreeSet<T>.TreeSet(int branchingFactor, Syste
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.TrimExcess() -> void
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.TryGetValue(T equalValue, out T actualValue) -> bool
 TunnelVisionLabs.Collections.Trees.TreeSet<T>.UnionWith(System.Collections.Generic.IEnumerable<T> other) -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Clear() -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Contains(T item) -> bool
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.CopyTo(T[] array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator.Current.get -> T
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Peek() -> T
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Pop() -> T
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.Push(T item) -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.ToArray() -> T[]
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.TreeStack() -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.TreeStack(int branchingFactor) -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.TrimExcess() -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.TryPeek(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.TryPop(out T result) -> bool
 static TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.CreateSetComparer() -> System.Collections.Generic.IEqualityComparer<TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>>
 static TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.CreateSetComparer(System.Collections.Generic.IEqualityComparer<T> memberEqualityComparer) -> System.Collections.Generic.IEqualityComparer<TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>>
 static TunnelVisionLabs.Collections.Trees.TreeSet<T>.CreateSetComparer() -> System.Collections.Generic.IEqualityComparer<TunnelVisionLabs.Collections.Trees.TreeSet<T>>
