@@ -147,6 +147,55 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         }
 
         [Fact]
+        public void TestClear()
+        {
+            var queue = new TreeQueue<int>(branchingFactor: 3);
+
+            queue.Clear();
+            Assert.Empty(queue);
+
+            foreach (int item in Enumerable.Range(0, 10))
+                queue.Enqueue(item);
+
+            Assert.NotEmpty(queue);
+            queue.Clear();
+            Assert.Empty(queue);
+        }
+
+        [Fact]
+        public void TestContains()
+        {
+            Random random = new Random();
+            var queue = new TreeQueue<int>(branchingFactor: 4);
+            for (int i = 0; i < 2 * 4 * 4; i++)
+            {
+                int value = random.Next(queue.Count + 1);
+                queue.Enqueue(i);
+
+                // Use queue.Contains(i) since this is a targeted collection API test
+#pragma warning disable xUnit2017 // Do not use Contains() to check if a value exists in a collection
+                Assert.True(queue.Contains(i));
+#pragma warning restore xUnit2017 // Do not use Contains() to check if a value exists in a collection
+            }
+
+            queue.Validate(ValidationRules.RequirePacked);
+        }
+
+        [Fact]
+        public void TestEmptyQueue()
+        {
+            var queue = new TreeQueue<int>();
+            Assert.Throws<InvalidOperationException>(() => queue.Peek());
+            Assert.Throws<InvalidOperationException>(() => queue.Dequeue());
+
+            Assert.False(queue.TryPeek(out var result));
+            Assert.Equal(0, result);
+
+            Assert.False(queue.TryDequeue(out result));
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
         public void TestTrimExcess()
         {
             Random random = new Random();
