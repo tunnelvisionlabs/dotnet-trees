@@ -199,7 +199,17 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             internal override ImmutableTreeList<Node>.Node InsertRange(bool isAppend, int index, IEnumerable<T> collection)
             {
                 if (IsFrozen)
-                    return AsMutable().InsertRange(isAppend, index, collection);
+                {
+                    IndexNode mutable = AsMutable();
+                    ImmutableTreeList<Node>.Node mutableResult = mutable.InsertRange(isAppend, index, collection);
+                    if (mutableResult.Count == 1 && mutableResult[0].Count == Count)
+                    {
+                        // If no changes were made to the mutable copy, return as though no changes were made at all
+                        return ImmutableTreeList<Node>.Node.Insert(ImmutableTreeList<Node>.Node.Empty, 0, this);
+                    }
+
+                    return mutableResult;
+                }
 
                 ImmutableTreeList<Node>.Node result = ImmutableTreeList<Node>.Node.Insert(ImmutableTreeList<Node>.Node.Empty, 0, this);
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);

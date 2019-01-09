@@ -468,7 +468,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(reference, list);
         }
 
-        [Fact(Skip = "https://github.com/tunnelvisionlabs/dotnet-trees/issues/59")]
+        [Fact]
         public void TestInsertEmptyRange()
         {
             ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
@@ -531,7 +531,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             for (int i = 0; i < 4 * 8 * 8; i++)
             {
                 int index = random.Next(list.Count + 1);
-                list.Insert(index, i);
+                list = list.Insert(index, i);
                 reference.Insert(index, i);
             }
 
@@ -573,7 +573,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             for (int i = 0; i < 4 * 8 * 8; i++)
             {
                 int index = random.Next(list.Count + 1);
-                list.Insert(index, i);
+                list = list.Insert(index, i);
                 reference.Insert(index, i);
             }
 
@@ -614,7 +614,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             for (int i = 0; i < 4 * 8 * 8; i++)
             {
                 int index = random.Next(list.Count + 1);
-                list.Insert(index, i);
+                list = list.Insert(index, i);
                 reference.Insert(index, i);
             }
 
@@ -655,7 +655,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             for (int i = 0; i < 4 * 8 * 8; i++)
             {
                 int index = random.Next(list.Count + 1);
-                list.Insert(index, i);
+                list = list.Insert(index, i);
                 reference.Insert(index, i);
             }
 
