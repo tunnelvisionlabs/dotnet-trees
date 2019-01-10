@@ -11,7 +11,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
     using TunnelVisionLabs.Collections.Trees.Immutable;
     using Xunit;
 
-    public class ImmutableTreeListTest
+    public partial class ImmutableTreeListTest
     {
         [Fact]
         public void TestIListInterface()
@@ -194,6 +194,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.NotNull(collection.SyncRoot);
             Assert.Same(collection, collection.SyncRoot);
 
+            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
+
             if (supportsNullValues)
             {
                 var copy = new object[collection.Count];
@@ -351,6 +354,21 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
+        public void TestAddViaInterface()
+        {
+            const int Value = 600;
+
+            IImmutableList<int> list = ImmutableTreeList.Create<int>();
+            Assert.Empty(list);
+            list = list.Add(Value);
+            Assert.Single(list);
+            Assert.Equal(Value, list[0]);
+            int[] expected = { Value };
+            int[] actual = list.ToArray();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void TestAddStaysPacked()
         {
             ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
@@ -380,6 +398,55 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
+        public void TestAddRange()
+        {
+            int[] expected = Enumerable.Range(600, 8 * 9).ToArray();
+
+            ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
+            CollectionAssert.EnumeratorNotInvalidated(list, () => list = list.AddRange(expected));
+
+            Assert.Throws<ArgumentNullException>("collection", () => list.AddRange(null));
+            CollectionAssert.EnumeratorNotInvalidated(list, () => list.AddRange(Enumerable.Empty<int>()));
+
+            Assert.Equal(expected.Length, list.Count);
+
+            int[] actual = list.ToArray();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TestAddRangeViaInterface()
+        {
+            int[] expected = Enumerable.Range(600, 8 * 9).ToArray();
+
+            IImmutableList<int> list = ImmutableTreeList.Create<int>();
+            list = list.AddRange(expected);
+
+            Assert.Equal(expected.Length, list.Count);
+
+            int[] actual = list.ToArray();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void TestClear()
+        {
+            var list = ImmutableTreeList.CreateRange(Enumerable.Range(600, 8 * 9));
+            Assert.Equal(8 * 9, list.Count);
+            Assert.Empty(list.Clear());
+            Assert.Same(ImmutableTreeList<int>.Empty, list.Clear());
+        }
+
+        [Fact]
+        public void TestClearViaInterface()
+        {
+            IImmutableList<int> list = ImmutableTreeList.CreateRange(Enumerable.Range(600, 8 * 9));
+            Assert.Equal(8 * 9, list.Count);
+            Assert.Empty(list.Clear());
+            Assert.Same(ImmutableTreeList<int>.Empty, list.Clear());
+        }
+
+        [Fact]
         public void TestInsert()
         {
             const int Value = 600;
@@ -399,6 +466,27 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(-1, item: 0));
             Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(-1, item: 0));
             Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(list.Count + 1, item: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(list.Count + 1, item: 0));
+        }
+
+        [Fact]
+        public void TestInsertViaInterface()
+        {
+            const int Value = 600;
+
+            IImmutableList<int> list = ImmutableTreeList.Create<int>();
+            Assert.Empty(list);
+            list = list.Insert(0, Value);
+            Assert.Single(list);
+            Assert.Equal(Value, list[0]);
+            int[] expected = { Value };
+            int[] actual = list.ToArray();
+            Assert.Equal(expected, actual);
+
+            List<int> reference = new List<int>(list);
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(-1, element: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(-1, item: 0));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Insert(list.Count + 1, element: 0));
             Assert.Throws<ArgumentOutOfRangeException>("index", () => reference.Insert(list.Count + 1, item: 0));
         }
 
@@ -426,6 +514,10 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         {
             ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
             List<int> reference = new List<int>();
+
+            Assert.Throws<ArgumentNullException>("collection", () => list.InsertRange(0, null));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.InsertRange(-1, Enumerable.Empty<int>()));
+            Assert.Throws<ArgumentOutOfRangeException>(null, () => list.InsertRange(1, Enumerable.Empty<int>()));
 
             Assert.Same(ImmutableTreeList<int>.Empty, list);
             Assert.Same(list, list.InsertRange(0, Enumerable.Empty<int>()));
@@ -498,6 +590,10 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 list = list.Add(i * 2);
                 reference.Add(i * 2);
             }
+
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.BinarySearch(index: -1, list.Count, 0, comparer: null));
+            Assert.Throws<ArgumentOutOfRangeException>("count", () => list.BinarySearch(0, count: -1, 0, comparer: null));
+            Assert.Throws<ArgumentException>(() => list.BinarySearch(1, list.Count, 0, comparer: null));
 
             // Test below start value
             Assert.Equal(reference.BinarySearch(reference[0] - 1), list.BinarySearch(reference[0] - 1));
@@ -577,6 +673,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 reference.Insert(index, i);
             }
 
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.LastIndexOf(list[0], index: -1, 0, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count, list.Count, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count - 1, -1, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.LastIndexOf(list[0], list.Count - 1, list.Count + 1, null));
@@ -600,8 +697,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestLastIndexOfInvalidOperations()
         {
             ImmutableTreeList<int> single = ImmutableTreeList.CreateRange(Enumerable.Range(1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => single.LastIndexOf(0, -1, 0, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 1, 0, null));
-            Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 0, -1, null));
+            Assert.Throws<ArgumentOutOfRangeException>("count", () => single.LastIndexOf(0, 0, -1, null));
             Assert.Throws<ArgumentOutOfRangeException>(() => single.LastIndexOf(0, 0, 2, null));
         }
 
@@ -862,6 +960,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 reference.Insert(index, item);
             }
 
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.RemoveAt(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(null, () => list.RemoveAt(list.Count));
+
             while (list.Count > 0)
             {
                 int index = random.Next(list.Count);
@@ -875,6 +976,107 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             Assert.Empty(list);
             Assert.Empty(reference);
+        }
+
+        [Fact]
+        public void TestRemoveRangeItems()
+        {
+            Random random = new Random();
+            ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
+            ImmutableList<int> reference = ImmutableList.Create<int>();
+            var itemsToRemove = new List<int>();
+            for (int i = 0; i < 4 * 8 * 8; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list = list.Insert(index, item);
+                reference = reference.Insert(index, item);
+                if ((random.Next() & 1) != 0)
+                    itemsToRemove.Add(item);
+            }
+
+            Assert.True(itemsToRemove.Count > 1);
+
+            ImmutableTreeList<int> pruned = list.RemoveRange(itemsToRemove);
+            ImmutableList<int> referencePruned = reference.RemoveRange(itemsToRemove);
+
+            Assert.Equal(list.Count - itemsToRemove.Count, pruned.Count);
+
+            Assert.Equal(referencePruned, pruned);
+
+            Assert.Throws<ArgumentNullException>("items", () => list.RemoveRange(items: null));
+        }
+
+        [Fact]
+        public void TestRemoveRange()
+        {
+            Random random = new Random();
+            ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
+            ImmutableList<int> reference = ImmutableList.Create<int>();
+            for (int i = 0; i < 4 * 8 * 8; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list = list.Insert(index, item);
+                reference = reference.Insert(index, item);
+            }
+
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.RemoveRange(-1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>("count", () => list.RemoveRange(0, -1));
+            Assert.Throws<ArgumentException>(null, () => list.RemoveRange(list.Count, 1));
+
+            Assert.Same(list, list.RemoveRange(5, 0));
+            Assert.Same(reference, reference.RemoveRange(5, 0));
+
+            // This is one of the cases where it's currently possible to obtain an empty list which is not the same
+            // instance as ImmutableTreeList<T>.Empty.
+            Assert.NotSame(ImmutableTreeList<int>.Empty, list.RemoveRange(0, list.Count));
+            Assert.Empty(list.RemoveRange(0, list.Count));
+
+            list = list.RemoveRange(3, list.Count - 8);
+            reference = reference.RemoveRange(3, reference.Count - 8);
+            Assert.Equal(reference, list);
+        }
+
+        [Fact]
+        public void TestReverse()
+        {
+            Random random = new Random();
+            ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
+            for (int i = 0; i < 4 * 8 * 8; i++)
+            {
+                int index = random.Next(list.Count + 1);
+                int item = random.Next();
+                list = list.Insert(index, item);
+            }
+
+            for (int i = 0; i <= list.Count; i++)
+            {
+                // Reversing an empty range does not change the list
+                Assert.Same(list, list.Reverse(5, 0));
+
+                // Reversing a single-element range does not change the list, but is not valid at the end of the list
+                if (i == list.Count)
+                {
+                    Assert.Throws<ArgumentException>(null, () => list.Reverse(i, 1));
+                }
+                else
+                {
+                    Assert.Same(list, list.Reverse(i, 1));
+                }
+            }
+
+            ImmutableTreeList<int> reversed = list.Reverse();
+            for (int i = 0; i < list.Count; i++)
+            {
+                Assert.Equal(list[i], reversed[reversed.Count - 1 - i]);
+            }
+
+            Assert.Equal(list, reversed.Reverse());
+
+            Assert.Throws<ArgumentOutOfRangeException>("index", () => list.Reverse(-1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>("count", () => list.Reverse(0, -1));
+            Assert.Throws<ArgumentException>(null, () => list.Reverse(list.Count, 1));
         }
 
         [Fact]

@@ -320,7 +320,19 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items) => RemoveRange(items, equalityComparer: null);
 
-        public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items, IEqualityComparer<T> equalityComparer) => throw null;
+        public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items, IEqualityComparer<T> equalityComparer)
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
+
+            ImmutableTreeList<T> result = this;
+            foreach (T item in items)
+            {
+                result = result.Remove(item, equalityComparer);
+            }
+
+            return result;
+        }
 
         public ImmutableTreeList<T> RemoveRange(int index, int count)
         {
@@ -525,7 +537,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             Debug.Assert(_root.IsFrozen, $"Assertion failed: {nameof(_root)}.{nameof(_root.IsFrozen)}");
             if (_root.FirstChild != null)
             {
-                Debug.Assert(_root.NodeCount > 1, $"Assertion failed: _root.NodeCount > 1");
+                Debug.Assert(((IndexNode)_root).NodeCount > 1, $"Assertion failed: ((IndexNode)_root).NodeCount > 1");
             }
 
             _root.Validate(validationRules, null);

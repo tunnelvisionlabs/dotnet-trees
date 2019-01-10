@@ -69,7 +69,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal override int Count => _count;
 
-            internal override int NodeCount => _nodeCount;
+            internal int NodeCount => _nodeCount;
 
             internal override LeafNode FirstLeaf => _nodes[0].FirstLeaf;
 

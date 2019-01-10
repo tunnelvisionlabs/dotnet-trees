@@ -21,11 +21,6 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 get;
             }
 
-            internal abstract int NodeCount
-            {
-                get;
-            }
-
             internal abstract LeafNode FirstLeaf
             {
                 get;
@@ -121,7 +116,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     (root, _) = root.RemoveAt(index, null);
                 }
 
-                while (root.FirstChild != null && root.NodeCount == 1)
+                while (root.FirstChild != null && ((IndexNode)root).NodeCount == 1)
                 {
                     root = root.FirstChild;
                 }
@@ -168,7 +163,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             {
                 (Node newRoot, Node mustBeNull) = root.TrimExcessImpl(null);
                 Debug.Assert(mustBeNull == null, $"Assertion failed: {nameof(mustBeNull)} == null");
-                while (newRoot.FirstChild != null && newRoot.NodeCount == 1)
+                while (newRoot.FirstChild != null && ((IndexNode)newRoot).NodeCount == 1)
                 {
                     newRoot = newRoot.FirstChild;
                 }
@@ -229,8 +224,6 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             private sealed class EmptyNode : Node
             {
                 internal override int Count => 0;
-
-                internal override int NodeCount => 0;
 
                 internal override LeafNode FirstLeaf => null;
 

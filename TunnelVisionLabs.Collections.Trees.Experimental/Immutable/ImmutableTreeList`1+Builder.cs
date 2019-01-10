@@ -523,7 +523,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 Debug.Assert(_root != null, $"Assertion failed: {nameof(_root)} != null");
                 if (_root.FirstChild != null)
                 {
-                    Debug.Assert(_root.NodeCount > 1, $"Assertion failed: _root.NodeCount > 1");
+                    Debug.Assert(((IndexNode)_root).NodeCount > 1, $"Assertion failed: ((IndexNode)_root).NodeCount > 1");
                 }
 
                 _root.Validate(validationRules, null);
