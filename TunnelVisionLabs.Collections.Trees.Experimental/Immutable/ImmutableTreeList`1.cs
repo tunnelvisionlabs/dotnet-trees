@@ -230,7 +230,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 throw new ArgumentException();
 
             ImmutableTreeList<T> result = RemoveRange(index + count, Count - index - count);
-            return RemoveRange(0, index);
+            return result.RemoveRange(0, index);
         }
 
         public int IndexOf(T value) => IndexOf(value, 0, Count, equalityComparer: null);
@@ -518,16 +518,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             if (array.Length - index < Count)
                 throw new ArgumentOutOfRangeException("Not enough space is available in the destination array.", nameof(index));
 
-            try
+            for (int i = 0; i < Count; i++)
             {
-                for (int i = 0; i < Count; i++)
-                {
-                    array.SetValue(this[i], i + index);
-                }
-            }
-            catch (ArrayTypeMismatchException)
-            {
-                throw new ArgumentException("Invalid array type");
+                array.SetValue(this[i], i + index);
             }
         }
 

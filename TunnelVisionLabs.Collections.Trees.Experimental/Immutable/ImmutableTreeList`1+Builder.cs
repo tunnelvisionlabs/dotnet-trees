@@ -492,23 +492,16 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (array.Length - index < Count)
                     throw new ArgumentOutOfRangeException("Not enough space is available in the destination array.", nameof(index));
 
-                try
+                int offset = index;
+                LeafNode leaf = _root.FirstLeaf;
+                while (leaf != null)
                 {
-                    int offset = index;
-                    LeafNode leaf = _root.FirstLeaf;
-                    while (leaf != null)
-                    {
-                        leaf.CopyToArray(array, offset);
-                        offset += leaf.Count;
-                        if (offset - index < _root.Count)
-                            (leaf, _) = _root.GetLeafNode(offset - index);
-                        else
-                            leaf = null;
-                    }
-                }
-                catch (ArrayTypeMismatchException)
-                {
-                    throw new ArgumentException("Invalid array type");
+                    leaf.CopyToArray(array, offset);
+                    offset += leaf.Count;
+                    if (offset - index < _root.Count)
+                        (leaf, _) = _root.GetLeafNode(offset - index);
+                    else
+                        leaf = null;
                 }
             }
 

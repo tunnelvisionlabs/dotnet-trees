@@ -181,6 +181,17 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             TestICollectionInterfaceImpl(ImmutableTreeList.Create<int?>(600, 601), supportsNullValues: true);
             TestICollectionInterfaceImpl(ImmutableTreeList.Create<object>(600, 601), supportsNullValues: true);
 
+            ICollection collection = ImmutableTreeList<int>.Empty;
+            collection.CopyTo(new int[0], 0);
+
+            // Type checks are only performed if the collection has items
+            collection.CopyTo(new string[0], 0);
+
+            collection = ImmutableTreeList.CreateRange(Enumerable.Range(0, 100));
+            var array = new int[collection.Count];
+            collection.CopyTo(array, 0);
+            Assert.Equal(array, collection);
+
             // Run the same set of tests on ImmutableList<T> to ensure consistent behavior
             TestICollectionInterfaceImpl(ImmutableList.Create(600, 601), supportsNullValues: false);
             TestICollectionInterfaceImpl(ImmutableList.Create<int?>(600, 601), supportsNullValues: true);
@@ -558,6 +569,13 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             reference.InsertRange(1, Enumerable.Range(0, 1));
             list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
+
+            // Test through the IImmutableList<T> interface
+            IImmutableList<int> immutableList = list;
+            immutableList = immutableList.InsertRange(0, Enumerable.Range(8, 3));
+            reference.InsertRange(0, Enumerable.Range(8, 3));
+            Assert.IsType<ImmutableTreeList<int>>(immutableList);
+            Assert.Equal(reference, immutableList);
         }
 
         [Fact]
@@ -999,10 +1017,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             ImmutableTreeList<int> pruned = list.RemoveRange(itemsToRemove);
             ImmutableList<int> referencePruned = reference.RemoveRange(itemsToRemove);
-
-            Assert.Equal(list.Count - itemsToRemove.Count, pruned.Count);
-
             Assert.Equal(referencePruned, pruned);
+
+            IImmutableList<int> immutableList = list;
+            IImmutableList<int> prunedViaInterface = immutableList.RemoveRange(itemsToRemove);
+            Assert.IsType<ImmutableTreeList<int>>(prunedViaInterface);
+            Assert.Equal(referencePruned, prunedViaInterface);
 
             Assert.Throws<ArgumentNullException>("items", () => list.RemoveRange(items: null));
         }
@@ -1033,9 +1053,14 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.NotSame(ImmutableTreeList<int>.Empty, list.RemoveRange(0, list.Count));
             Assert.Empty(list.RemoveRange(0, list.Count));
 
-            list = list.RemoveRange(3, list.Count - 8);
-            reference = reference.RemoveRange(3, reference.Count - 8);
-            Assert.Equal(reference, list);
+            ImmutableTreeList<int> pruned = list.RemoveRange(3, list.Count - 8);
+            ImmutableList<int> referencePruned = reference.RemoveRange(3, reference.Count - 8);
+            Assert.Equal(referencePruned, pruned);
+
+            IImmutableList<int> immutableList = list;
+            IImmutableList<int> prunedViaInterface = immutableList.RemoveRange(3, immutableList.Count - 8);
+            Assert.IsType<ImmutableTreeList<int>>(prunedViaInterface);
+            Assert.Equal(referencePruned, prunedViaInterface);
         }
 
         [Fact]

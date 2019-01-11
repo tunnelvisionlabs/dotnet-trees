@@ -111,6 +111,14 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             ICollection collection = ImmutableTreeList<int>.Empty.ToBuilder();
             collection.CopyTo(new int[0], 0);
 
+            // Type checks are only performed if the collection has items
+            collection.CopyTo(new string[0], 0);
+
+            collection = ImmutableTreeList.CreateRange(Enumerable.Range(0, 100)).ToBuilder();
+            var array = new int[collection.Count];
+            collection.CopyTo(array, 0);
+            Assert.Equal(array, collection);
+
             // Run the same set of tests on ImmutableList<T>.Builder to ensure consistent behavior
             TestICollectionInterfaceImpl(ImmutableList.Create(600, 601).ToBuilder(), isOwnSyncRoot: false, supportsNullValues: false);
             TestICollectionInterfaceImpl(ImmutableList.Create<int?>(600, 601).ToBuilder(), isOwnSyncRoot: false, supportsNullValues: true);
@@ -133,6 +141,16 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
             Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
+
+            void CopyToArrayWithNonZeroLowerBound() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0);
+            if (collection.GetType().GetGenericTypeDefinition() == typeof(ImmutableList<>.Builder))
+            {
+                Assert.Throws<IndexOutOfRangeException>(CopyToArrayWithNonZeroLowerBound);
+            }
+            else
+            {
+                Assert.Throws<ArgumentException>(CopyToArrayWithNonZeroLowerBound);
+            }
 
             if (supportsNullValues)
             {
