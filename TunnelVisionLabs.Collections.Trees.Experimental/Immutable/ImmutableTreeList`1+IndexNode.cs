@@ -860,6 +860,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     int splitPoint = _nodeCount / 2;
 
                     bool forceNext = false;
+#if true
+                    Debug.Assert(_nodes.Length == 8, "Immutable collections use a fixed branching factor of 8, so the algorithm does not need to account for odd-value branching factors.");
+#else
                     if ((_nodeCount + 1) / 2 > splitPoint && index > splitPoint)
                     {
                         // When splitting a node with an odd branching factor, prior to insertion one split node will
@@ -870,6 +873,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         splitPoint++;
                         forceNext = true;
                     }
+#endif
 
                     _nodes.Copy(splitPoint, ref splitNode._nodes, 0, _nodeCount - splitPoint);
                     _offsets.Copy(splitPoint, ref splitNode._offsets, 0, _nodeCount - splitPoint);
