@@ -289,30 +289,23 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal override Node RemoveLast()
             {
-                Debug.Assert(_count > 0, $"Assertion failed: _count > 0");
+                Debug.Assert(_count > 1, $"Assertion failed: _count > 1");
 
-                if (_count == 1)
+                IndexNode result = AsMutable();
+                Node lastNode = result._nodes[result._nodeCount - 1];
+                if (lastNode.Count == 1)
                 {
-                    return null;
+                    result._nodeCount--;
+                    result._offsets[result._nodeCount] = default;
+                    result._nodes[result._nodeCount] = default;
                 }
                 else
                 {
-                    IndexNode result = AsMutable();
-                    Node lastNode = result._nodes[result._nodeCount - 1];
-                    if (lastNode.Count == 1)
-                    {
-                        result._nodeCount--;
-                        result._offsets[result._nodeCount] = default;
-                        result._nodes[result._nodeCount] = default;
-                    }
-                    else
-                    {
-                        result._nodes[result._nodeCount - 1] = lastNode.RemoveLast();
-                    }
-
-                    result._count--;
-                    return result;
+                    result._nodes[result._nodeCount - 1] = lastNode.RemoveLast();
                 }
+
+                result._count--;
+                return result;
             }
 
             internal override (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode)

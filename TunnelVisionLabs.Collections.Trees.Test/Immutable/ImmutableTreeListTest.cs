@@ -49,6 +49,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Throws<NotSupportedException>(() => list[list.Count] = 1);
             Assert.Throws<NotSupportedException>(() => list.Insert(-1, 602));
             Assert.Throws<NotSupportedException>(() => list.Insert(list.Count + 1, 602));
+            Assert.Throws<NotSupportedException>(() => list.RemoveAt(0));
 
             Assert.NotEqual(list[1], list[0]);
             Assert.Throws<NotSupportedException>(() => list.Insert(0, list[0]));
@@ -138,6 +139,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             int originalCount = list.Count;
             Assert.Throws<NotSupportedException>(() => list.Remove(default));
             Assert.Equal(originalCount, list.Count);
+            Assert.Throws<NotSupportedException>(() => list.RemoveAt(0));
+            Assert.Equal(originalCount, list.Count);
 
             T removedItem = list[0];
             Assert.Throws<NotSupportedException>(() => list.Remove(list[0]));
@@ -207,6 +210,16 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
             Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
+
+            void CopyToArrayWithNonZeroLowerBound() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0);
+            if (collection.GetType().GetGenericTypeDefinition() == typeof(ImmutableList<>))
+            {
+                Assert.Throws<IndexOutOfRangeException>(CopyToArrayWithNonZeroLowerBound);
+            }
+            else
+            {
+                Assert.Throws<ArgumentException>(CopyToArrayWithNonZeroLowerBound);
+            }
 
             if (supportsNullValues)
             {
@@ -333,6 +346,15 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 Assert.Equal(i, list[i]);
                 list = list.SetItem(i, ~list[i]);
                 Assert.Equal(~i, list[i]);
+            }
+
+            // Test through the IImmutableList<T> interface
+            IImmutableList<int> immutableList = list;
+            for (int i = 0; i < immutableList.Count; i++)
+            {
+                Assert.Equal(~i, immutableList[i]);
+                immutableList = immutableList.SetItem(i, ~immutableList[i]);
+                Assert.Equal(i, immutableList[i]);
             }
         }
 
@@ -665,6 +687,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             ImmutableTreeList<int> empty = ImmutableTreeList.Create<int>();
             Assert.Equal(-1, empty.IndexOf(0));
+
+            // Test with a custom equality comparer
+            var stringList = ImmutableTreeList.Create<string>("aa", "aA", "Aa", "AA");
+            Assert.Equal(3, stringList.IndexOf("AA", StringComparer.Ordinal));
+            Assert.Equal(0, stringList.IndexOf("AA", StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -709,6 +736,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
                 Assert.Equal(reference.LastIndexOf(i, lastIndex - 1), list.LastIndexOf(i, lastIndex - 1, lastIndex, null));
             }
+
+            // Test with a custom equality comparer
+            var stringList = ImmutableTreeList.Create<string>("aa", "aA", "Aa", "AA");
+            Assert.Equal(0, stringList.LastIndexOf("aa", StringComparer.Ordinal));
+            Assert.Equal(3, stringList.LastIndexOf("aa", StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -917,6 +949,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
 
+            // Then sort everything in reverse order
+            list = list.Sort(ReverseComparer<int>.Default);
+            reference.Sort(ReverseComparer<int>.Default);
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+
             // Test sorting an empty list
             ImmutableTreeList<int> empty = ImmutableTreeList.Create<int>();
             empty = empty.Sort();
@@ -933,6 +971,14 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(100, sameValue.Count);
             for (int i = 0; i < sameValue.Count; i++)
                 Assert.Equal(1, sameValue[i]);
+
+            // Test sorting a list with cycles of three distinct values
+            var cycleValues = ImmutableTreeList.CreateRange(Enumerable.Range(0, 100).Select(x => x % 3));
+            var referenceCycleValues = ImmutableList.CreateRange(Enumerable.Range(0, 100).Select(x => x % 3));
+            cycleValues = cycleValues.Sort();
+            cycleValues.Validate(ValidationRules.RequirePacked);
+            referenceCycleValues = referenceCycleValues.Sort();
+            Assert.Equal(referenceCycleValues, cycleValues);
         }
 
         [Fact]
@@ -994,6 +1040,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             Assert.Empty(list);
             Assert.Empty(reference);
+
+            // Test through the IImmutableList<T> interface
+            IImmutableList<int> immutableList = ImmutableTreeList.CreateRange(Enumerable.Range(0, 100));
+            Assert.Equal(Enumerable.Range(1, 99), immutableList.RemoveAt(0));
+            Assert.IsType<ImmutableTreeList<int>>(immutableList.RemoveAt(0));
         }
 
         [Fact]
@@ -1276,6 +1327,36 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(8 * 4, list.Count);
             Assert.NotSame(list, list.Remove(3));
             Assert.Equal((8 * 4) - 1, list.Remove(3).Count);
+
+            // Test through the IImmutableList<T> interface
+            IImmutableList<int> immutableList = list;
+            Assert.Same(immutableList, immutableList.Remove(-1));
+            Assert.NotSame(immutableList, immutableList.Remove(3));
+            Assert.Equal((8 * 4) - 1, immutableList.Remove(3).Count);
+        }
+
+        [Fact]
+        public void TestReplaceValue()
+        {
+            // Test with dotnet-trees
+            var list = ImmutableTreeList.Create("aa", "aA", "Aa", "AA");
+            TestReplaceValueImpl(list);
+            Assert.Equal(new[] { "aa", "bb", "Aa", "AA" }, list.Replace("aA", "bb"));
+
+            // Test with the reference immutable collection
+            TestReplaceValueImpl(ImmutableList.Create("aa", "aA", "Aa", "AA"));
+        }
+
+        private void TestReplaceValueImpl(IImmutableList<string> list)
+        {
+            Assert.Equal(new[] { "aa", "aA", "Aa", "AA" }, list);
+            Assert.Throws<ArgumentException>("oldValue", () => list.Replace("a", "b"));
+
+            IImmutableList<string> replaceWithOneMatch = list.Replace("AA", "bb", StringComparer.Ordinal);
+            Assert.Equal(new[] { "aa", "aA", "Aa", "bb" }, replaceWithOneMatch);
+
+            IImmutableList<string> replaceWithMultipleMatches = list.Replace("AA", "bb", StringComparer.OrdinalIgnoreCase);
+            Assert.Equal(new[] { "bb", "aA", "Aa", "AA" }, replaceWithMultipleMatches);
         }
 
         [Fact]
@@ -1289,6 +1370,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(new[] { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 }, list.RemoveAll(i => (i % 2) == 0));
             Assert.Same(list, list.RemoveAll(i => i < 0));
             Assert.Equal(20, list.Count);
+
+            // Test through the IImmutableList<T> interface
+            IImmutableList<int> immutableList = list;
+            Assert.Equal(new[] { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 }, immutableList.RemoveAll(i => (i % 2) == 0));
+            Assert.Same(immutableList, immutableList.RemoveAll(i => i < 0));
         }
 
         [Fact]

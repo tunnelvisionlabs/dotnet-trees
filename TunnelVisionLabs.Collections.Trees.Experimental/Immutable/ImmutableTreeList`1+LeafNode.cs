@@ -221,20 +221,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal override Node RemoveLast()
             {
-                Debug.Assert(_count > 0, $"Assertion failed: _count > 0");
+                Debug.Assert(_count > 1, $"Assertion failed: {nameof(_count)} > 1");
 
-                if (_count == 1)
-                {
-                    return null;
-                }
-                else
-                {
-                    Debug.Assert(_count > 1, $"Assertion failed: _count > 1");
-                    LeafNode result = AsMutable();
-                    result._count--;
-                    result._data[result._count] = default;
-                    return result;
-                }
+                LeafNode result = AsMutable();
+                result._count--;
+                result._data[result._count] = default;
+                return result;
             }
 
             internal override (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode)

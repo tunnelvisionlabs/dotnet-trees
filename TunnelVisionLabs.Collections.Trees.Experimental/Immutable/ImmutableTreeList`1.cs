@@ -346,7 +346,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> Replace(T oldValue, T newValue) => Replace(oldValue, newValue, equalityComparer: null);
 
-        public ImmutableTreeList<T> Replace(T oldValue, T newValue, IEqualityComparer<T> equalityComparer) => throw null;
+        public ImmutableTreeList<T> Replace(T oldValue, T newValue, IEqualityComparer<T> equalityComparer)
+        {
+            int index = IndexOf(oldValue, 0, Count, equalityComparer);
+            if (index < 0)
+                throw new ArgumentException("Cannot find the old value", nameof(oldValue));
+
+            return SetItem(index, newValue);
+        }
 
         public ImmutableTreeList<T> Reverse() => Reverse(0, Count);
 
@@ -375,8 +382,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 throw new ArgumentOutOfRangeException($"{nameof(index)} must be less than {nameof(Count)}", nameof(index));
 
             Node root = _root.SetItem(index, value);
-            if (root == _root)
-                return this;
+
+            // Optimized handling for root nodes isn't implemented because SetItem currently creates a new root even if
+            // the value didn't change.
+            Debug.Assert(root != _root, "Assertion failed: ");
 
             root.Freeze();
             return new ImmutableTreeList<T>(root);

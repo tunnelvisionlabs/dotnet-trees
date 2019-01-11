@@ -4,6 +4,7 @@
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
+    using System.Collections.Generic;
     using TunnelVisionLabs.Collections.Trees.Immutable;
     using Xunit;
 
@@ -17,6 +18,15 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Throws<IndexOutOfRangeException>(() => array[-1] = 0);
             Assert.Throws<IndexOutOfRangeException>(() => array[array.Length]);
             Assert.Throws<IndexOutOfRangeException>(() => array[array.Length] = 0);
+        }
+
+        [Fact]
+        public void TestSortSmallRange()
+        {
+            FixedArray8<int> array = default;
+            array.Sort(0, 0, Comparer<int>.Default);
+            array.Sort(1, 1, Comparer<int>.Default);
+            Assert.Equal(default, array);
         }
     }
 }

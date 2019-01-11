@@ -511,6 +511,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             ImmutableTreeList<int>.Builder empty = ImmutableTreeList.CreateBuilder<int>();
             Assert.Equal(-1, empty.IndexOf(0));
+
+            // Test with a custom equality comparer
+            var stringList = ImmutableTreeList.Create<string>("aa", "aA", "Aa", "AA").ToBuilder();
+            Assert.Equal(3, stringList.IndexOf("AA", 0, stringList.Count, StringComparer.Ordinal));
+            Assert.Equal(0, stringList.IndexOf("AA", 0, stringList.Count, StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -554,6 +559,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
                 Assert.Equal(reference.LastIndexOf(i, lastIndex - 1), list.LastIndexOf(i, lastIndex - 1));
             }
+
+            // Test with a custom equality comparer
+            var stringList = ImmutableTreeList.Create<string>("aa", "aA", "Aa", "AA").ToBuilder();
+            Assert.Equal(0, stringList.LastIndexOf("aa", stringList.Count - 1, stringList.Count, StringComparer.Ordinal));
+            Assert.Equal(3, stringList.LastIndexOf("aa", stringList.Count - 1, stringList.Count, StringComparer.OrdinalIgnoreCase));
         }
 
         [Fact]
@@ -713,6 +723,16 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             many.TrimExcess();
             many.Validate(ValidationRules.RequirePacked);
+
+            // Construct a poorly-packed list with frozen nodes
+            many = ImmutableTreeList.CreateRange(Enumerable.Range(0, 8)).ToBuilder();
+            many.Insert(0, -1);
+            ImmutableTreeList<int> immutable = many.ToImmutable();
+            ////Assert.Same(immutable, many.ToImmutable());
+            many.TrimExcess();
+            many.Validate(ValidationRules.RequirePacked);
+            Assert.NotSame(immutable, many.ToImmutable());
+            Assert.Equal(immutable, many.ToImmutable());
         }
 
         [Fact]
@@ -751,6 +771,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             // Then sort everything
             list.Sort();
             reference.Sort();
+            list.Validate(ValidationRules.None);
+            Assert.Equal(reference, list);
+
+            // Then sort everything in reverse order
+            list.Sort(ReverseComparer<int>.Default);
+            reference.Sort(ReverseComparer<int>.Default);
             list.Validate(ValidationRules.None);
             Assert.Equal(reference, list);
 
