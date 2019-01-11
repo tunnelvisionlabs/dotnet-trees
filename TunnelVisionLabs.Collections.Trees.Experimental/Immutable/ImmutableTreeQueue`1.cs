@@ -6,7 +6,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableTreeQueue<T> : IImmutableQueue<T>
     {
         public static ImmutableTreeQueue<T> Empty => throw null;

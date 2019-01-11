@@ -5,7 +5,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public static class ImmutableTreeDictionary
     {
         public static ImmutableTreeDictionary<TKey, TValue> Create<TKey, TValue>() => throw null;
