@@ -63,7 +63,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             return GetInt32();
         }
 
-        private static int GetInt32()
+        /// <summary>
+        /// Gets an integer value between 0 and <see cref="int.MaxValue"/>.
+        /// </summary>
+        /// <returns>An integer value between 0 and <see cref="int.MaxValue"/>.</returns>
+        public static int GetInt32()
         {
             int i = _rand.Next();
             Debug.WriteLine("Random Int32 produced: " + i.ToString());
