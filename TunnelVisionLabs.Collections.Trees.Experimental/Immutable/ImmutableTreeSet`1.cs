@@ -7,7 +7,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableTreeSet<T> : IImmutableSet<T>, ISet<T>, ICollection
     {
         public static readonly ImmutableTreeSet<T> Empty;

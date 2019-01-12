@@ -4,7 +4,9 @@
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public static class ImmutableSortedTreeSet
     {
         public static ImmutableSortedTreeSet<T> Create<T>() => throw null;
