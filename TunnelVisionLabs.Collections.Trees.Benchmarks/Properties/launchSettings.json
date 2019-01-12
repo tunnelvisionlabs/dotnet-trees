@@ -2,7 +2,7 @@
   "profiles": {
     "Benchmark (All)": {
       "commandName": "Project",
-      "commandLineArgs": "*"
+      "commandLineArgs": "--filter *"
     },
     "Benchmark (Interactive)": {
       "commandName": "Project"
