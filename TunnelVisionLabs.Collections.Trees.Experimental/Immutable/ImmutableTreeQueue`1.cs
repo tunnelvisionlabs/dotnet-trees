@@ -65,5 +65,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         IEnumerator IEnumerable.GetEnumerator()
             => GetEnumerator();
+
+        internal void Validate(ValidationRules validationRules)
+        {
+            _treeList.Validate(validationRules);
+        }
     }
 }
