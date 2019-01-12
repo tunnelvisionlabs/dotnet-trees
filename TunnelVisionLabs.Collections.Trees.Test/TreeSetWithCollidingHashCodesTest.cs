@@ -98,26 +98,5 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         {
             return new TreeSet<T>(branchingFactor: 4, comparer: ZeroHashCodeEqualityComparer<T>.Default);
         }
-
-        private class SubsetHashCodeEqualityComparer<T> : IEqualityComparer<T>
-        {
-            private readonly IEqualityComparer<T> _equalityComparer;
-            private readonly Func<T, int> _getHashCode;
-
-            public SubsetHashCodeEqualityComparer(IEqualityComparer<T> equalityComparer, IEqualityComparer<T> hashCodeEqualityComparer)
-                : this(equalityComparer, hashCodeEqualityComparer.GetHashCode)
-            {
-            }
-
-            public SubsetHashCodeEqualityComparer(IEqualityComparer<T> equalityComparer, Func<T, int> getHashCode)
-            {
-                _equalityComparer = equalityComparer;
-                _getHashCode = getHashCode;
-            }
-
-            public bool Equals(T x, T y) => _equalityComparer.Equals(x, y);
-
-            public int GetHashCode(T obj) => _getHashCode(obj);
-        }
     }
 }
