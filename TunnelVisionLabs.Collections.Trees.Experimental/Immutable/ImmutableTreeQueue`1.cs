@@ -3,38 +3,67 @@
 
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableTreeQueue<T> : IImmutableQueue<T>
     {
-        public static ImmutableTreeQueue<T> Empty => throw null;
+        public static readonly ImmutableTreeQueue<T> Empty = new ImmutableTreeQueue<T>(ImmutableTreeList<T>.Empty);
 
-        public bool IsEmpty => throw null;
+        private readonly ImmutableTreeList<T> _treeList;
 
-        public ImmutableTreeQueue<T> Clear() => throw null;
+        private ImmutableTreeQueue(ImmutableTreeList<T> treeList)
+        {
+            _treeList = treeList;
+        }
 
-        public ImmutableTreeQueue<T> Dequeue() => throw null;
+        public bool IsEmpty
+            => _treeList.IsEmpty;
 
-        public ImmutableTreeQueue<T> Dequeue(out T value) => throw null;
+        public ImmutableTreeQueue<T> Clear()
+            => Empty;
 
-        public ImmutableTreeQueue<T> Enqueue(T value) => throw null;
+        public ImmutableTreeQueue<T> Dequeue()
+            => Dequeue(out _);
 
-        public Enumerator GetEnumerator() => throw null;
+        public ImmutableTreeQueue<T> Dequeue(out T value)
+        {
+            if (IsEmpty)
+                throw new InvalidOperationException();
 
-        public T Peek() => throw null;
+            value = _treeList[0];
+            return new ImmutableTreeQueue<T>(_treeList.RemoveAt(0));
+        }
 
-        IImmutableQueue<T> IImmutableQueue<T>.Clear() => throw null;
+        public ImmutableTreeQueue<T> Enqueue(T value)
+            => new ImmutableTreeQueue<T>(_treeList.Add(value));
 
-        IImmutableQueue<T> IImmutableQueue<T>.Dequeue() => throw null;
+        public Enumerator GetEnumerator()
+            => new Enumerator(_treeList.GetEnumerator());
 
-        IImmutableQueue<T> IImmutableQueue<T>.Enqueue(T value) => throw null;
+        public T Peek()
+        {
+            if (IsEmpty)
+                throw new InvalidOperationException();
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+            return _treeList[0];
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+        IImmutableQueue<T> IImmutableQueue<T>.Clear()
+            => Clear();
+
+        IImmutableQueue<T> IImmutableQueue<T>.Dequeue()
+            => Dequeue();
+
+        IImmutableQueue<T> IImmutableQueue<T>.Enqueue(T value)
+            => Enqueue(value);
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
     }
 }
