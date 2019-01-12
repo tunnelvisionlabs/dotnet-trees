@@ -11,15 +11,24 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     {
         public struct Enumerator : IEnumerator<T>
         {
-            public T Current => throw null;
+            private ImmutableTreeList<T>.Enumerator _enumerator;
 
-            object IEnumerator.Current => throw null;
+            internal Enumerator(ImmutableTreeList<T>.Enumerator enumerator)
+            {
+                _enumerator = enumerator;
+            }
 
-            public bool MoveNext() => throw null;
+            public T Current => _enumerator.Current;
 
-            void IDisposable.Dispose() => throw null;
+            object IEnumerator.Current => _enumerator.Current;
 
-            void IEnumerator.Reset() => throw null;
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            void IDisposable.Dispose() => _enumerator.Dispose();
+
+            void IEnumerator.Reset() => InternalReset();
+
+            internal void InternalReset() => _enumerator.Reset();
         }
     }
 }

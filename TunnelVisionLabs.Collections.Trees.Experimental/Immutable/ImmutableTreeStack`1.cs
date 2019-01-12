@@ -3,38 +3,67 @@
 
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableTreeStack<T> : IImmutableStack<T>
     {
-        public static ImmutableTreeStack<T> Empty => throw null;
+        public static readonly ImmutableTreeStack<T> Empty = new ImmutableTreeStack<T>(ImmutableTreeList<T>.Empty);
 
-        public bool IsEmpty => throw null;
+        private readonly ImmutableTreeList<T> _treeList;
 
-        public ImmutableTreeStack<T> Clear() => throw null;
+        private ImmutableTreeStack(ImmutableTreeList<T> treeList)
+        {
+            _treeList = treeList;
+        }
 
-        public Enumerator GetEnumerator() => throw null;
+        public bool IsEmpty
+            => _treeList.IsEmpty;
 
-        public T Peek() => throw null;
+        public ImmutableTreeStack<T> Clear()
+            => Empty;
 
-        public ImmutableTreeStack<T> Pop() => throw null;
+        public Enumerator GetEnumerator()
+            => new Enumerator(_treeList.GetEnumerator());
 
-        public ImmutableTreeStack<T> Pop(out T value) => throw null;
+        public T Peek()
+        {
+            if (IsEmpty)
+                throw new InvalidOperationException();
 
-        public ImmutableTreeStack<T> Push(T value) => throw null;
+            return _treeList[0];
+        }
 
-        IImmutableStack<T> IImmutableStack<T>.Clear() => throw null;
+        public ImmutableTreeStack<T> Pop()
+            => Pop(out _);
 
-        IImmutableStack<T> IImmutableStack<T>.Pop() => throw null;
+        public ImmutableTreeStack<T> Pop(out T value)
+        {
+            if (IsEmpty)
+                throw new InvalidOperationException();
 
-        IImmutableStack<T> IImmutableStack<T>.Push(T value) => throw null;
+            value = _treeList[0];
+            return new ImmutableTreeStack<T>(_treeList.RemoveAt(0));
+        }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+        public ImmutableTreeStack<T> Push(T value)
+            => new ImmutableTreeStack<T>(_treeList.Insert(0, value));
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+        IImmutableStack<T> IImmutableStack<T>.Clear()
+            => Clear();
+
+        IImmutableStack<T> IImmutableStack<T>.Pop()
+            => Pop();
+
+        IImmutableStack<T> IImmutableStack<T>.Push(T value)
+            => Push(value);
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
     }
 }

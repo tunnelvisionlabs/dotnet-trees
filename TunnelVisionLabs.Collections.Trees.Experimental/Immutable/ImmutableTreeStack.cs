@@ -3,18 +3,39 @@
 
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
+    using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
     public static class ImmutableTreeStack
     {
-        public static ImmutableTreeStack<T> Create<T>() => throw null;
+        public static ImmutableTreeStack<T> Create<T>()
+            => ImmutableTreeStack<T>.Empty;
 
-        public static ImmutableTreeStack<T> Create<T>(T item) => throw null;
+        public static ImmutableTreeStack<T> Create<T>(T item)
+            => ImmutableTreeStack<T>.Empty.Push(item);
 
-        public static ImmutableTreeStack<T> Create<T>(params T[] items) => throw null;
+        public static ImmutableTreeStack<T> Create<T>(params T[] items)
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
 
-        public static ImmutableTreeStack<T> Create<T>(IEnumerable<T> items) => throw null;
+            ImmutableTreeStack<T> result = ImmutableTreeStack<T>.Empty;
+            foreach (T item in items)
+                result = result.Push(item);
+
+            return result;
+        }
+
+        public static ImmutableTreeStack<T> CreateRange<T>(IEnumerable<T> items)
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
+
+            ImmutableTreeStack<T> result = ImmutableTreeStack<T>.Empty;
+            foreach (T item in items)
+                result = result.Push(item);
+
+            return result;
+        }
     }
 }
