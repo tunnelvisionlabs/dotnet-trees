@@ -90,6 +90,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return this;
             }
 
+            if (_comparer.Equals(Empty.Comparer))
+            {
+                return Empty;
+            }
+
             return new ImmutableSortedTreeList<T>(treeList, _comparer);
         }
 
@@ -161,84 +166,51 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         }
 
         public int IndexOf(T value)
-            => IndexOf(value, 0, Count, equalityComparer: null);
+            => IndexOf(value, 0, Count);
 
         public int IndexOf(T value, int index)
-            => IndexOf(value, index, Count - index, equalityComparer: null);
+            => IndexOf(value, index, Count - index);
 
         public int IndexOf(T value, int index, int count)
-            => IndexOf(value, index, count, equalityComparer: null);
-
-        public int IndexOf(T value, int index, int count, IEqualityComparer<T> equalityComparer)
         {
             var comparer = new CoercingComparer(_comparer, 1);
             int result = _treeList.BinarySearch(index, count, value, comparer);
             if (!comparer.FoundMatch)
                 return -1;
 
-            result = ~result;
-            if (equalityComparer.Equals(_treeList[result], value))
-                return result;
-
-            // Check duplicates according to Comparer
-            for (result++; result < Count; result++)
-            {
-                if (_comparer.Compare(_treeList[result], value) != 0)
-                    return -1;
-
-                if (equalityComparer.Equals(_treeList[result], value))
-                    return result;
-            }
-
-            // Reached the end of the list
-            return -1;
+            return ~result;
         }
+
+        int IImmutableList<T>.IndexOf(T value, int index, int count, IEqualityComparer<T> equalityComparer)
+            => _treeList.IndexOf(value, index, count, equalityComparer);
 
         public int LastIndexOf(T item)
         {
             if (IsEmpty)
                 return -1;
 
-            return LastIndexOf(item, Count - 1, Count, equalityComparer: null);
+            return LastIndexOf(item, Count - 1, Count);
         }
 
         public int LastIndexOf(T item, int index)
-            => LastIndexOf(item, index, index + 1, equalityComparer: null);
+            => LastIndexOf(item, index, index + 1);
 
         public int LastIndexOf(T item, int index, int count)
-            => LastIndexOf(item, index, count, equalityComparer: null);
-
-        public int LastIndexOf(T item, int index, int count, IEqualityComparer<T> equalityComparer)
         {
             var comparer = new CoercingComparer(_comparer, -1);
             int result = _treeList.BinarySearch(index - count + 1, count, item, comparer);
             if (!comparer.FoundMatch)
                 return -1;
 
-            result = ~result - 1;
-            if (equalityComparer.Equals(_treeList[result], item))
-                return result;
-
-            // Check duplicates according to Comparer
-            for (result--; result >= 0; result--)
-            {
-                if (_comparer.Compare(_treeList[result], item) != 0)
-                    return -1;
-
-                if (equalityComparer.Equals(_treeList[result], item))
-                    return result;
-            }
-
-            // Reached the beginning of the list
-            return -1;
+            return ~result - 1;
         }
 
-        public ImmutableSortedTreeList<T> Remove(T value)
-            => Remove(value, equalityComparer: null);
+        int IImmutableList<T>.LastIndexOf(T item, int index, int count, IEqualityComparer<T> equalityComparer)
+            => _treeList.LastIndexOf(item, index, count, equalityComparer);
 
-        public ImmutableSortedTreeList<T> Remove(T value, IEqualityComparer<T> equalityComparer)
+        public ImmutableSortedTreeList<T> Remove(T value)
         {
-            int index = IndexOf(value, 0, Count, equalityComparer);
+            int index = IndexOf(value, 0, Count);
             if (index < 0)
                 return this;
 
@@ -268,9 +240,6 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         }
 
         public ImmutableSortedTreeList<T> RemoveRange(IEnumerable<T> items)
-            => RemoveRange(items, equalityComparer: null);
-
-        public ImmutableSortedTreeList<T> RemoveRange(IEnumerable<T> items, IEqualityComparer<T> equalityComparer)
         {
             if (items is null)
                 throw new ArgumentNullException(nameof(items));
@@ -278,7 +247,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             ImmutableSortedTreeList<T> result = this;
             foreach (T item in items)
             {
-                result = result.Remove(item, equalityComparer);
+                result = result.Remove(item);
             }
 
             return result;
@@ -294,11 +263,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         }
 
         public ImmutableSortedTreeList<T> Replace(T oldValue, T newValue)
-            => Replace(oldValue, newValue, equalityComparer: null);
-
-        public ImmutableSortedTreeList<T> Replace(T oldValue, T newValue, IEqualityComparer<T> equalityComparer)
         {
-            int index = IndexOf(oldValue, 0, Count, equalityComparer);
+            int index = IndexOf(oldValue, 0, Count);
             if (index < 0)
                 throw new ArgumentException("Cannot find the old value", nameof(oldValue));
 
@@ -314,7 +280,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             if (comparer == _comparer)
                 return this;
 
-            return new ImmutableSortedTreeList<T>(_treeList.Sort(comparer), _comparer);
+            return new ImmutableSortedTreeList<T>(_treeList.Sort(comparer), comparer);
         }
 
         public Builder ToBuilder()
@@ -333,13 +299,30 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             => AddRange(items);
 
         IImmutableList<T> IImmutableList<T>.Remove(T value, IEqualityComparer<T> equalityComparer)
-            => Remove(value, equalityComparer);
+        {
+            int index = ((IImmutableList<T>)this).IndexOf(value, 0, Count, equalityComparer);
+            if (index < 0)
+                return this;
+
+            return RemoveAt(index);
+        }
 
         IImmutableList<T> IImmutableList<T>.RemoveAll(Predicate<T> match)
             => RemoveAll(match);
 
         IImmutableList<T> IImmutableList<T>.RemoveRange(IEnumerable<T> items, IEqualityComparer<T> equalityComparer)
-            => RemoveRange(items, equalityComparer);
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
+
+            IImmutableList<T> result = this;
+            foreach (T item in items)
+            {
+                result = result.Remove(item, equalityComparer);
+            }
+
+            return result;
+        }
 
         IImmutableList<T> IImmutableList<T>.RemoveRange(int index, int count)
             => RemoveRange(index, count);
@@ -348,7 +331,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             => RemoveAt(index);
 
         IImmutableList<T> IImmutableList<T>.Replace(T oldValue, T newValue, IEqualityComparer<T> equalityComparer)
-            => Replace(oldValue, newValue, equalityComparer);
+        {
+            int index = ((IImmutableList<T>)this).IndexOf(oldValue, 0, Count, equalityComparer);
+            if (index < 0)
+                throw new ArgumentException("Cannot find the old value", nameof(oldValue));
+
+            return RemoveAt(index).Add(newValue);
+        }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
             => GetEnumerator();
