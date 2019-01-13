@@ -20,19 +20,19 @@ namespace TunnelVisionLabs.Collections.Trees.Benchmarks.Immutable
             }
 
             [Benchmark(Baseline = true, Description = "ImmutableList<T>")]
-            public object List()
+            public ImmutableList<int> List()
             {
                 return ImmutableList.CreateRange(Enumerable.Range(0, Count));
             }
 
             [Benchmark(Description = "ImmutableArray<T>")]
-            public object Array()
+            public ImmutableArray<int> Array()
             {
                 return ImmutableArray.CreateRange(Enumerable.Range(0, Count));
             }
 
             [Benchmark(Description = "ImmutableTreeArray<T>")]
-            public object TreeList()
+            public ImmutableTreeList<int> TreeList()
             {
                 return ImmutableTreeList.CreateRange(Enumerable.Range(0, Count));
             }
