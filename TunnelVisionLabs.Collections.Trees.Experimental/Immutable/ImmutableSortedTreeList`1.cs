@@ -231,11 +231,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public ImmutableSortedTreeList<T> RemoveAt(int index)
         {
             ImmutableTreeList<T> treeList = _treeList.RemoveAt(index);
-            if (treeList == _treeList)
-            {
-                return this;
-            }
-
+            Debug.Assert(treeList != _treeList, $"Assertion failed: {nameof(treeList)} != {nameof(_treeList)}");
             return new ImmutableSortedTreeList<T>(treeList, _comparer);
         }
 
