@@ -13,11 +13,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     {
         public sealed class Builder : IList<T>, IReadOnlyList<T>, IList
         {
+            private ImmutableTreeList<T> _immutableList;
             private Node _root;
             private int _version;
 
             internal Builder(ImmutableTreeList<T> list)
             {
+                _immutableList = list;
                 _root = list._root;
             }
 
@@ -387,7 +389,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             {
                 Node root = _root;
                 root.Freeze();
-                return new ImmutableTreeList<T>(root);
+                if (root == _immutableList._root)
+                    return _immutableList;
+
+                _immutableList = new ImmutableTreeList<T>(root);
+                return _immutableList;
             }
 
             public bool TrueForAll(Predicate<T> match)
