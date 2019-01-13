@@ -319,7 +319,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 _nodes[pageIndex] = modifiedChild;
                 if (modifiedNextChild == originalNextChild)
                 {
-                    for (int i = pageIndex + 1; i < _nodeCount; i++)
+                    if (pageIndex + 1 < _nodeCount)
+                    {
+                        // Account for possible rebalancing of mutable nodes
+                        _offsets[pageIndex + 1] = _offsets[pageIndex] + modifiedChild.Count;
+                    }
+
+                    for (int i = pageIndex + 2; i < _nodeCount; i++)
                         _offsets[i]--;
 
                     _count--;

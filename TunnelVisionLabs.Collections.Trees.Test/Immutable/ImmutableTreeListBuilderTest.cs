@@ -827,6 +827,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [InlineData(4)]
         [InlineData(5)]
         [InlineData(6)]
+        [InlineData(11)]
         public void TestRemoveAt(int seed)
         {
             Random random = new Random(seed);
