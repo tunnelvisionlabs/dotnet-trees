@@ -133,71 +133,35 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 => ToImmutable().GetRange(index, count);
 
             public int IndexOf(T item)
-                => IndexOf(item, 0, Count, equalityComparer: null);
+                => IndexOf(item, 0, Count);
 
             public int IndexOf(T item, int index)
-                => IndexOf(item, index, Count - index, equalityComparer: null);
+                => IndexOf(item, index, Count - index);
 
             public int IndexOf(T item, int index, int count)
-                => IndexOf(item, index, count, equalityComparer: null);
-
-            public int IndexOf(T item, int index, int count, IEqualityComparer<T> equalityComparer)
             {
                 var comparer = new CoercingComparer(Comparer, 1);
                 int result = _treeList.BinarySearch(index, count, item, comparer);
                 if (!comparer.FoundMatch)
                     return -1;
 
-                result = ~result;
-                if (equalityComparer.Equals(_treeList[result], item))
-                    return result;
-
-                // Check duplicates according to Comparer
-                for (result++; result < Count; result++)
-                {
-                    if (Comparer.Compare(_treeList[result], item) != 0)
-                        return -1;
-
-                    if (equalityComparer.Equals(_treeList[result], item))
-                        return result;
-                }
-
-                // Reached the end of the list
-                return -1;
+                return ~result;
             }
 
             public int LastIndexOf(T item)
-                => LastIndexOf(item, Count - 1, Count, equalityComparer: null);
+                => LastIndexOf(item, Count - 1, Count);
 
             public int LastIndexOf(T item, int startIndex)
-                => LastIndexOf(item, startIndex, startIndex + 1, equalityComparer: null);
+                => LastIndexOf(item, startIndex, startIndex + 1);
 
             public int LastIndexOf(T item, int startIndex, int count)
-                => LastIndexOf(item, startIndex, count, equalityComparer: null);
-
-            public int LastIndexOf(T item, int startIndex, int count, IEqualityComparer<T> equalityComparer)
             {
                 var comparer = new CoercingComparer(Comparer, -1);
                 int result = _treeList.BinarySearch(startIndex - count + 1, count, item, comparer);
                 if (!comparer.FoundMatch)
                     return -1;
 
-                result = ~result - 1;
-                if (equalityComparer.Equals(_treeList[result], item))
-                    return result;
-
-                // Check duplicates according to Comparer
-                for (result--; result >= 0; result--)
-                {
-                    if (Comparer.Compare(_treeList[result], item) != 0)
-                        return -1;
-
-                    if (equalityComparer.Equals(_treeList[result], item))
-                        return result;
-                }
-
-                // Reached the beginning of the list
-                return -1;
+                return ~result - 1;
             }
 
             public bool Remove(T item)
