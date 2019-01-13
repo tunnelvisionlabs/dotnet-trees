@@ -10,6 +10,7 @@ namespace TunnelVisionLabs.Collections.Trees.Benchmarks.Immutable
 
     public class ImmutableTreeListBenchmark
     {
+        [ShortRunJob]
         public class RangeToList
         {
             [Params(10, 1000, 100000, 10000000)]
