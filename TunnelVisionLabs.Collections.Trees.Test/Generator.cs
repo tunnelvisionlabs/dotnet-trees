@@ -56,13 +56,6 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Debug.WriteLine("Random Byte[] produced: " + Convert.ToBase64String(buffer));
         }
 
-        // returns a non-negative Int32 between 0 and Int32.MaxValue
-        private static int GetInt32(int new_seed)
-        {
-            Seed = new_seed;
-            return GetInt32();
-        }
-
         /// <summary>
         /// Gets an integer value between 0 and <see cref="int.MaxValue"/>.
         /// </summary>
@@ -70,6 +63,18 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public static int GetInt32()
         {
             int i = _rand.Next();
+            Debug.WriteLine("Random Int32 produced: " + i.ToString());
+            return i;
+        }
+
+        /// <summary>
+        /// Gets a non-negative integer value less than <paramref name="maxValue"/>.
+        /// </summary>
+        /// <param name="maxValue">The exclusive maximum for the generated random value.</param>
+        /// <returns>A non-negative integer value less than <paramref name="maxValue"/>.</returns>
+        public static int GetInt32(int maxValue)
+        {
+            int i = _rand.Next(maxValue);
             Debug.WriteLine("Random Int32 produced: " + i.ToString());
             return i;
         }
@@ -83,7 +88,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             if (minValue < maxValue)
             {
-                return minValue + (GetInt32(-55) % (maxValue - minValue));
+                Seed = -55;
+                return minValue + (GetInt32() % (maxValue - minValue));
             }
 
             return minValue;
