@@ -31,7 +31,7 @@ namespace TunnelVisionLabs.Collections.Trees.Benchmarks.Immutable
                 return ImmutableArray.CreateRange(Enumerable.Range(0, Count));
             }
 
-            [Benchmark(Description = "ImmutableTreeArray<T>")]
+            [Benchmark(Description = "ImmutableTreeList<T>")]
             public ImmutableTreeList<int> TreeList()
             {
                 return ImmutableTreeList.CreateRange(Enumerable.Range(0, Count));
