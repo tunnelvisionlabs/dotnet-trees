@@ -144,7 +144,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValu
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.Add(System.Collections.Generic.KeyValuePair<TKey, TValue> item) -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.Add(TKey key, TValue value) -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.AddRange(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> items) -> void
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.Builder() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.Clear() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.Contains(System.Collections.Generic.KeyValuePair<TKey, TValue> item) -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Builder.ContainsKey(TKey key) -> bool
@@ -177,7 +176,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValu
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Enumerator.Reset() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.Enumerator
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.ImmutableTreeDictionary() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.IsEmpty.get -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.KeyCollection
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
