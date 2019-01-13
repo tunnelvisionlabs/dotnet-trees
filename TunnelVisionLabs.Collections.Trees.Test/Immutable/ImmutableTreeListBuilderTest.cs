@@ -1142,6 +1142,24 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
+        public void TestToImmutable()
+        {
+            int value = Generator.GetInt32();
+
+            ImmutableTreeList<int>.Builder list = ImmutableTreeList.CreateBuilder<int>();
+            Assert.Empty(list);
+            Assert.Same(ImmutableTreeList<int>.Empty, list.ToImmutable());
+
+            list.Add(value);
+            Assert.Equal(new[] { value }, list.ToImmutable());
+            Assert.Same(list.ToImmutable(), list.ToImmutable());
+
+            list.Add(value);
+            Assert.Equal(new[] { value, value }, list.ToImmutable());
+            Assert.Same(list.ToImmutable(), list.ToImmutable());
+        }
+
+        [Fact]
         public void TestTrueForAll()
         {
             var list = ImmutableTreeList.CreateBuilder<int>();
