@@ -5,6 +5,7 @@ namespace TunnelVisionLabs.Collections.Trees.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
 
+    [ShortRunJob]
     public class DummyBenchmark
     {
         private static readonly int[] Ints = { 1, 2, 3 };
