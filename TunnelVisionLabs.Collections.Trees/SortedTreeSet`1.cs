@@ -190,7 +190,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, other, returnIfUnfound: false);
             return uniqueCount == Count && unfoundCount > 0;
         }
 
@@ -225,7 +225,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, other, returnIfUnfound: true);
             return uniqueCount < Count && unfoundCount == 0;
         }
 
@@ -251,7 +251,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, other, returnIfUnfound: false);
             return uniqueCount == Count && unfoundCount >= 0;
         }
 
@@ -342,7 +342,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 }
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, other, returnIfUnfound: true);
             return uniqueCount == Count && unfoundCount == 0;
         }
 
@@ -412,52 +412,6 @@ namespace TunnelVisionLabs.Collections.Trees
 
         void ICollection.CopyTo(Array array, int index) => ((ICollection)_sortedList).CopyTo(array, index);
 
-        private (int uniqueCount, int unfoundCount) CheckUniqueAndUnfoundElements(IEnumerable<T> other, bool returnIfUnfound)
-        {
-            if (Count == 0)
-            {
-                if (other.Any())
-                    return (uniqueCount: 0, unfoundCount: 1);
-
-                return (uniqueCount: 0, unfoundCount: 0);
-            }
-
-            const int StackAllocThreshold = 100;
-            int originalLastIndex = Count;
-            int intArrayLength = ((originalLastIndex - 1) / 32) + 1;
-            Span<int> span = intArrayLength <= StackAllocThreshold
-                ? stackalloc int[intArrayLength]
-                : new int[intArrayLength];
-            BitHelper bitHelper = new BitHelper(span);
-
-            // count of items in other not found in this
-            int unfoundCount = 0;
-
-            // count of unique items in other found in this
-            int uniqueCount = 0;
-
-            foreach (T item in other)
-            {
-                int index = _sortedList.IndexOf(item);
-                if (index >= 0)
-                {
-                    if (!bitHelper.IsMarked(index))
-                    {
-                        bitHelper.MarkBit(index);
-                        uniqueCount++;
-                    }
-                }
-                else
-                {
-                    unfoundCount++;
-                    if (returnIfUnfound)
-                        return (uniqueCount, unfoundCount);
-                }
-            }
-
-            return (uniqueCount, unfoundCount);
-        }
-
         internal void Validate(ValidationRules validationRules)
         {
             _sortedList.Validate(validationRules);
@@ -466,38 +420,6 @@ namespace TunnelVisionLabs.Collections.Trees
             {
                 Debug.Assert(Comparer.Compare(_sortedList[i], _sortedList[i + 1]) < 0, "Assertion failed: Comparer.Compare(_sortedList[i], _sortedList[i + 1]) < 0");
                 Debug.Assert(Comparer.Compare(_sortedList[i + 1], _sortedList[i]) > 0, "Assertion failed: Comparer.Compare(_sortedList[i + 1], _sortedList[i]) > 0");
-            }
-        }
-
-        private ref struct BitHelper
-        {
-            private readonly Span<int> _span;
-
-            public BitHelper(Span<int> span)
-            {
-                _span = span;
-            }
-
-            internal void MarkBit(int bitPosition)
-            {
-                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
-
-                int bitArrayIndex = bitPosition / 32;
-                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
-
-                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
-                _span[bitArrayIndex] |= 1 << (bitPosition & 31);
-            }
-
-            internal bool IsMarked(int bitPosition)
-            {
-                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
-
-                int bitArrayIndex = bitPosition / 32;
-                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
-
-                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
-                return (_span[bitArrayIndex] & (1 << (bitPosition & 31))) != 0;
             }
         }
 

@@ -8,7 +8,6 @@ namespace TunnelVisionLabs.Collections.Trees
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Threading;
 
     public partial class TreeSet<T> : ISet<T>, IReadOnlyCollection<T>, ICollection
     {
@@ -28,7 +27,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeSet(IEqualityComparer<T> comparer)
         {
             _comparer = comparer ?? EqualityComparer<T>.Default;
-            _sortedList = new SortedTreeList<(int hashCode, T value)>(WrapperComparer.Instance);
+            _sortedList = new SortedTreeList<(int hashCode, T value)>(SetHelper.WrapperComparer<T>.Instance);
         }
 
         public TreeSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
@@ -48,7 +47,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeSet(int branchingFactor, IEqualityComparer<T> comparer)
         {
             _comparer = comparer ?? EqualityComparer<T>.Default;
-            _sortedList = new SortedTreeList<(int hashCode, T value)>(branchingFactor, WrapperComparer.Instance);
+            _sortedList = new SortedTreeList<(int hashCode, T value)>(branchingFactor, SetHelper.WrapperComparer<T>.Instance);
         }
 
         public TreeSet(int branchingFactor, IEnumerable<T> collection, IEqualityComparer<T> comparer)
@@ -241,7 +240,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, Comparer, other, returnIfUnfound: false);
             return uniqueCount == Count && unfoundCount > 0;
         }
 
@@ -276,7 +275,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, Comparer, other, returnIfUnfound: true);
             return uniqueCount < Count && unfoundCount == 0;
         }
 
@@ -302,7 +301,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: false);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, Comparer, other, returnIfUnfound: false);
             return uniqueCount == Count && unfoundCount >= 0;
         }
 
@@ -401,7 +400,7 @@ namespace TunnelVisionLabs.Collections.Trees
             if (this == other)
                 return true;
 
-            (int uniqueCount, int unfoundCount) = CheckUniqueAndUnfoundElements(other, returnIfUnfound: true);
+            (int uniqueCount, int unfoundCount) = SetHelper.CheckUniqueAndUnfoundElements(_sortedList, Comparer, other, returnIfUnfound: true);
             return uniqueCount == Count && unfoundCount == 0;
         }
 
@@ -509,77 +508,6 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        private (int uniqueCount, int unfoundCount) CheckUniqueAndUnfoundElements(IEnumerable<T> other, bool returnIfUnfound)
-        {
-            if (Count == 0)
-            {
-                if (other.Any())
-                    return (uniqueCount: 0, unfoundCount: 1);
-
-                return (uniqueCount: 0, unfoundCount: 0);
-            }
-
-            const int StackAllocThreshold = 100;
-            int originalLastIndex = Count;
-            int intArrayLength = ((originalLastIndex - 1) / 32) + 1;
-            Span<int> span = intArrayLength <= StackAllocThreshold
-                ? stackalloc int[intArrayLength]
-                : new int[intArrayLength];
-            BitHelper bitHelper = new BitHelper(span);
-
-            // count of items in other not found in this
-            int unfoundCount = 0;
-
-            // count of unique items in other found in this
-            int uniqueCount = 0;
-
-            foreach (T item in other)
-            {
-                int hashCode = _comparer.GetHashCode(item);
-
-                int index = _sortedList.IndexOf((hashCode, item));
-                if (index >= 0)
-                {
-                    // Find the duplicate value if it exists
-                    for (int i = index; i < Count; i++)
-                    {
-                        (int hashCode, T value) bucket = _sortedList[i];
-                        if (bucket.hashCode != hashCode)
-                        {
-                            index = -1;
-                            break;
-                        }
-
-                        if (_comparer.Equals(bucket.value, item))
-                        {
-                            index = i;
-                            break;
-                        }
-
-                        // Fast path didn't match the item of interest
-                        index = -1;
-                    }
-                }
-
-                if (index >= 0)
-                {
-                    if (!bitHelper.IsMarked(index))
-                    {
-                        bitHelper.MarkBit(index);
-                        uniqueCount++;
-                    }
-                }
-                else
-                {
-                    unfoundCount++;
-                    if (returnIfUnfound)
-                        return (uniqueCount, unfoundCount);
-                }
-            }
-
-            return (uniqueCount, unfoundCount);
-        }
-
         internal void Validate(ValidationRules validationRules)
         {
             _sortedList.Validate(validationRules);
@@ -588,48 +516,6 @@ namespace TunnelVisionLabs.Collections.Trees
             {
                 Debug.Assert(_sortedList[i].hashCode <= _sortedList[i + 1].hashCode, "Assertion failed: _sortedList[i].hashCode <= _sortedList[i + 1].hashCode");
                 Debug.Assert(!Comparer.Equals(_sortedList[i].value, _sortedList[i + 1].value), "Assertion failed: !Comparer.Equals(_sortedList[i].value, _sortedList[i + 1].value)");
-            }
-        }
-
-        private ref struct BitHelper
-        {
-            private readonly Span<int> _span;
-
-            public BitHelper(Span<int> span)
-            {
-                _span = span;
-            }
-
-            internal void MarkBit(int bitPosition)
-            {
-                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
-
-                int bitArrayIndex = bitPosition / 32;
-                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
-
-                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
-                _span[bitArrayIndex] |= 1 << (bitPosition & 31);
-            }
-
-            internal bool IsMarked(int bitPosition)
-            {
-                Debug.Assert(bitPosition >= 0, $"Assertion failed: {nameof(bitPosition)} >= 0");
-
-                int bitArrayIndex = bitPosition / 32;
-                Debug.Assert(bitArrayIndex < _span.Length, $"Assertion failed: {nameof(bitArrayIndex)} < {nameof(_span)}.Length");
-
-                // Note: Using (bitPosition & 31) instead of (bitPosition % 32)
-                return (_span[bitArrayIndex] & (1 << (bitPosition & 31))) != 0;
-            }
-        }
-
-        private sealed class WrapperComparer : IComparer<(int hashCode, T value)>
-        {
-            internal static readonly WrapperComparer Instance = new WrapperComparer();
-
-            public int Compare((int hashCode, T value) x, (int hashCode, T value) y)
-            {
-                return x.hashCode - y.hashCode;
             }
         }
 
