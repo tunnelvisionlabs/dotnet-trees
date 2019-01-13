@@ -233,7 +233,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Add(T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder.Add(T item) -> bool
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder.Builder() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder.Clear() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder.Contains(T item) -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Builder.Count.get -> int
@@ -262,7 +261,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Enumerator.Move
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Enumerator.Reset() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Except(System.Collections.Generic.IEnumerable<T> other) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Enumerator
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.ImmutableTreeSet() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.Intersect(System.Collections.Generic.IEnumerable<T> other) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.IsEmpty.get -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeSet<T>.IsProperSubsetOf(System.Collections.Generic.IEnumerable<T> other) -> bool

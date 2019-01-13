@@ -176,6 +176,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return false;
             }
 
+            public void RemoveRange(int index, int count)
+                => _treeList.RemoveRange(index, count);
+
             public int RemoveAll(Predicate<T> match)
                 => _treeList.RemoveAll(match);
 

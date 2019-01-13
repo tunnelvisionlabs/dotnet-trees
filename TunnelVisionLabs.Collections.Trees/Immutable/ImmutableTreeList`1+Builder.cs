@@ -342,6 +342,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 _version++;
             }
 
+            internal void RemoveRange(int index, int count)
+            {
+                _root = Node.RemoveRange(_root, index, count);
+                _version++;
+            }
+
             public void Reverse() => Reverse(0, Count);
 
             public void Reverse(int index, int count)
