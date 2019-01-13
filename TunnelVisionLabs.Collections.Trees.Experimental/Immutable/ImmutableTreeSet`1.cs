@@ -114,6 +114,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             if (equalityComparer == _comparer)
                 return this;
 
+            if (IsEmpty)
+            {
+                if (equalityComparer == Empty._comparer)
+                    return Empty;
+                else
+                    return new ImmutableTreeSet<T>(Empty._sortedList, equalityComparer);
+            }
+
             return ImmutableTreeSet.CreateRange(equalityComparer, this);
         }
 

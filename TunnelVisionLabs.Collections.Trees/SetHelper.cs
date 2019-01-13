@@ -165,7 +165,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
             public int Compare((int hashCode, T value) x, (int hashCode, T value) y)
             {
-                return x.hashCode - y.hashCode;
+                return x.hashCode.CompareTo(y.hashCode);
             }
         }
     }

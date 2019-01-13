@@ -150,7 +150,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     foreach (T item in other)
                     {
                         if (Contains(item))
-                            toSave.Add(item);
+                            toSave = toSave.Add(item);
                     }
 
                     IntersectWith(toSave);
@@ -440,6 +440,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
             }
 
+            internal void TrimExcess()
+                => _sortedList.TrimExcess();
+
             internal bool TryGetValue(T equalValue, out T actualValue)
             {
                 int hashCode = KeyComparer.GetHashCode(equalValue);
@@ -526,6 +529,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             IEnumerator IEnumerable.GetEnumerator()
                 => GetEnumerator();
+
+            internal void Validate(ValidationRules validationRules)
+            {
+                _sortedList.Validate(validationRules);
+            }
         }
     }
 }
