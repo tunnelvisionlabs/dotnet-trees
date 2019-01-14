@@ -11,61 +11,61 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
     using Xunit;
     using ICollection = System.Collections.ICollection;
 
-    public class ImmutableTreeSetTest
+    public class ImmutableTreeSetTest : AbstractImmutableSetTest
     {
         [Fact]
         public void TestEmptyImmutableTreeSet()
         {
-            var list = ImmutableTreeSet.Create<int>();
-            Assert.Same(ImmutableTreeSet<int>.Empty, list);
-            Assert.Empty(list);
+            var set = ImmutableTreeSet.Create<int>();
+            Assert.Same(ImmutableTreeSet<int>.Empty, set);
+            Assert.Empty(set);
         }
 
         [Fact]
-        public void TestSingleElementList()
+        public void TestSingleElementSet()
         {
             var value = Generator.GetInt32().ToString();
-            var list = ImmutableTreeSet.Create(value);
-            Assert.Equal(new[] { value }, list);
+            var set = ImmutableTreeSet.Create(value);
+            Assert.Equal(new[] { value }, set);
 
-            list = ImmutableTreeSet.Create(equalityComparer: null, value);
-            Assert.Same(EqualityComparer<string>.Default, list.KeyComparer);
-            Assert.Equal(new[] { value }, list);
+            set = ImmutableTreeSet.Create(equalityComparer: null, value);
+            Assert.Same(EqualityComparer<string>.Default, set.KeyComparer);
+            Assert.Equal(new[] { value }, set);
 
-            list = ImmutableTreeSet.Create(StringComparer.OrdinalIgnoreCase, value);
-            Assert.Same(StringComparer.OrdinalIgnoreCase, list.KeyComparer);
-            Assert.Equal(new[] { value }, list);
+            set = ImmutableTreeSet.Create(StringComparer.OrdinalIgnoreCase, value);
+            Assert.Same(StringComparer.OrdinalIgnoreCase, set.KeyComparer);
+            Assert.Equal(new[] { value }, set);
         }
 
         [Fact]
-        public void TestMultipleElementList()
+        public void TestMultipleElementSet()
         {
             var values = new[] { Generator.GetInt32().ToString(), Generator.GetInt32().ToString(), Generator.GetInt32().ToString() };
 
             // Construction using ImmutableTreeSet.Create
-            var list = ImmutableTreeSet.Create(values);
-            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), list);
+            var set = ImmutableTreeSet.Create(values);
+            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), set);
 
-            list = ImmutableTreeSet.Create<string>(equalityComparer: null, values);
-            Assert.Same(EqualityComparer<string>.Default, list.KeyComparer);
-            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), list);
+            set = ImmutableTreeSet.Create<string>(equalityComparer: null, values);
+            Assert.Same(EqualityComparer<string>.Default, set.KeyComparer);
+            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), set);
 
-            list = ImmutableTreeSet.Create(StringComparer.OrdinalIgnoreCase, values);
-            Assert.Same(StringComparer.OrdinalIgnoreCase, list.KeyComparer);
-            Assert.Equal(values.OrderBy(StringComparer.OrdinalIgnoreCase.GetHashCode), list);
+            set = ImmutableTreeSet.Create(StringComparer.OrdinalIgnoreCase, values);
+            Assert.Same(StringComparer.OrdinalIgnoreCase, set.KeyComparer);
+            Assert.Equal(values.OrderBy(StringComparer.OrdinalIgnoreCase.GetHashCode), set);
 
             // Construction using ImmutableTreeSet.ToImmutableTreeSet
-            list = values.ToImmutableTreeSet();
-            Assert.Same(EqualityComparer<string>.Default, list.KeyComparer);
-            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), list);
+            set = values.ToImmutableTreeSet();
+            Assert.Same(EqualityComparer<string>.Default, set.KeyComparer);
+            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), set);
 
-            list = values.ToImmutableTreeSet(equalityComparer: null);
-            Assert.Same(EqualityComparer<string>.Default, list.KeyComparer);
-            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), list);
+            set = values.ToImmutableTreeSet(equalityComparer: null);
+            Assert.Same(EqualityComparer<string>.Default, set.KeyComparer);
+            Assert.Equal(values.OrderBy(EqualityComparer<string>.Default.GetHashCode), set);
 
-            list = values.ToImmutableTreeSet(StringComparer.OrdinalIgnoreCase);
-            Assert.Same(StringComparer.OrdinalIgnoreCase, list.KeyComparer);
-            Assert.Equal(values.OrderBy(StringComparer.OrdinalIgnoreCase.GetHashCode), list);
+            set = values.ToImmutableTreeSet(StringComparer.OrdinalIgnoreCase);
+            Assert.Same(StringComparer.OrdinalIgnoreCase, set.KeyComparer);
+            Assert.Equal(values.OrderBy(StringComparer.OrdinalIgnoreCase.GetHashCode), set);
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestImmutableTreeSetCreateRange()
         {
             var values = new[] { Generator.GetInt32(), Generator.GetInt32(), Generator.GetInt32() };
-            var list = ImmutableTreeSet.CreateRange(values);
-            Assert.Equal(values.OrderBy(x => x), list);
+            var set = ImmutableTreeSet.CreateRange(values);
+            Assert.Equal(values.OrderBy(x => x), set);
         }
 
         [Fact]
@@ -146,6 +146,17 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
+        public void TestUnsupportedISetOperations()
+        {
+            ISet<int> set = ImmutableTreeSet.Create<int>();
+            Assert.Throws<NotSupportedException>(() => set.Add(1));
+            Assert.Throws<NotSupportedException>(() => set.UnionWith(Enumerable.Empty<int>()));
+            Assert.Throws<NotSupportedException>(() => set.IntersectWith(Enumerable.Empty<int>()));
+            Assert.Throws<NotSupportedException>(() => set.ExceptWith(Enumerable.Empty<int>()));
+            Assert.Throws<NotSupportedException>(() => set.SymmetricExceptWith(Enumerable.Empty<int>()));
+        }
+
+        [Fact]
         public void TestICollectionInterface()
         {
             TestICollectionInterfaceImpl(ImmutableTreeSet.Create(600, 601), supportsNullValues: false);
@@ -167,66 +178,6 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             TestICollectionInterfaceImpl(ImmutableList.Create(600, 601), supportsNullValues: false);
             TestICollectionInterfaceImpl(ImmutableList.Create<int?>(600, 601), supportsNullValues: true);
             TestICollectionInterfaceImpl(ImmutableList.Create<object>(600, 601), supportsNullValues: true);
-        }
-
-        private static void TestICollectionInterfaceImpl(ICollection collection, bool supportsNullValues)
-        {
-            Assert.True(collection.IsSynchronized);
-
-            Assert.NotNull(collection.SyncRoot);
-            Assert.Same(collection, collection.SyncRoot);
-
-            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
-            Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
-
-            void CopyToArrayWithNonZeroLowerBound() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0);
-            if (collection.GetType().GetGenericTypeDefinition() == typeof(ImmutableList<>))
-            {
-                Assert.Throws<IndexOutOfRangeException>(CopyToArrayWithNonZeroLowerBound);
-            }
-            else
-            {
-                Assert.Throws<ArgumentException>(CopyToArrayWithNonZeroLowerBound);
-            }
-
-            if (supportsNullValues)
-            {
-                var copy = new object[collection.Count];
-
-                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, Assert.Null);
-                Assert.All(copy, Assert.Null);
-
-                collection.CopyTo(copy, 0);
-                Assert.Equal(600, copy[0]);
-                Assert.Equal(601, copy[1]);
-
-                copy = new object[collection.Count + 2];
-                collection.CopyTo(copy, 1);
-                Assert.Null(copy[0]);
-                Assert.Equal(600, copy[1]);
-                Assert.Equal(601, copy[2]);
-                Assert.Null(copy[3]);
-            }
-            else
-            {
-                var copy = new int[collection.Count];
-
-                Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, item => Assert.Equal(0, item));
-                Assert.All(copy, item => Assert.Equal(0, item));
-
-                collection.CopyTo(copy, 0);
-                Assert.Equal(600, copy[0]);
-                Assert.Equal(601, copy[1]);
-
-                copy = new int[collection.Count + 2];
-                collection.CopyTo(copy, 1);
-                Assert.Equal(0, copy[0]);
-                Assert.Equal(600, copy[1]);
-                Assert.Equal(601, copy[2]);
-                Assert.Equal(0, copy[3]);
-            }
         }
 
         [Fact]
@@ -363,7 +314,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
-        public void TestUnion()
+        public void TestUnion2()
         {
             int[] expected = Enumerable.Range(600, 8 * 9).ToArray();
 
@@ -401,10 +352,10 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Empty(set.Clear());
             Assert.Same(ImmutableTreeSet<int>.Empty, set.Clear());
 
-            var stringList = ImmutableTreeSet.CreateRange(StringComparer.Ordinal, new[] { "a", "b" });
-            ImmutableTreeSet<string> emptyStringList = stringList.Clear();
-            Assert.Same(stringList.KeyComparer, emptyStringList.KeyComparer);
-            Assert.Same(emptyStringList, emptyStringList.Clear());
+            var stringSet = ImmutableTreeSet.CreateRange(StringComparer.Ordinal, new[] { "a", "b" });
+            ImmutableTreeSet<string> emptyStringSet = stringSet.Clear();
+            Assert.Same(stringSet.KeyComparer, emptyStringSet.KeyComparer);
+            Assert.Same(emptyStringSet, emptyStringSet.Clear());
         }
 
         [Fact]
@@ -417,7 +368,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         }
 
         [Fact]
-        public void TestExcept()
+        public void TestExcept2()
         {
             var random = new Random();
             var set = ImmutableTreeSet.Create<int>();
@@ -485,7 +436,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.False(enumerator.MoveNext());
             Assert.Equal(0, enumerator.Current);
 
-            // Adding an item to the list doesn't affect the enumerator
+            // Adding an item to the set doesn't affect the enumerator
             set = set.Add(1);
             Assert.False(enumerator.MoveNext());
             Assert.Equal(0, enumerator.Current);
@@ -525,6 +476,45 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Same(immutableSet, immutableSet.Remove(-1));
             Assert.NotSame(immutableSet, immutableSet.Remove(3));
             Assert.Equal((8 * 4) - 1, immutableSet.Remove(3).Count);
+        }
+
+        [Fact]
+        public void TestTryGetValue()
+        {
+            var set = ImmutableTreeSet.Create(StringComparer.OrdinalIgnoreCase, "AA");
+            Assert.True(set.TryGetValue("AA", out var value));
+            Assert.Equal("AA", value);
+
+            Assert.True(set.TryGetValue("aa", out value));
+            Assert.Equal("AA", value);
+        }
+
+        [Fact]
+        public void TestWithComparer()
+        {
+            // Empty collection with the default comparer
+            Assert.Same(ImmutableTreeSet<int>.Empty, ImmutableTreeSet<int>.Empty.WithComparer(null));
+            Assert.Same(ImmutableTreeSet<int>.Empty, ImmutableTreeSet<int>.Empty.WithComparer(EqualityComparer<int>.Default));
+
+            // Empty collection with non-default comparer
+            ImmutableTreeSet<string> emptyWithCustomComparer = ImmutableTreeSet<string>.Empty.WithComparer(StringComparer.OrdinalIgnoreCase);
+            Assert.Same(StringComparer.OrdinalIgnoreCase, emptyWithCustomComparer.KeyComparer);
+            Assert.Same(emptyWithCustomComparer, emptyWithCustomComparer.WithComparer(StringComparer.OrdinalIgnoreCase));
+
+            Assert.NotSame(ImmutableTreeSet<string>.Empty, emptyWithCustomComparer);
+            Assert.Same(ImmutableTreeSet<string>.Empty, emptyWithCustomComparer.WithComparer(null));
+
+            // Non-empty collections
+            var set = ImmutableTreeSet.Create("aa", "AA");
+            Assert.Equal(new[] { "aa", "AA" }.OrderBy(x => x.GetHashCode()), set);
+
+            var first = set.First();
+            Assert.Equal(new[] { first }, set.WithComparer(StringComparer.OrdinalIgnoreCase));
+        }
+
+        protected override IImmutableSet<T> CreateSet<T>()
+        {
+            return ImmutableTreeSet.Create<T>();
         }
     }
 }
