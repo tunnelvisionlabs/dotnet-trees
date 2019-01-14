@@ -315,17 +315,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
                 Node originalNextChild = pageIndex < _nodeCount - 1 ? _nodes[pageIndex + 1] : nextNode?.FirstChild;
+                int? originalNextChildCount = originalNextChild?.Count;
                 (Node modifiedChild, Node modifiedNextChild) = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex], originalNextChild);
                 _nodes[pageIndex] = modifiedChild;
-                if (modifiedNextChild == originalNextChild)
+                if (modifiedNextChild == originalNextChild && modifiedNextChild?.Count == originalNextChildCount)
                 {
-                    if (pageIndex + 1 < _nodeCount)
-                    {
-                        // Account for possible rebalancing of mutable nodes
-                        _offsets[pageIndex + 1] = _offsets[pageIndex] + modifiedChild.Count;
-                    }
-
-                    for (int i = pageIndex + 2; i < _nodeCount; i++)
+                    for (int i = pageIndex + 1; i < _nodeCount; i++)
                         _offsets[i]--;
 
                     _count--;
