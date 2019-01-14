@@ -18,8 +18,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             ISet<int> set = CreateSet<int>();
             Assert.Throws<ArgumentNullException>(() => set.UnionWith(null));
 
-            set.UnionWith(Enumerable.Range(0, 7));
-            set.UnionWith(Enumerable.Range(5, 5));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 7)));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(5, 5)));
             Assert.Equal(Enumerable.Range(0, 10), set);
         }
 
@@ -34,14 +34,14 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // Test ExceptWith self
             set.Add(1);
-            set.ExceptWith(set);
+            set.ExceptWith(TransformEnumerableForSetOperation(set));
             Assert.Empty(set);
 
             // Test ExceptWith subset
-            set.UnionWith(Enumerable.Range(0, 10));
-            set.ExceptWith(new[] { 1, 3, 5, 7, 9 });
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            set.ExceptWith(TransformEnumerableForSetOperation(new[] { 1, 3, 5, 7, 9 }));
             Assert.Equal(new[] { 0, 2, 4, 6, 8 }, set);
-            set.ExceptWith(new[] { 0, 2, 4, 6, 8 });
+            set.ExceptWith(TransformEnumerableForSetOperation(new[] { 0, 2, 4, 6, 8 }));
             Assert.Empty(set);
         }
 
@@ -56,18 +56,18 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // Test IntersectWith self
             set.Add(1);
-            set.IntersectWith(set);
+            set.IntersectWith(TransformEnumerableForSetOperation(set));
             Assert.Equal(new[] { 1 }, set);
 
             // Test IntersectWith array
-            set.UnionWith(Enumerable.Range(0, 10));
-            set.IntersectWith(new[] { 1, 3, 11, 5, 7, 9 });
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            set.IntersectWith(TransformEnumerableForSetOperation(new[] { 1, 3, 11, 5, 7, 9 }));
             Assert.Equal(new[] { 1, 3, 5, 7, 9 }, set);
 
             // Test IntersectWith same set type
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(Enumerable.Range(3, 5));
-            set.IntersectWith(other);
+            other.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(3, 5)));
+            set.IntersectWith(TransformEnumerableForSetOperation(other));
             Assert.Equal(new[] { 3, 5, 7 }, set);
         }
 
@@ -79,30 +79,30 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Throws<ArgumentNullException>(() => set.SymmetricExceptWith(null));
 
             // Test behavior when the current set is empty
-            set.SymmetricExceptWith(new[] { 1, 5, 3 });
-            second.UnionWith(new[] { 1, 5, 3 });
+            set.SymmetricExceptWith(TransformEnumerableForSetOperation(new[] { 1, 5, 3 }));
+            second.UnionWith(TransformEnumerableForSetOperation(new[] { 1, 5, 3 }));
             Assert.Equal(second.ToArray(), set);
 
             // Test SymmetricExceptWith self
             Assert.NotEmpty(set);
-            set.SymmetricExceptWith(set);
+            set.SymmetricExceptWith(TransformEnumerableForSetOperation(set));
             Assert.Empty(set);
-            set.SymmetricExceptWith(set);
+            set.SymmetricExceptWith(TransformEnumerableForSetOperation(set));
             Assert.Empty(set);
 
             // Test SymmetricExceptWith same set type
             ISet<int> other = CreateSet<int>();
-            set.UnionWith(new[] { 1, 3, 5 });
-            other.UnionWith(new[] { 3, 5, 7 });
-            set.SymmetricExceptWith(other);
+            set.UnionWith(TransformEnumerableForSetOperation(new[] { 1, 3, 5 }));
+            other.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5, 7 }));
+            set.SymmetricExceptWith(TransformEnumerableForSetOperation(other));
             Assert.Equal(new[] { 1, 7 }, set);
 
             // Test SymmetricExceptWith same set type
             set.Clear();
             other = CreateSet<int>();
-            set.UnionWith(new[] { 1, 3, 5 });
-            other.UnionWith(new[] { 3, 5, 7 });
-            set.SymmetricExceptWith(other.ToArray());
+            set.UnionWith(TransformEnumerableForSetOperation(new[] { 1, 3, 5 }));
+            other.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5, 7 }));
+            set.SymmetricExceptWith(TransformEnumerableForSetOperation(other.ToArray()));
             Assert.Equal(new[] { 1, 7 }, set);
         }
 
@@ -113,32 +113,32 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Throws<ArgumentNullException>(() => set.IsProperSubsetOf(null));
 
             // Test behavior when the current set is empty
-            Assert.False(set.IsProperSubsetOf(Enumerable.Empty<int>()));
-            Assert.True(set.IsProperSubsetOf(Enumerable.Range(0, 1)));
+            Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(Enumerable.Empty<int>())));
+            Assert.True(set.IsProperSubsetOf(TransformEnumerableForSetOperation(Enumerable.Range(0, 1))));
 
             // Test IsProperSubsetOf self
             set.Add(1);
-            Assert.False(set.IsProperSubsetOf(set));
-            Assert.False(set.IsProperSubsetOf(set.ToArray()));
+            Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(set)));
+            Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(set.ToArray())));
 
             // Test IsProperSubsetOf array
             set.UnionWith(new[] { 3, 5, 7 });
-            Assert.True(set.IsProperSubsetOf(new[] { 1, 3, 5, 7, 9 }));
-            Assert.False(set.IsProperSubsetOf(new[] { 1, 3, 7, 9 }));
-            Assert.True(set.IsProperSubsetOf(Enumerable.Range(0, 10)));
+            Assert.True(set.IsProperSubsetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 5, 7, 9 })));
+            Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 7, 9 })));
+            Assert.True(set.IsProperSubsetOf(TransformEnumerableForSetOperation(Enumerable.Range(0, 10))));
 
             // Test IsProperSubsetOf same set type
             set.Clear();
-            set.UnionWith(new[] { 3, 5 });
+            set.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5 }));
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(Enumerable.Range(3, 5));
-            Assert.True(set.IsProperSubsetOf(other));
-            Assert.False(other.IsProperSubsetOf(set));
+            other.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(3, 5)));
+            Assert.True(set.IsProperSubsetOf(TransformEnumerableForSetOperation(other)));
+            Assert.False(other.IsProperSubsetOf(TransformEnumerableForSetOperation(set)));
 
             set.Remove(5);
             set.Add(8);
             Assert.True(set.Count < other.Count);
-            Assert.False(set.IsProperSubsetOf(other));
+            Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(other)));
         }
 
         [Fact]
@@ -152,31 +152,31 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // Test IsProperSupersetOf self
             set.Add(1);
-            Assert.False(set.IsProperSupersetOf(set));
-            Assert.False(set.IsProperSupersetOf(set.ToArray()));
+            Assert.False(set.IsProperSupersetOf(TransformEnumerableForSetOperation(set)));
+            Assert.False(set.IsProperSupersetOf(TransformEnumerableForSetOperation(set.ToArray())));
 
             // Test IsProperSupersetOf empty
             Assert.NotEmpty(set);
-            Assert.True(set.IsProperSupersetOf(new int[0]));
+            Assert.True(set.IsProperSupersetOf(TransformEnumerableForSetOperation(new int[0])));
 
             // Test IsProperSupersetOf array
-            set.UnionWith(Enumerable.Range(0, 10));
-            Assert.True(set.IsProperSupersetOf(new[] { 1, 3, 5, 7, 9 }));
-            Assert.False(set.IsProperSupersetOf(new[] { 1, 3, 11, 5, 7, 9 }));
-            Assert.False(set.IsProperSupersetOf(Enumerable.Range(0, 10)));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            Assert.True(set.IsProperSupersetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 5, 7, 9 })));
+            Assert.False(set.IsProperSupersetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 11, 5, 7, 9 })));
+            Assert.False(set.IsProperSupersetOf(TransformEnumerableForSetOperation(Enumerable.Range(0, 10))));
 
             // Test IsProperSupersetOf same set type
             set.Clear();
-            set.UnionWith(Enumerable.Range(3, 5));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(3, 5)));
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(new[] { 3, 5 });
-            Assert.True(set.IsProperSupersetOf(other));
-            Assert.False(other.IsProperSupersetOf(set));
+            other.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5 }));
+            Assert.True(set.IsProperSupersetOf(TransformEnumerableForSetOperation(other)));
+            Assert.False(other.IsProperSupersetOf(TransformEnumerableForSetOperation(set)));
 
             other.Remove(5);
             other.Add(8);
             Assert.True(set.Count > other.Count);
-            Assert.False(set.IsProperSupersetOf(other));
+            Assert.False(set.IsProperSupersetOf(TransformEnumerableForSetOperation(other)));
         }
 
         [Fact]
@@ -190,27 +190,27 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // Test IsSubsetOf self
             set.Add(1);
-            Assert.True(set.IsSubsetOf(set));
-            Assert.True(set.IsSubsetOf(set.ToArray()));
+            Assert.True(set.IsSubsetOf(TransformEnumerableForSetOperation(set)));
+            Assert.True(set.IsSubsetOf(TransformEnumerableForSetOperation(set.ToArray())));
 
             // Test IsSubsetOf array
-            set.UnionWith(new[] { 3, 5, 7 });
-            Assert.True(set.IsSubsetOf(new[] { 1, 3, 5, 7, 9 }));
-            Assert.False(set.IsSubsetOf(new[] { 1, 3, 7, 9 }));
-            Assert.True(set.IsSubsetOf(Enumerable.Range(0, 10)));
+            set.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5, 7 }));
+            Assert.True(set.IsSubsetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 5, 7, 9 })));
+            Assert.False(set.IsSubsetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 7, 9 })));
+            Assert.True(set.IsSubsetOf(TransformEnumerableForSetOperation(Enumerable.Range(0, 10))));
 
             // Test IsSubsetOf same set type
             set.Clear();
-            set.UnionWith(new[] { 3, 5 });
+            set.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5 }));
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(Enumerable.Range(3, 5));
-            Assert.True(set.IsSubsetOf(other));
-            Assert.False(other.IsSubsetOf(set));
+            other.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(3, 5)));
+            Assert.True(set.IsSubsetOf(TransformEnumerableForSetOperation(other)));
+            Assert.False(other.IsSubsetOf(TransformEnumerableForSetOperation(set)));
 
             set.Remove(5);
             set.Add(8);
             Assert.True(set.Count < other.Count);
-            Assert.False(set.IsSubsetOf(other));
+            Assert.False(set.IsSubsetOf(TransformEnumerableForSetOperation(other)));
         }
 
         [Fact]
@@ -221,31 +221,31 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // Test IsSupersetOf self
             set.Add(1);
-            Assert.True(set.IsSupersetOf(set));
-            Assert.True(set.IsSupersetOf(set.ToArray()));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(set)));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(set.ToArray())));
 
             // Test IsSupersetOf empty
             Assert.NotEmpty(set);
-            Assert.True(set.IsSupersetOf(new int[0]));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(new int[0])));
 
             // Test IsSupersetOf array
-            set.UnionWith(Enumerable.Range(0, 10));
-            Assert.True(set.IsSupersetOf(new[] { 1, 3, 5, 7, 9 }));
-            Assert.False(set.IsSupersetOf(new[] { 1, 3, 11, 5, 7, 9 }));
-            Assert.True(set.IsSupersetOf(Enumerable.Range(0, 10)));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 5, 7, 9 })));
+            Assert.False(set.IsSupersetOf(TransformEnumerableForSetOperation(new[] { 1, 3, 11, 5, 7, 9 })));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(Enumerable.Range(0, 10))));
 
             // Test IsSupersetOf same set type
             set.Clear();
-            set.UnionWith(Enumerable.Range(3, 5));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(3, 5)));
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(new[] { 3, 5 });
-            Assert.True(set.IsSupersetOf(other));
-            Assert.False(other.IsSupersetOf(set));
+            other.UnionWith(TransformEnumerableForSetOperation(new[] { 3, 5 }));
+            Assert.True(set.IsSupersetOf(TransformEnumerableForSetOperation(other)));
+            Assert.False(other.IsSupersetOf(TransformEnumerableForSetOperation(set)));
 
             other.Remove(5);
             other.Add(8);
             Assert.True(set.Count > other.Count);
-            Assert.False(set.IsSupersetOf(other));
+            Assert.False(set.IsSupersetOf(TransformEnumerableForSetOperation(other)));
         }
 
         [Fact]
@@ -257,15 +257,15 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             // Return without iterating if the set is already empty
             Assert.False(set.Overlaps(EverythingThrowsEnumerable<int>.Instance));
 
-            set.UnionWith(Enumerable.Range(0, 10));
-            Assert.False(set.Overlaps(Enumerable.Empty<int>()));
-            Assert.False(set.Overlaps(Enumerable.Range(-2, 2)));
-            Assert.False(set.Overlaps(Enumerable.Range(10, 2)));
-            Assert.True(set.Overlaps(Enumerable.Range(-2, 3)));
-            Assert.True(set.Overlaps(Enumerable.Range(9, 3)));
-            Assert.True(set.Overlaps(Enumerable.Range(3, 1)));
-            Assert.True(set.Overlaps(Enumerable.Range(0, 1)));
-            Assert.True(set.Overlaps(Enumerable.Range(9, 1)));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            Assert.False(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Empty<int>())));
+            Assert.False(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(-2, 2))));
+            Assert.False(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(10, 2))));
+            Assert.True(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(-2, 3))));
+            Assert.True(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(9, 3))));
+            Assert.True(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(3, 1))));
+            Assert.True(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(0, 1))));
+            Assert.True(set.Overlaps(TransformEnumerableForSetOperation(Enumerable.Range(9, 1))));
         }
 
         [Fact]
@@ -275,50 +275,53 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Throws<ArgumentNullException>(() => set.SetEquals(null));
 
             // Test behavior when the current set is empty
-            Assert.True(set.SetEquals(Enumerable.Empty<int>()));
-            Assert.False(set.SetEquals(Enumerable.Range(0, 1)));
+            Assert.True(set.SetEquals(TransformEnumerableForSetOperation(Enumerable.Empty<int>())));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(Enumerable.Range(0, 1))));
 
             // Test SetEquals self
-            Assert.True(set.SetEquals(set));
+            Assert.True(set.SetEquals(TransformEnumerableForSetOperation(set)));
 
             // Test with same set type
-            set.UnionWith(Enumerable.Range(0, 10));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
             ISet<int> other = CreateSet<int>();
-            other.UnionWith(Enumerable.Range(0, 10));
-            Assert.True(set.SetEquals(other));
+            other.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            Assert.True(set.SetEquals(TransformEnumerableForSetOperation(other)));
 
             other.Remove(0);
-            Assert.False(set.SetEquals(other));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other)));
             other.Add(-1);
-            Assert.False(set.SetEquals(other));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other)));
             other.Remove(-1);
             other.Add(0);
             other.Remove(8);
-            Assert.False(set.SetEquals(other));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other)));
             other.Add(11);
-            Assert.False(set.SetEquals(other));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other)));
 
             // Test with different set type
             set.Clear();
             other.Clear();
-            set.UnionWith(Enumerable.Range(0, 10));
-            other.UnionWith(Enumerable.Range(0, 10));
-            Assert.True(set.SetEquals(other.ToArray()));
-            Assert.True(set.SetEquals(other.Concat(other).ToArray()));
+            set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            other.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 10)));
+            Assert.True(set.SetEquals(TransformEnumerableForSetOperation(other.ToArray())));
+            Assert.True(set.SetEquals(TransformEnumerableForSetOperation(other.Concat(other).ToArray())));
 
             other.Remove(0);
-            Assert.False(set.SetEquals(other.ToArray()));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other.ToArray())));
             other.Add(-1);
-            Assert.False(set.SetEquals(other.ToArray()));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other.ToArray())));
             other.Remove(-1);
             other.Add(0);
             other.Remove(8);
-            Assert.False(set.SetEquals(other.ToArray()));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other.ToArray())));
             other.Add(11);
-            Assert.False(set.SetEquals(other.ToArray()));
+            Assert.False(set.SetEquals(TransformEnumerableForSetOperation(other.ToArray())));
         }
 
         protected abstract ISet<T> CreateSet<T>();
+
+        protected virtual IEnumerable<T> TransformEnumerableForSetOperation<T>(IEnumerable<T> enumerable)
+            => enumerable;
 
         protected static void TestICollectionInterfaceImpl(ICollection collection, bool isOwnSyncRoot, bool supportsNullValues)
         {
