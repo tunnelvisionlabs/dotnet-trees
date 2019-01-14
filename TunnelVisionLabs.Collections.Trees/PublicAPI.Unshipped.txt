@@ -105,6 +105,19 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Sort(int index
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.ToBuilder() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Builder
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.TrueForAll(System.Predicate<T> match) -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.this[int index].get -> T
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Clear() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Dequeue() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Dequeue(out T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enqueue(T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enumerator.Current.get -> T
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Peek() -> T
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Clear() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
@@ -453,6 +466,10 @@ static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList.Create<T>(
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList.CreateBuilder<T>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Builder
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList.CreateRange<T>(System.Collections.Generic.IEnumerable<T> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList.ToImmutableTreeList<T>(this System.Collections.Generic.IEnumerable<T> source) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue.Create<T>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue.Create<T>(T item) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue.Create<T>(params T[] items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
+static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue.CreateRange<T>(System.Collections.Generic.IEnumerable<T> items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>(T item) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
 static TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack.Create<T>(params T[] items) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
@@ -461,4 +478,5 @@ static TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.CreateSetComparer() -
 static TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.CreateSetComparer(System.Collections.Generic.IEqualityComparer<T> memberEqualityComparer) -> System.Collections.Generic.IEqualityComparer<TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>>
 static TunnelVisionLabs.Collections.Trees.TreeSet<T>.CreateSetComparer() -> System.Collections.Generic.IEqualityComparer<TunnelVisionLabs.Collections.Trees.TreeSet<T>>
 static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeList<T>
+static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeQueue<T>
 static readonly TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>.Empty -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableTreeStack<T>
