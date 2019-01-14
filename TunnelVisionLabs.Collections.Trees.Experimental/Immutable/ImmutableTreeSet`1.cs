@@ -41,7 +41,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         }
 
         public ImmutableTreeSet<T> Clear()
-            => Empty.WithComparer(KeyComparer);
+        {
+            if (IsEmpty)
+                return this;
+
+            return Empty.WithComparer(KeyComparer);
+        }
 
         public bool Contains(T value)
             => ToBuilder().Contains(value);
@@ -179,5 +184,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         void ICollection<T>.Clear() => throw new NotSupportedException();
 
         bool ICollection<T>.Remove(T item) => throw new NotSupportedException();
+
+        internal void Validate(ValidationRules validationRules)
+        {
+            _sortedList.Validate(validationRules);
+        }
     }
 }
