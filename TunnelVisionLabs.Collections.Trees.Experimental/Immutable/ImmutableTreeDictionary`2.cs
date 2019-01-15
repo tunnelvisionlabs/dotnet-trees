@@ -20,7 +20,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         private readonly IEqualityComparer<TValue> _valueComparer;
 
         private ImmutableTreeDictionary()
-            : this(ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairComparer.Default), keyComparer: null, valueComparer: null)
+            : this(ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairComparer<TKey, TValue>.Default), keyComparer: null, valueComparer: null)
         {
         }
 
@@ -30,7 +30,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
 
             Debug.Assert(
-                treeSet.KeyComparer is KeyOfPairComparer comparer && comparer.KeyComparer == keyComparer,
+                treeSet.KeyComparer is KeyOfPairComparer<TKey, TValue> comparer && comparer.KeyComparer == keyComparer,
                 "Assertion failed: treeSet.KeyComparer is KeyOfPairComparer comparer && comparer.KeyComparer == keyComparer");
 
             _treeSet = treeSet;
@@ -233,7 +233,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (keyComparer == Empty.KeyComparer && valueComparer == Empty.ValueComparer)
                     return Empty;
                 else
-                    return new ImmutableTreeDictionary<TKey, TValue>(Empty._treeSet.WithComparer(new KeyOfPairComparer(keyComparer)), keyComparer, valueComparer);
+                    return new ImmutableTreeDictionary<TKey, TValue>(Empty._treeSet.WithComparer(new KeyOfPairComparer<TKey, TValue>(keyComparer)), keyComparer, valueComparer);
             }
 
             if (KeyComparer == keyComparer)
@@ -362,28 +362,5 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         void IDictionary.Clear() => throw new NotSupportedException();
 
         void IDictionary.Remove(object key) => throw new NotSupportedException();
-
-        private sealed class KeyOfPairComparer : IEqualityComparer<KeyValuePair<TKey, TValue>>
-        {
-            internal KeyOfPairComparer(IEqualityComparer<TKey> comparer)
-            {
-                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
-                KeyComparer = comparer;
-            }
-
-            internal static KeyOfPairComparer Default { get; } = new KeyOfPairComparer(EqualityComparer<TKey>.Default);
-
-            internal IEqualityComparer<TKey> KeyComparer { get; }
-
-            public bool Equals(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
-            {
-                return KeyComparer.Equals(x.Key, y.Key);
-            }
-
-            public int GetHashCode(KeyValuePair<TKey, TValue> obj)
-            {
-                return KeyComparer.GetHashCode(obj.Key);
-            }
-        }
     }
 }

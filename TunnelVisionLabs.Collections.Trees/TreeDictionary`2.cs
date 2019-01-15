@@ -6,7 +6,6 @@ namespace TunnelVisionLabs.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using IDictionary = System.Collections.IDictionary;
 
@@ -28,7 +27,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeDictionary(IEqualityComparer<TKey> comparer)
         {
             _comparer = comparer ?? EqualityComparer<TKey>.Default;
-            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(new KeyComparer(_comparer));
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
         public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)
@@ -51,7 +50,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeDictionary(int branchingFactor, IEqualityComparer<TKey> comparer)
         {
             _comparer = comparer ?? EqualityComparer<TKey>.Default;
-            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyComparer(_comparer));
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
         public TreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)
@@ -297,27 +296,6 @@ namespace TunnelVisionLabs.Collections.Trees
             else
             {
                 throw new ArgumentException(nameof(array));
-            }
-        }
-
-        private sealed class KeyComparer : IEqualityComparer<KeyValuePair<TKey, TValue>>
-        {
-            private readonly IEqualityComparer<TKey> _comparer;
-
-            internal KeyComparer(IEqualityComparer<TKey> comparer)
-            {
-                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
-                _comparer = comparer;
-            }
-
-            public bool Equals(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
-            {
-                return _comparer.Equals(x.Key, y.Key);
-            }
-
-            public int GetHashCode(KeyValuePair<TKey, TValue> obj)
-            {
-                return _comparer.GetHashCode(obj.Key);
             }
         }
     }
