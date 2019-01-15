@@ -10,7 +10,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
     public partial class ImmutableTreeDictionary<TKey, TValue>
     {
-        public sealed class Builder : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
+        public sealed partial class Builder : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
         {
             private ImmutableTreeDictionary<TKey, TValue> _dictionary;
             private readonly ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Builder _treeSetBuilder;
@@ -27,33 +27,23 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public int Count => _treeSetBuilder.Count;
 
-            public IEnumerable<TKey> Keys
-            {
-                get
-                {
-                    foreach (KeyValuePair<TKey, TValue> pair in this)
-                        yield return pair.Key;
-                }
-            }
+            public KeyCollection Keys => new KeyCollection(this);
 
-            public IEnumerable<TValue> Values
-            {
-                get
-                {
-                    foreach (KeyValuePair<TKey, TValue> pair in this)
-                        yield return pair.Value;
-                }
-            }
+            public ValueCollection Values => new ValueCollection(this);
 
-            ICollection<TKey> IDictionary<TKey, TValue>.Keys => ToImmutable().Keys;
+            IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
-            ICollection<TValue> IDictionary<TKey, TValue>.Values => ToImmutable().Values;
+            IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
+
+            ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
+
+            ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
 
             bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
-            ICollection IDictionary.Keys => ToImmutable().Keys;
+            ICollection IDictionary.Keys => Keys;
 
-            ICollection IDictionary.Values => ToImmutable().Values;
+            ICollection IDictionary.Values => Values;
 
             bool IDictionary.IsReadOnly => false;
 
@@ -125,7 +115,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             {
                 if (!_treeSetBuilder.Add(new KeyValuePair<TKey, TValue>(key, value)))
                 {
-                    if (!ValueComparer.Equals(value, value))
+                    if (!ValueComparer.Equals(this[key], value))
                     {
                         throw new ArgumentException();
                     }
@@ -137,6 +127,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public void AddRange(IEnumerable<KeyValuePair<TKey, TValue>> items)
             {
+                if (items == null)
+                    throw new ArgumentNullException(nameof(items));
+
                 foreach (KeyValuePair<TKey, TValue> pair in items)
                     Add(pair.Key, pair.Value);
             }
@@ -230,7 +223,29 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             }
 
             void IDictionary.Add(object key, object value)
-                => Add((TKey)key, (TValue)value);
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+                if (value == null && default(TValue) != null)
+                    throw new ArgumentException(nameof(value), nameof(value));
+
+                try
+                {
+                    var typedKey = (TKey)key;
+                    try
+                    {
+                        Add(typedKey, (TValue)value);
+                    }
+                    catch (InvalidCastException)
+                    {
+                        throw new ArgumentException(nameof(value), nameof(value));
+                    }
+                }
+                catch (InvalidCastException)
+                {
+                    throw new ArgumentException(nameof(key), nameof(key));
+                }
+            }
 
             IDictionaryEnumerator IDictionary.GetEnumerator()
                 => new Enumerator(_treeSetBuilder.GetEnumerator(), Enumerator.ReturnType.DictionaryEntry);
@@ -248,8 +263,51 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             void ICollection.CopyTo(Array array, int index)
             {
-                ICollection collection = _treeSetBuilder;
-                collection.CopyTo(array, index);
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if (array.Rank != 1)
+                    throw new ArgumentException(nameof(array));
+                if (array.GetLowerBound(0) != 0)
+                    throw new ArgumentException();
+                if (index < 0 || index > array.Length)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (array.Length - index < Count)
+                    throw new ArgumentException();
+
+                if (array is KeyValuePair<TKey, TValue>[] pairs)
+                {
+                    ICollection<KeyValuePair<TKey, TValue>> collection = this;
+                    collection.CopyTo(pairs, index);
+                }
+                else if (array is DictionaryEntry[] dictionaryEntryArray)
+                {
+                    int i = index;
+                    foreach (KeyValuePair<TKey, TValue> pair in this)
+                    {
+                        dictionaryEntryArray[i] = new DictionaryEntry(pair.Key, pair.Value);
+                        i++;
+                    }
+                }
+                else if (array is object[] objects)
+                {
+                    try
+                    {
+                        int i = index;
+                        foreach (KeyValuePair<TKey, TValue> pair in this)
+                        {
+                            objects[i] = pair;
+                            i++;
+                        }
+                    }
+                    catch (ArrayTypeMismatchException)
+                    {
+                        throw new ArgumentException(nameof(array), nameof(array));
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException(nameof(array));
+                }
             }
         }
     }

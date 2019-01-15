@@ -70,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         object ICollection.SyncRoot => this;
 
-        bool ICollection.IsSynchronized => false;
+        bool ICollection.IsSynchronized => true;
 
         public TValue this[TKey key]
         {
@@ -113,8 +113,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             ImmutableTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
             if (result == _treeSet)
             {
-                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> existingPair)
-                    || !ValueComparer.Equals(existingPair.Value, value))
+                if (!ValueComparer.Equals(this[key], value))
                 {
                     throw new ArgumentException();
                 }
@@ -179,7 +178,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return this;
             }
 
-            return new ImmutableTreeDictionary<TKey, TValue>(_treeSet, _keyComparer, _valueComparer);
+            return new ImmutableTreeDictionary<TKey, TValue>(result, _keyComparer, _valueComparer);
         }
 
         public ImmutableTreeDictionary<TKey, TValue> SetItem(TKey key, TValue value)
@@ -187,6 +186,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeDictionary<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
+
             Builder result = ToBuilder();
             foreach (var item in items)
             {

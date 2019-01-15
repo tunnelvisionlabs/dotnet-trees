@@ -24,7 +24,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             bool ICollection<TValue>.IsReadOnly => true;
 
-            bool ICollection.IsSynchronized => false;
+            bool ICollection.IsSynchronized => true;
 
             object ICollection.SyncRoot => ((ICollection)_dictionary).SyncRoot;
 
