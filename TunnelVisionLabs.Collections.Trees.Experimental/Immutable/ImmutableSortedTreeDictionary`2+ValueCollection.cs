@@ -6,24 +6,91 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
 
     public partial class ImmutableSortedTreeDictionary<TKey, TValue>
     {
-        public partial struct ValueCollection : IReadOnlyCollection<TValue>, ICollection<TValue>
+        public partial struct ValueCollection : IReadOnlyCollection<TValue>, ICollection<TValue>, ICollection
         {
-            public int Count => throw null;
+            private readonly ImmutableSortedTreeDictionary<TKey, TValue> _dictionary;
 
-            bool ICollection<TValue>.IsReadOnly => throw null;
+            internal ValueCollection(ImmutableSortedTreeDictionary<TKey, TValue> dictionary)
+            {
+                Debug.Assert(dictionary != null, $"Assertion failed: {nameof(dictionary)} != null");
+                _dictionary = dictionary;
+            }
 
-            public Enumerator GetEnumerator() => throw null;
+            public int Count => _dictionary.Count;
 
-            public bool Contains(TValue item) => throw null;
+            bool ICollection<TValue>.IsReadOnly => true;
 
-            IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => throw null;
+            bool ICollection.IsSynchronized => true;
 
-            IEnumerator IEnumerable.GetEnumerator() => throw null;
+            object ICollection.SyncRoot => ((ICollection)_dictionary).SyncRoot;
 
-            void ICollection<TValue>.CopyTo(TValue[] array, int arrayIndex) => throw null;
+            public Enumerator GetEnumerator() => new Enumerator(_dictionary.GetEnumerator());
+
+            public bool Contains(TValue item) => _dictionary.ContainsValue(item);
+
+            IEnumerator<TValue> IEnumerable<TValue>.GetEnumerator() => GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            void ICollection<TValue>.CopyTo(TValue[] array, int arrayIndex)
+            {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if (arrayIndex < 0 || arrayIndex > array.Length)
+                    throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+                if (array.Length - arrayIndex < _dictionary.Count)
+                    throw new ArgumentException();
+
+                int i = arrayIndex;
+                foreach (TValue value in this)
+                {
+                    array[i] = value;
+                    i++;
+                }
+            }
+
+            void ICollection.CopyTo(Array array, int index)
+            {
+                if (array == null)
+                    throw new ArgumentNullException(nameof(array));
+                if (array.Rank != 1)
+                    throw new ArgumentException();
+                if (array.GetLowerBound(0) != 0)
+                    throw new ArgumentException();
+                if (index < 0 || index > array.Length)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                if (array.Length - index < _dictionary.Count)
+                    throw new ArgumentException();
+
+                if (array is TValue[] values)
+                {
+                    ((ICollection<TValue>)this).CopyTo(values, index);
+                }
+                else if (array is object[] objects)
+                {
+                    try
+                    {
+                        int i = index;
+                        foreach (TValue value in this)
+                        {
+                            objects[i] = value;
+                            i++;
+                        }
+                    }
+                    catch (ArrayTypeMismatchException)
+                    {
+                        throw new ArgumentException();
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException();
+                }
+            }
 
             void ICollection<TValue>.Add(TValue item) => throw new NotSupportedException();
 
