@@ -82,7 +82,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Add(T value) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder.Add(T item) -> bool
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder.Builder() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder.Clear() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder.Contains(T item) -> bool
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Builder.Count.get -> int
@@ -115,7 +114,6 @@ TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Enumerato
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Enumerator.Reset() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Except(System.Collections.Generic.IEnumerable<T> other) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Enumerator
-TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.ImmutableSortedTreeSet() -> void
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.IndexOf(T item) -> int
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.Intersect(System.Collections.Generic.IEnumerable<T> other) -> TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.Immutable.ImmutableSortedTreeSet<T>.IsEmpty.get -> bool

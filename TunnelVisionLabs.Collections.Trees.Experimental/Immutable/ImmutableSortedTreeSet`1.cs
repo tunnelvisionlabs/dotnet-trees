@@ -7,112 +7,205 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableSortedTreeSet<T> : IImmutableSet<T>, ISet<T>, IList<T>, IReadOnlyList<T>, IList
     {
-        public static readonly ImmutableSortedTreeSet<T> Empty;
+        public static readonly ImmutableSortedTreeSet<T> Empty = new ImmutableSortedTreeSet<T>(ImmutableSortedTreeList.Create<T>(Comparer<T>.Default));
 
-        public IComparer<T> KeyComparer => throw null;
+        private readonly ImmutableSortedTreeList<T> _sortedList;
 
-        public int Count => throw null;
+        private ImmutableSortedTreeSet(ImmutableSortedTreeList<T> sortedList)
+        {
+            _sortedList = sortedList;
+        }
 
-        public bool IsEmpty => throw null;
+        public IComparer<T> KeyComparer => _sortedList.Comparer;
 
-        public T Max => throw null;
+        public int Count => _sortedList.Count;
 
-        public T Min => throw null;
+        public bool IsEmpty => _sortedList.IsEmpty;
 
-        bool ICollection<T>.IsReadOnly => throw null;
+        public T Max => !IsEmpty ? this[Count - 1] : default;
 
-        bool ICollection.IsSynchronized => throw null;
+        public T Min => !IsEmpty ? this[0] : default;
 
-        object ICollection.SyncRoot => throw null;
+        bool ICollection<T>.IsReadOnly => true;
 
-        bool IList.IsFixedSize => throw null;
+        bool ICollection.IsSynchronized => true;
 
-        bool IList.IsReadOnly => throw null;
+        object ICollection.SyncRoot => this;
 
-        public T this[int index] => throw null;
+        bool IList.IsFixedSize => true;
+
+        bool IList.IsReadOnly => true;
+
+        public T this[int index] => _sortedList[index];
 
         T IList<T>.this[int index]
         {
-            get => throw null;
-            set => throw null;
+            get => _sortedList[index];
+            set => throw new NotSupportedException();
         }
 
         object IList.this[int index]
         {
-            get => throw null;
-            set => throw null;
+            get => _sortedList[index];
+            set => throw new NotSupportedException();
         }
 
-        public ImmutableSortedTreeSet<T> Add(T value) => throw null;
+        public ImmutableSortedTreeSet<T> Add(T value)
+        {
+            Builder builder = ToBuilder();
+            builder.Add(value);
+            return builder.ToImmutable();
+        }
 
-        public ImmutableSortedTreeSet<T> Clear() => throw null;
+        public ImmutableSortedTreeSet<T> Clear()
+        {
+            if (IsEmpty)
+                return this;
 
-        public bool Contains(T value) => throw null;
+            return Empty.WithComparer(KeyComparer);
+        }
 
-        public ImmutableSortedTreeSet<T> Except(IEnumerable<T> other) => throw null;
+        public bool Contains(T value)
+            => ToBuilder().Contains(value);
 
-        public Enumerator GetEnumerator() => throw null;
+        public ImmutableSortedTreeSet<T> Except(IEnumerable<T> other)
+        {
+            Builder builder = ToBuilder();
+            builder.ExceptWith(other);
+            return builder.ToImmutable();
+        }
 
-        public int IndexOf(T item) => throw null;
+        public Enumerator GetEnumerator()
+            => new Enumerator(_sortedList.GetEnumerator());
 
-        public ImmutableSortedTreeSet<T> Intersect(IEnumerable<T> other) => throw null;
+        public int IndexOf(T item)
+            => _sortedList.IndexOf(item);
 
-        public bool IsProperSubsetOf(IEnumerable<T> other) => throw null;
+        public ImmutableSortedTreeSet<T> Intersect(IEnumerable<T> other)
+        {
+            Builder builder = ToBuilder();
+            builder.IntersectWith(other);
+            return builder.ToImmutable();
+        }
 
-        public bool IsProperSupersetOf(IEnumerable<T> other) => throw null;
+        public bool IsProperSubsetOf(IEnumerable<T> other)
+            => ToBuilder().IsProperSubsetOf(other);
 
-        public bool IsSubsetOf(IEnumerable<T> other) => throw null;
+        public bool IsProperSupersetOf(IEnumerable<T> other)
+            => ToBuilder().IsProperSupersetOf(other);
 
-        public bool IsSupersetOf(IEnumerable<T> other) => throw null;
+        public bool IsSubsetOf(IEnumerable<T> other)
+            => ToBuilder().IsSubsetOf(other);
 
-        public bool Overlaps(IEnumerable<T> other) => throw null;
+        public bool IsSupersetOf(IEnumerable<T> other)
+            => ToBuilder().IsSupersetOf(other);
 
-        public ImmutableSortedTreeSet<T> Remove(T value) => throw null;
+        public bool Overlaps(IEnumerable<T> other)
+            => ToBuilder().Overlaps(other);
 
-        public IEnumerable<T> Reverse() => throw null;
+        public ImmutableSortedTreeSet<T> Remove(T value)
+        {
+            Builder builder = ToBuilder();
+            builder.Remove(value);
+            return builder.ToImmutable();
+        }
 
-        public bool SetEquals(IEnumerable<T> other) => throw null;
+        public IEnumerable<T> Reverse()
+            => _sortedList.Reverse();
 
-        public ImmutableSortedTreeSet<T> SymmetricExcept(IEnumerable<T> other) => throw null;
+        public bool SetEquals(IEnumerable<T> other)
+            => ToBuilder().SetEquals(other);
 
-        public bool TryGetValue(T equalValue, out T actualValue) => throw null;
+        public ImmutableSortedTreeSet<T> SymmetricExcept(IEnumerable<T> other)
+        {
+            Builder builder = ToBuilder();
+            builder.SymmetricExceptWith(other);
+            return builder.ToImmutable();
+        }
 
-        public ImmutableSortedTreeSet<T> Union(IEnumerable<T> other) => throw null;
+        public bool TryGetValue(T equalValue, out T actualValue)
+            => ToBuilder().TryGetValue(equalValue, out actualValue);
 
-        public Builder ToBuilder() => throw null;
+        public ImmutableSortedTreeSet<T> Union(IEnumerable<T> other)
+        {
+            var builder = ToBuilder();
+            builder.UnionWith(other);
+            return builder.ToImmutable();
+        }
 
-        public ImmutableSortedTreeSet<T> WithComparer(IComparer<T> comparer) => throw null;
+        public Builder ToBuilder()
+            => new Builder(this);
 
-        IImmutableSet<T> IImmutableSet<T>.Clear() => throw null;
+        public ImmutableSortedTreeSet<T> WithComparer(IComparer<T> comparer)
+        {
+            comparer = comparer ?? Comparer<T>.Default;
+            if (comparer == _sortedList.Comparer)
+                return this;
 
-        IImmutableSet<T> IImmutableSet<T>.Add(T value) => throw null;
+            if (IsEmpty)
+            {
+                if (comparer == Empty.KeyComparer)
+                    return Empty;
+                else
+                    return new ImmutableSortedTreeSet<T>(Empty._sortedList.WithComparer(comparer));
+            }
 
-        IImmutableSet<T> IImmutableSet<T>.Remove(T value) => throw null;
+            return ImmutableSortedTreeSet.CreateRange(comparer, this);
+        }
 
-        IImmutableSet<T> IImmutableSet<T>.Intersect(IEnumerable<T> other) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Clear()
+            => Clear();
 
-        IImmutableSet<T> IImmutableSet<T>.Except(IEnumerable<T> other) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Add(T value)
+            => Add(value);
 
-        IImmutableSet<T> IImmutableSet<T>.SymmetricExcept(IEnumerable<T> other) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Remove(T value)
+            => Remove(value);
 
-        IImmutableSet<T> IImmutableSet<T>.Union(IEnumerable<T> other) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Intersect(IEnumerable<T> other)
+            => Intersect(other);
 
-        void ICollection<T>.CopyTo(T[] array, int arrayIndex) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Except(IEnumerable<T> other)
+            => Except(other);
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.SymmetricExcept(IEnumerable<T> other)
+            => SymmetricExcept(other);
 
-        bool IList.Contains(object value) => throw null;
+        IImmutableSet<T> IImmutableSet<T>.Union(IEnumerable<T> other)
+            => Union(other);
 
-        int IList.IndexOf(object value) => throw null;
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+        {
+            ICollection<T> collection = ToBuilder();
+            collection.CopyTo(array, arrayIndex);
+        }
 
-        IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw null;
+        void ICollection.CopyTo(Array array, int index)
+        {
+            ICollection collection = ToBuilder();
+            collection.CopyTo(array, index);
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+        bool IList.Contains(object value)
+        {
+            IList sortedList = _sortedList;
+            return sortedList.Contains(value);
+        }
+
+        int IList.IndexOf(object value)
+        {
+            IList sortedList = _sortedList;
+            return sortedList.IndexOf(value);
+        }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            => GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => GetEnumerator();
 
         bool ISet<T>.Add(T item) => throw new NotSupportedException();
 
@@ -143,5 +236,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         void IList.Remove(object value) => throw new NotSupportedException();
 
         void IList.RemoveAt(int index) => throw new NotSupportedException();
+
+        internal void Validate(ValidationRules validationRules)
+        {
+            _sortedList.Validate(validationRules);
+        }
     }
 }
