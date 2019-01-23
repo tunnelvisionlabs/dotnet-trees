@@ -28,7 +28,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public SortedTreeDictionary(IComparer<TKey> comparer)
         {
             _comparer = comparer ?? Comparer<TKey>.Default;
-            _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(new KeyComparer(_comparer));
+            _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
         public SortedTreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey> comparer)
@@ -51,7 +51,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public SortedTreeDictionary(int branchingFactor, IComparer<TKey> comparer)
         {
             _comparer = comparer ?? Comparer<TKey>.Default;
-            _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyComparer(_comparer));
+            _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
         public SortedTreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey> comparer)
@@ -301,22 +301,6 @@ namespace TunnelVisionLabs.Collections.Trees
             else
             {
                 throw new ArgumentException(nameof(array));
-            }
-        }
-
-        private sealed class KeyComparer : IComparer<KeyValuePair<TKey, TValue>>
-        {
-            private readonly IComparer<TKey> _comparer;
-
-            internal KeyComparer(IComparer<TKey> comparer)
-            {
-                Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
-                _comparer = comparer;
-            }
-
-            public int Compare(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
-            {
-                return _comparer.Compare(x.Key, y.Key);
             }
         }
     }
