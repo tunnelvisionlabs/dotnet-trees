@@ -27,7 +27,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeDictionary(IEqualityComparer<TKey> comparer)
         {
             _comparer = comparer ?? EqualityComparer<TKey>.Default;
-            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(new KeyOfPairComparer<TKey, TValue>(_comparer));
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(new KeyOfPairEqualityComparer<TKey, TValue>(_comparer));
         }
 
         public TreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)
@@ -50,7 +50,7 @@ namespace TunnelVisionLabs.Collections.Trees
         public TreeDictionary(int branchingFactor, IEqualityComparer<TKey> comparer)
         {
             _comparer = comparer ?? EqualityComparer<TKey>.Default;
-            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyOfPairComparer<TKey, TValue>(_comparer));
+            _treeSet = new TreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyOfPairEqualityComparer<TKey, TValue>(_comparer));
         }
 
         public TreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey> comparer)

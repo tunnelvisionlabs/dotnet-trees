@@ -6,16 +6,16 @@ namespace TunnelVisionLabs.Collections.Trees
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    internal sealed class KeyOfPairComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>
+    internal sealed class KeyOfPairEqualityComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>
     {
-        internal KeyOfPairComparer(IEqualityComparer<TKey> comparer)
+        internal KeyOfPairEqualityComparer(IEqualityComparer<TKey> comparer)
         {
             Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
             KeyComparer = comparer;
         }
 
-        internal static KeyOfPairComparer<TKey, TValue> Default { get; }
-            = new KeyOfPairComparer<TKey, TValue>(EqualityComparer<TKey>.Default);
+        internal static KeyOfPairEqualityComparer<TKey, TValue> Default { get; }
+            = new KeyOfPairEqualityComparer<TKey, TValue>(EqualityComparer<TKey>.Default);
 
         internal IEqualityComparer<TKey> KeyComparer { get; }
 
