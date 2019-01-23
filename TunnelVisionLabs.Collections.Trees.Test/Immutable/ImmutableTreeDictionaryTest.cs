@@ -78,42 +78,42 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             // Construction using ImmutableTreeDictionary.Create
             var dictionary = ImmutableTreeDictionary.CreateRange(pairs);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = ImmutableTreeDictionary.CreateRange<string, int>(keyComparer: null, pairs);
             Assert.Same(EqualityComparer<string>.Default, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = ImmutableTreeDictionary.CreateRange(StringComparer.OrdinalIgnoreCase, pairs);
             Assert.Same(StringComparer.OrdinalIgnoreCase, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(new KeyOfPairComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(new KeyOfPairEqualityComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
 
             // Construction using ImmutableTreeDictionary.ToImmutableTreeDictionary
             dictionary = pairs.ToImmutableTreeDictionary();
             Assert.Same(EqualityComparer<string>.Default, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = pairs.ToImmutableTreeDictionary(keyComparer: null);
             Assert.Same(EqualityComparer<string>.Default, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = pairs.ToImmutableTreeDictionary(StringComparer.OrdinalIgnoreCase);
             Assert.Same(StringComparer.OrdinalIgnoreCase, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(new KeyOfPairComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(new KeyOfPairEqualityComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
 
             // Construction using ImmutableTreeDictionary.ToImmutableTreeDictionary, where the source is already an
             // ImmutableTreeDictionary<TKey, TValue>
             dictionary = pairs.ToImmutableTreeDictionary().ToImmutableTreeDictionary();
             Assert.Same(EqualityComparer<string>.Default, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = pairs.ToImmutableTreeDictionary().ToImmutableTreeDictionary(keyComparer: null);
             Assert.Same(EqualityComparer<string>.Default, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
 
             dictionary = pairs.ToImmutableTreeDictionary().ToImmutableTreeDictionary(StringComparer.OrdinalIgnoreCase);
             Assert.Same(StringComparer.OrdinalIgnoreCase, dictionary.KeyComparer);
-            Assert.Equal(pairs.OrderBy(new KeyOfPairComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(new KeyOfPairEqualityComparer<string, int>(StringComparer.OrdinalIgnoreCase).GetHashCode), dictionary);
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             };
 
             var dictionary = ImmutableTreeDictionary.CreateRange(pairs);
-            Assert.Equal(pairs.OrderBy(KeyOfPairComparer<string, int>.Default.GetHashCode), dictionary);
+            Assert.Equal(pairs.OrderBy(KeyOfPairEqualityComparer<string, int>.Default.GetHashCode), dictionary);
         }
 
         [Fact]

@@ -20,7 +20,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         private readonly IEqualityComparer<TValue> _valueComparer;
 
         private ImmutableTreeDictionary()
-            : this(ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairComparer<TKey, TValue>.Default), keyComparer: null, valueComparer: null)
+            : this(ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairEqualityComparer<TKey, TValue>.Default), keyComparer: null, valueComparer: null)
         {
         }
 
@@ -30,7 +30,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
 
             Debug.Assert(
-                treeSet.KeyComparer is KeyOfPairComparer<TKey, TValue> comparer && comparer.KeyComparer == keyComparer,
+                treeSet.KeyComparer is KeyOfPairEqualityComparer<TKey, TValue> comparer && comparer.KeyComparer == keyComparer,
                 "Assertion failed: treeSet.KeyComparer is KeyOfPairComparer comparer && comparer.KeyComparer == keyComparer");
 
             _treeSet = treeSet;
@@ -235,7 +235,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (keyComparer == Empty.KeyComparer && valueComparer == Empty.ValueComparer)
                     return Empty;
                 else
-                    return new ImmutableTreeDictionary<TKey, TValue>(Empty._treeSet.WithComparer(new KeyOfPairComparer<TKey, TValue>(keyComparer)), keyComparer, valueComparer);
+                    return new ImmutableTreeDictionary<TKey, TValue>(Empty._treeSet.WithComparer(new KeyOfPairEqualityComparer<TKey, TValue>(keyComparer)), keyComparer, valueComparer);
             }
 
             if (KeyComparer == keyComparer)

@@ -6,27 +6,20 @@ namespace TunnelVisionLabs.Collections.Trees
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    internal sealed class KeyOfPairComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>
+    internal sealed class KeyOfPairComparer<TKey, TValue> : IComparer<KeyValuePair<TKey, TValue>>
     {
-        internal KeyOfPairComparer(IEqualityComparer<TKey> comparer)
+        internal KeyOfPairComparer(IComparer<TKey> comparer)
         {
             Debug.Assert(comparer != null, $"Assertion failed: {nameof(comparer)} != null");
             KeyComparer = comparer;
         }
 
         internal static KeyOfPairComparer<TKey, TValue> Default { get; }
-            = new KeyOfPairComparer<TKey, TValue>(EqualityComparer<TKey>.Default);
+            = new KeyOfPairComparer<TKey, TValue>(Comparer<TKey>.Default);
 
-        internal IEqualityComparer<TKey> KeyComparer { get; }
+        internal IComparer<TKey> KeyComparer { get; }
 
-        public bool Equals(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
-        {
-            return KeyComparer.Equals(x.Key, y.Key);
-        }
-
-        public int GetHashCode(KeyValuePair<TKey, TValue> obj)
-        {
-            return KeyComparer.GetHashCode(obj.Key);
-        }
+        public int Compare(KeyValuePair<TKey, TValue> x, KeyValuePair<TKey, TValue> y)
+            => KeyComparer.Compare(x.Key, y.Key);
     }
 }

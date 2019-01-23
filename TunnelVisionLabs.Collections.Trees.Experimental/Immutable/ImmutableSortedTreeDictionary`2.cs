@@ -7,118 +7,342 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Diagnostics;
+    using System.Linq;
 
-    [ExcludeFromCodeCoverage]
     public sealed partial class ImmutableSortedTreeDictionary<TKey, TValue> : IImmutableDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
     {
-        public static readonly ImmutableSortedTreeDictionary<TKey, TValue> Empty;
+        public static readonly ImmutableSortedTreeDictionary<TKey, TValue> Empty
+            = new ImmutableSortedTreeDictionary<TKey, TValue>(ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairComparer<TKey, TValue>.Default), keyComparer: null, valueComparer: null);
 
-        public IComparer<TKey> KeyComparer => throw null;
+        private readonly ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> _treeSet;
+        private readonly IComparer<TKey> _keyComparer;
+        private readonly IEqualityComparer<TValue> _valueComparer;
 
-        public IEqualityComparer<TValue> ValueComparer => throw null;
+        private ImmutableSortedTreeDictionary(ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> treeSet, IComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        {
+            keyComparer = keyComparer ?? Comparer<TKey>.Default;
+            valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
 
-        public int Count => throw null;
+            Debug.Assert(
+                treeSet.KeyComparer is KeyOfPairComparer<TKey, TValue> comparer && comparer.KeyComparer == keyComparer,
+                "Assertion failed: treeSet.KeyComparer is KeyOfPairComparer<TKey, TValue> comparer && comparer.KeyComparer == keyComparer");
 
-        public bool IsEmpty => throw null;
+            _treeSet = treeSet;
+            _keyComparer = keyComparer;
+            _valueComparer = valueComparer;
+        }
 
-        public KeyCollection Keys => throw null;
+        public IComparer<TKey> KeyComparer => _keyComparer;
 
-        public ValueCollection Values => throw null;
+        public IEqualityComparer<TValue> ValueComparer => _valueComparer;
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys => throw null;
+        public int Count => _treeSet.Count;
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values => throw null;
+        public bool IsEmpty => _treeSet.IsEmpty;
 
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => throw null;
+        public KeyCollection Keys => new KeyCollection(this);
 
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => throw null;
+        public ValueCollection Values => new ValueCollection(this);
 
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => throw null;
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => Keys;
 
-        ICollection IDictionary.Keys => throw null;
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => Values;
 
-        ICollection IDictionary.Values => throw null;
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
 
-        bool IDictionary.IsReadOnly => throw null;
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 
-        bool IDictionary.IsFixedSize => throw null;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => true;
 
-        object ICollection.SyncRoot => throw null;
+        ICollection IDictionary.Keys => Keys;
 
-        bool ICollection.IsSynchronized => throw null;
+        ICollection IDictionary.Values => Values;
 
-        public TValue this[TKey key] => throw null;
+        bool IDictionary.IsReadOnly => true;
+
+        bool IDictionary.IsFixedSize => true;
+
+        object ICollection.SyncRoot => this;
+
+        bool ICollection.IsSynchronized => true;
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> value))
+                    throw new KeyNotFoundException();
+
+                return value.Value;
+            }
+        }
 
         TValue IDictionary<TKey, TValue>.this[TKey key]
         {
-            get => throw null;
-            set => throw null;
+            get => this[key];
+            set => throw new NotSupportedException();
         }
 
         object IDictionary.this[object key]
         {
-            get => throw null;
-            set => throw null;
+            get
+            {
+                if (key is null)
+                    throw new ArgumentNullException(nameof(key));
+
+                if (key is TKey typedKey && TryGetValue(typedKey, out TValue value))
+                    return value;
+
+                return null;
+            }
+
+            set
+            {
+                throw new NotSupportedException();
+            }
         }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> Add(TKey key, TValue value) => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> Add(TKey key, TValue value)
+        {
+            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
+            if (result == _treeSet)
+            {
+                if (!ValueComparer.Equals(this[key], value))
+                {
+                    throw new ArgumentException();
+                }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs) => throw null;
+                return this;
+            }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> Clear() => throw null;
+            return new ImmutableSortedTreeDictionary<TKey, TValue>(result, _keyComparer, _valueComparer);
+        }
 
-        public bool Contains(KeyValuePair<TKey, TValue> pair) => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+        {
+            Builder result = ToBuilder();
+            result.AddRange(pairs);
+            return result.ToImmutable();
+        }
 
-        public bool ContainsKey(TKey key) => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> Clear()
+        {
+            if (IsEmpty)
+            {
+                return this;
+            }
 
-        public bool ContainsValue(TValue value) => throw null;
+            return new ImmutableSortedTreeDictionary<TKey, TValue>(_treeSet.Clear(), _keyComparer, _valueComparer);
+        }
 
-        public Enumerator GetEnumerator() => throw null;
+        public bool Contains(KeyValuePair<TKey, TValue> pair)
+        {
+            return TryGetValue(pair.Key, out TValue value)
+                && ValueComparer.Equals(value, pair.Value);
+        }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> Remove(TKey key) => throw null;
+        public bool ContainsKey(TKey key)
+            => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default));
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> RemoveRange(IEnumerable<TKey> keys) => throw null;
+        public bool ContainsValue(TValue value)
+            => _treeSet.Any(pair => ValueComparer.Equals(pair.Value, value));
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> SetItem(TKey key, TValue value) => throw null;
+        public Enumerator GetEnumerator()
+            => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items) => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> Remove(TKey key)
+        {
+            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
+            if (result == _treeSet)
+            {
+                return this;
+            }
 
-        public bool TryGetKey(TKey equalKey, out TKey actualKey) => throw null;
+            return new ImmutableSortedTreeDictionary<TKey, TValue>(result, _keyComparer, _valueComparer);
+        }
 
-        public bool TryGetValue(TKey key, out TValue value) => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> RemoveRange(IEnumerable<TKey> keys)
+        {
+            if (keys is null)
+                throw new ArgumentNullException(nameof(keys));
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer) => throw null;
+            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Except(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default)));
+            if (result == _treeSet)
+            {
+                return this;
+            }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) => throw null;
+            return new ImmutableSortedTreeDictionary<TKey, TValue>(result, _keyComparer, _valueComparer);
+        }
 
-        public Builder ToBuilder() => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> SetItem(TKey key, TValue value)
+            => Remove(key).Add(key, value);
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Clear() => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)
+        {
+            if (items is null)
+                throw new ArgumentNullException(nameof(items));
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Add(TKey key, TValue value) => throw null;
+            Builder result = ToBuilder();
+            foreach (var item in items)
+            {
+                result[item.Key] = item.Value;
+            }
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs) => throw null;
+            return result.ToImmutable();
+        }
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItem(TKey key, TValue value) => throw null;
+        public bool TryGetKey(TKey equalKey, out TKey actualKey)
+        {
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(equalKey, default), out KeyValuePair<TKey, TValue> value))
+            {
+                actualKey = default;
+                return false;
+            }
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items) => throw null;
+            actualKey = value.Key;
+            return true;
+        }
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.RemoveRange(IEnumerable<TKey> keys) => throw null;
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> actualValue))
+            {
+                value = default;
+                return false;
+            }
 
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Remove(TKey key) => throw null;
+            value = actualValue.Value;
+            return true;
+        }
 
-        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer)
+            => WithComparers(keyComparer, valueComparer: null);
 
-        IDictionaryEnumerator IDictionary.GetEnumerator() => throw null;
+        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        {
+            keyComparer = keyComparer ?? Comparer<TKey>.Default;
+            valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
 
-        IEnumerator IEnumerable.GetEnumerator() => throw null;
+            if (IsEmpty)
+            {
+                if (keyComparer == Empty.KeyComparer && valueComparer == Empty.ValueComparer)
+                    return Empty;
+                else
+                    return new ImmutableSortedTreeDictionary<TKey, TValue>(Empty._treeSet.WithComparer(new KeyOfPairComparer<TKey, TValue>(keyComparer)), keyComparer, valueComparer);
+            }
 
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) => throw null;
+            if (KeyComparer == keyComparer)
+            {
+                if (ValueComparer == valueComparer)
+                {
+                    return this;
+                }
+                else
+                {
+                    // Don't need to reconstruct the tree because the key comparer is the same
+                    return new ImmutableSortedTreeDictionary<TKey, TValue>(_treeSet, keyComparer, valueComparer);
+                }
+            }
 
-        bool IDictionary.Contains(object key) => throw null;
+            return ImmutableSortedTreeDictionary.CreateRange(keyComparer, valueComparer, this);
+        }
 
-        void ICollection.CopyTo(Array array, int index) => throw null;
+        public Builder ToBuilder()
+            => new Builder(this);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Clear()
+            => Clear();
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Add(TKey key, TValue value)
+            => Add(key, value);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
+            => AddRange(pairs);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItem(TKey key, TValue value)
+            => SetItem(key, value);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)
+            => SetItems(items);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.RemoveRange(IEnumerable<TKey> keys)
+            => RemoveRange(keys);
+
+        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Remove(TKey key) => Remove(key);
+
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+            => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+            => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.DictionaryEntry);
+
+        IEnumerator IEnumerable.GetEnumerator()
+            => new Enumerator(_treeSet.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
+
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            ICollection<KeyValuePair<TKey, TValue>> treeSet = _treeSet;
+            treeSet.CopyTo(array, arrayIndex);
+        }
+
+        bool IDictionary.Contains(object key)
+        {
+            if (key == null)
+                throw new ArgumentNullException(nameof(key));
+
+            return key is TKey typedKey && ContainsKey(typedKey);
+        }
+
+        void ICollection.CopyTo(Array array, int index)
+        {
+            if (array == null)
+                throw new ArgumentNullException(nameof(array));
+            if (array.Rank != 1)
+                throw new ArgumentException(nameof(array));
+            if (array.GetLowerBound(0) != 0)
+                throw new ArgumentException();
+            if (index < 0 || index > array.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (array.Length - index < Count)
+                throw new ArgumentException();
+
+            if (array is KeyValuePair<TKey, TValue>[] pairs)
+            {
+                ICollection<KeyValuePair<TKey, TValue>> collection = this;
+                collection.CopyTo(pairs, index);
+            }
+            else if (array is DictionaryEntry[] dictionaryEntryArray)
+            {
+                int i = index;
+                foreach (KeyValuePair<TKey, TValue> pair in this)
+                {
+                    dictionaryEntryArray[i] = new DictionaryEntry(pair.Key, pair.Value);
+                    i++;
+                }
+            }
+            else if (array is object[] objects)
+            {
+                try
+                {
+                    int i = index;
+                    foreach (KeyValuePair<TKey, TValue> pair in this)
+                    {
+                        objects[i] = pair;
+                        i++;
+                    }
+                }
+                catch (ArrayTypeMismatchException)
+                {
+                    throw new ArgumentException(nameof(array), nameof(array));
+                }
+            }
+            else
+            {
+                throw new ArgumentException(nameof(array));
+            }
+        }
 
         void IDictionary<TKey, TValue>.Add(TKey key, TValue value) => throw new NotSupportedException();
 
