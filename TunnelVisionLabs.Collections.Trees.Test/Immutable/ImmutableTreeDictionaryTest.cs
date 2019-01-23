@@ -5,6 +5,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using TunnelVisionLabs.Collections.Trees.Immutable;
     using Xunit;
@@ -14,7 +15,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
     using IDictionaryEnumerator = System.Collections.IDictionaryEnumerator;
     using IEnumerator = System.Collections.IEnumerator;
 
-    public class ImmutableTreeDictionaryTest
+    public class ImmutableTreeDictionaryTest : AbstractImmutableDictionaryTest
     {
         [Fact]
         public void TestEmptyDictionary()
@@ -46,51 +47,6 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 #pragma warning restore xUnit2017 // Do not use Contains() to check if a value exists in a collection
 
             Assert.Same(dictionary, dictionary.Clear());
-        }
-
-        [Fact]
-        public void TestRemoveRange()
-        {
-            var dictionary = ImmutableTreeDictionary.Create<int, int>();
-            for (int i = 0; i < 10; i++)
-                dictionary = dictionary.Add(i, i);
-
-            IEnumerable<int> itemsToRemove = dictionary.Keys.Where(i => (i & 1) == 0);
-            dictionary = dictionary.RemoveRange(itemsToRemove);
-            Assert.Equal(new[] { 1, 3, 5, 7, 9 }.Select(x => new KeyValuePair<int, int>(x, x)), dictionary);
-
-            Assert.Same(dictionary, dictionary.RemoveRange(Enumerable.Empty<int>()));
-            Assert.Throws<ArgumentNullException>("keys", () => dictionary.RemoveRange(null));
-        }
-
-        [Fact]
-        public void TestSetItems()
-        {
-            var dictionary = ImmutableTreeDictionary.Create<int, int>();
-            dictionary = dictionary.SetItems(Enumerable.Range(0, 4).Select(x => new KeyValuePair<int, int>(x, x)));
-            Assert.Equal(
-                new[]
-                {
-                    new KeyValuePair<int, int>(0, 0),
-                    new KeyValuePair<int, int>(1, 1),
-                    new KeyValuePair<int, int>(2, 2),
-                    new KeyValuePair<int, int>(3, 3),
-                },
-                dictionary);
-
-            IEnumerable<int> itemsToChange = dictionary.Keys.Where(i => (i & 1) == 0);
-            dictionary = dictionary.SetItems(itemsToChange.Select(x => new KeyValuePair<int, int>(x, x + 1)));
-            Assert.Equal(
-                new[]
-                {
-                    new KeyValuePair<int, int>(0, 1),
-                    new KeyValuePair<int, int>(1, 1),
-                    new KeyValuePair<int, int>(2, 3),
-                    new KeyValuePair<int, int>(3, 3),
-                },
-                dictionary);
-
-            Assert.Throws<ArgumentNullException>("items", () => dictionary.SetItems(null));
         }
 
         [Fact]
@@ -232,21 +188,47 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestDefaultComparer()
         {
-            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, int>().KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>().KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>().ValueComparer);
             Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>().KeyComparer);
-            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, int>().KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>().ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>().KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>().ValueComparer);
 
-            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, int>(Enumerable.Empty<KeyValuePair<object, int>>()).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(Enumerable.Empty<KeyValuePair<object, object>>()).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(Enumerable.Empty<KeyValuePair<object, object>>()).ValueComparer);
             Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(Enumerable.Empty<KeyValuePair<int, int>>()).KeyComparer);
-            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, int>(Enumerable.Empty<KeyValuePair<IComparable, int>>()).KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(Enumerable.Empty<KeyValuePair<int, int>>()).ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).ValueComparer);
 
-            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, int>(keyComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null).ValueComparer);
             Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>(keyComparer: null).KeyComparer);
-            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, int>(keyComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>(keyComparer: null).ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>(keyComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>(keyComparer: null).ValueComparer);
 
-            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, int>(keyComparer: null, Enumerable.Empty<KeyValuePair<object, int>>()).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(keyComparer: null, Enumerable.Empty<KeyValuePair<object, object>>()).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(keyComparer: null, Enumerable.Empty<KeyValuePair<object, object>>()).ValueComparer);
             Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(keyComparer: null, Enumerable.Empty<KeyValuePair<int, int>>()).KeyComparer);
-            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, int>(keyComparer: null, Enumerable.Empty<KeyValuePair<IComparable, int>>()).KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(keyComparer: null, Enumerable.Empty<KeyValuePair<int, int>>()).ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(keyComparer: null, Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(keyComparer: null, Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).ValueComparer);
+
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: null).ValueComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>(keyComparer: null, valueComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.Create<int, int>(keyComparer: null, valueComparer: null).ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>(keyComparer: null, valueComparer: null).KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.Create<IComparable, IComparable>(keyComparer: null, valueComparer: null).ValueComparer);
+
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<object, object>>()).KeyComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.CreateRange<object, object>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<object, object>>()).ValueComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<int, int>>()).KeyComparer);
+            Assert.Same(EqualityComparer<int>.Default, ImmutableTreeDictionary.CreateRange<int, int>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<int, int>>()).ValueComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).KeyComparer);
+            Assert.Same(EqualityComparer<IComparable>.Default, ImmutableTreeDictionary.CreateRange<IComparable, IComparable>(keyComparer: null, valueComparer: null, Enumerable.Empty<KeyValuePair<IComparable, IComparable>>()).ValueComparer);
         }
 
         [Fact]
@@ -263,6 +245,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Same(objComparer, ImmutableTreeDictionary.CreateRange<object, int>(keyComparer: objComparer, Enumerable.Empty<KeyValuePair<object, int>>()).KeyComparer);
             Assert.Same(intComparer, ImmutableTreeDictionary.CreateRange<int, int>(keyComparer: intComparer, Enumerable.Empty<KeyValuePair<int, int>>()).KeyComparer);
             Assert.Same(comparableComparer, ImmutableTreeDictionary.CreateRange<IComparable, int>(keyComparer: comparableComparer, Enumerable.Empty<KeyValuePair<IComparable, int>>()).KeyComparer);
+
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: objComparer).KeyComparer);
+            Assert.Same(objComparer, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: objComparer).ValueComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null).WithComparers(keyComparer: null, valueComparer: objComparer).KeyComparer);
+            Assert.Same(objComparer, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null).WithComparers(keyComparer: null, valueComparer: objComparer).ValueComparer);
         }
 
         [Fact]
@@ -544,6 +531,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(new KeyValuePair<int, int>(1, 2), enumerator.Current);
             Assert.False(enumerator.MoveNext());
             Assert.Equal(new KeyValuePair<int, int>(1, 2), enumerator.Current);
+        }
+
+        protected override IImmutableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
+        {
+            return ImmutableTreeDictionary.Create<TKey, TValue>();
         }
     }
 }
