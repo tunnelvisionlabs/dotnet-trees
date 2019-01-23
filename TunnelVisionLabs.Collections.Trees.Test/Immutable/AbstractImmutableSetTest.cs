@@ -387,16 +387,5 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 Assert.Equal(0, copy[3]);
             }
         }
-
-        private sealed class EverythingThrowsEnumerable<T> : IEnumerable<T>
-        {
-            public static readonly EverythingThrowsEnumerable<T> Instance = new EverythingThrowsEnumerable<T>();
-
-            [ExcludeFromCodeCoverage]
-            public IEnumerator<T> GetEnumerator() => throw new NotSupportedException();
-
-            [ExcludeFromCodeCoverage]
-            IEnumerator IEnumerable.GetEnumerator() => throw new NotSupportedException();
-        }
     }
 }

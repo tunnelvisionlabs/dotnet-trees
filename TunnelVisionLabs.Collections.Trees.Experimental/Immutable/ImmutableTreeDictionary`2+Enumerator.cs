@@ -8,17 +8,50 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
     public sealed partial class ImmutableTreeDictionary<TKey, TValue>
     {
-        public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
+        public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>, IDictionaryEnumerator
         {
-            public KeyValuePair<TKey, TValue> Current => throw null;
+            private readonly ReturnType _returnType;
+            private ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Enumerator _enumerator;
 
-            object IEnumerator.Current => throw null;
+            internal Enumerator(ImmutableTreeSet<KeyValuePair<TKey, TValue>>.Enumerator enumerator, ReturnType returnType)
+            {
+                _returnType = returnType;
+                _enumerator = enumerator;
+            }
 
-            public void Dispose() => throw null;
+            internal enum ReturnType
+            {
+                /// <summary>
+                /// The return value from the implementation of <see cref="IEnumerable.GetEnumerator"/> is
+                /// <see cref="KeyValuePair{TKey, TValue}"/>. This is the return value for most instances of this
+                /// enumerator.
+                /// </summary>
+                KeyValuePair,
 
-            public bool MoveNext() => throw null;
+                /// <summary>
+                /// The return value from the implementation of <see cref="IEnumerable.GetEnumerator"/> is
+                /// <see cref="DictionaryEntry"/>. This is the return value for instances of this enumerator created by
+                /// the <see cref="IDictionary.GetEnumerator"/> implementation in
+                /// <see cref="TreeDictionary{TKey, TValue}"/>.
+                /// </summary>
+                DictionaryEntry,
+            }
 
-            public void Reset() => throw null;
+            public KeyValuePair<TKey, TValue> Current => _enumerator.Current;
+
+            object IEnumerator.Current => _returnType == ReturnType.DictionaryEntry ? (object)((IDictionaryEnumerator)this).Entry : Current;
+
+            DictionaryEntry IDictionaryEnumerator.Entry => new DictionaryEntry(Current.Key, Current.Value);
+
+            object IDictionaryEnumerator.Key => Current.Key;
+
+            object IDictionaryEnumerator.Value => Current.Value;
+
+            public void Dispose() => _enumerator.Dispose();
+
+            public bool MoveNext() => _enumerator.MoveNext();
+
+            public void Reset() => _enumerator.Reset();
         }
     }
 }
