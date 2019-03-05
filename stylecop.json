@@ -13,6 +13,9 @@
     "orderingRules": {
       // Ignore accessibility for determining the element order
       "elementOrder": [ "kind", "constant" ]
+    },
+    "namingRules": {
+      "tupleElementNameCasing": "camelCase"
     }
   }
 }
