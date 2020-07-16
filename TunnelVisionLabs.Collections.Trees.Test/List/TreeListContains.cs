@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+#nullable disable
+
 // This file contains tests for Contains...
 #pragma warning disable xUnit2017 // Do not use Contains() to check if a value exists in a collection
 
