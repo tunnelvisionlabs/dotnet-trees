@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
@@ -41,7 +39,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestImmutableTreeStackCreateValidation()
         {
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeStack.Create<int>(null));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeStack.Create<int>(null!));
         }
 
         [Fact]
@@ -55,7 +53,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestImmutableTreeStackCreateRangeValidation()
         {
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeStack.CreateRange<int>(null));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeStack.CreateRange<int>(null!));
         }
 
         [Fact]
