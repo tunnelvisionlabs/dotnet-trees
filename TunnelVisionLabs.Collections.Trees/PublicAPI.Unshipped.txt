@@ -453,33 +453,33 @@ TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.this[TKey 
 TunnelVisionLabs.Collections.Trees.SortedTreeDictionary<TKey, TValue>.this[TKey key].set -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Add(T item) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.AddRange(System.Collections.Generic.IEnumerable<T> collection) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.AddRange(System.Collections.Generic.IEnumerable<T>! collection) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.BinarySearch(T item) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.BinarySearch(int index, int count, T item) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Clear() -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Comparer.get -> System.Collections.Generic.IComparer<T>
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Comparer.get -> System.Collections.Generic.IComparer<T>!
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Contains(T item) -> bool
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(T[] array) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(T[] array, int arrayIndex) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(int index, T[] array, int arrayIndex, int count) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(T[]! array) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(T[]! array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.CopyTo(int index, T[]! array, int arrayIndex, int count) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.Current.get -> T
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.Dispose() -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator.MoveNext() -> bool
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Exists(System.Predicate<T> match) -> bool
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Find(System.Predicate<T> match) -> T
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindAll(System.Predicate<T> match) -> TunnelVisionLabs.Collections.Trees.SortedTreeList<T>
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, int count, System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLast(System.Predicate<T> match) -> T
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, int count, System.Predicate<T> match) -> int
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.ForEach(System.Action<T> action) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Exists(System.Predicate<T>! match) -> bool
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Find(System.Predicate<T>! match) -> T
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindAll(System.Predicate<T>! match) -> TunnelVisionLabs.Collections.Trees.SortedTreeList<T>!
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindIndex(int startIndex, int count, System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLast(System.Predicate<T>! match) -> T
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.FindLastIndex(int startIndex, int count, System.Predicate<T>! match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.ForEach(System.Action<T>! action) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Enumerator
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.GetRange(int index, int count) -> TunnelVisionLabs.Collections.Trees.SortedTreeList<T>
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.GetRange(int index, int count) -> TunnelVisionLabs.Collections.Trees.SortedTreeList<T>!
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.IndexOf(T item) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.IndexOf(T item, int index) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.IndexOf(T item, int index, int count) -> int
@@ -487,19 +487,19 @@ TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item, int index) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.LastIndexOf(T item, int index, int count) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.Remove(T item) -> bool
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.RemoveAll(System.Predicate<T> match) -> int
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.RemoveAll(System.Predicate<T>! match) -> int
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.RemoveAt(int index) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.RemoveRange(int index, int count) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList() -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IComparer<T> comparer) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T> collection) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IComparer<T> comparer) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IComparer<T>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T>! collection) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(System.Collections.Generic.IEnumerable<T>! collection, System.Collections.Generic.IComparer<T>? comparer) -> void
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IComparer<T> comparer) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IEnumerable<T> collection, System.Collections.Generic.IComparer<T> comparer) -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.ToArray() -> T[]
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IComparer<T>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.SortedTreeList(int branchingFactor, System.Collections.Generic.IEnumerable<T>! collection, System.Collections.Generic.IComparer<T>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.ToArray() -> T[]!
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.TrimExcess() -> void
-~TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.TrueForAll(System.Predicate<T> match) -> bool
+TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.TrueForAll(System.Predicate<T>! match) -> bool
 TunnelVisionLabs.Collections.Trees.SortedTreeList<T>.this[int index].get -> T
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>
 TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.Add(T item) -> bool
