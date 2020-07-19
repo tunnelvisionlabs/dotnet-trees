@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed partial class ImmutableSortedTreeList<T>
     {
@@ -45,7 +44,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 set => throw new NotSupportedException();
             }
 
-            object IList.this[int index]
+            object? IList.this[int index]
             {
                 get => this[index];
                 set => throw new NotSupportedException();
@@ -98,6 +97,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             public bool Exists(Predicate<T> match)
                 => FindIndex(match) >= 0;
 
+            [return: MaybeNull]
             public T Find(Predicate<T> match)
                 => _treeList.Find(match);
 
@@ -113,6 +113,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             public int FindIndex(int startIndex, int count, Predicate<T> match)
                 => _treeList.FindIndex(startIndex, count, match);
 
+            [return: MaybeNull]
             public T FindLast(Predicate<T> match)
                 => _treeList.FindLast(match);
 
@@ -207,29 +208,30 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             IEnumerator IEnumerable.GetEnumerator()
                 => GetEnumerator();
 
-            int IList.Add(object value)
+            int IList.Add(object? value)
             {
                 if (value == null && default(T) != null)
                     throw new ArgumentNullException(nameof(value));
 
                 try
                 {
-                    Add((T)value);
+                    Add((T)value!);
                 }
                 catch (InvalidCastException)
                 {
+                    Debug.Assert(value is object, $"Assertion failed: {nameof(value)} is object");
                     throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
                 }
 
                 return Count - 1;
             }
 
-            bool IList.Contains(object value)
+            bool IList.Contains(object? value)
             {
                 if (value == null)
                 {
                     if (default(T) == null)
-                        return Contains(default);
+                        return Contains(default!);
                 }
                 else if (value is T)
                 {
@@ -239,12 +241,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return false;
             }
 
-            int IList.IndexOf(object value)
+            int IList.IndexOf(object? value)
             {
                 if (value == null)
                 {
                     if (default(T) == null)
-                        return IndexOf(default);
+                        return IndexOf(default!);
                 }
                 else if (value is T)
                 {
@@ -254,7 +256,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return -1;
             }
 
-            void IList.Remove(object value)
+            void IList.Remove(object? value)
             {
                 int index = ((IList)this).IndexOf(value);
                 if (index >= 0)
@@ -269,7 +271,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             void IList<T>.Insert(int index, T item) => throw new NotSupportedException();
 
-            void IList.Insert(int index, object value) => throw new NotSupportedException();
+            void IList.Insert(int index, object? value) => throw new NotSupportedException();
 
             internal void TrimExcess()
                 => _treeList.TrimExcess();
