@@ -1,13 +1,12 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
 
     internal struct FixedArray8<T>
     {
@@ -195,11 +194,18 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             }
         }
 
-        internal void Clear(int index, int length)
+        internal void MarkAsUnused(int index, int length)
         {
+#if !NET45 && !NETSTANDARD1_1 && !NETSTANDARD2_0
+            if (!RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+            {
+                return;
+            }
+#endif
+
             for (int i = 0; i < length; i++)
             {
-                this[i + index] = default;
+                this[i + index] = default!;
             }
         }
 

@@ -434,8 +434,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                             int transferCount = nextIndex._nodeCount - minimumNodeCount;
                             nextIndex._nodes.Copy(0, ref _nodes, _nodeCount, transferCount);
                             nextIndex._nodes.Copy(transferCount, ref nextIndex._nodes, 0, nextIndex._nodeCount - transferCount);
-                            nextIndex._offsets.Clear(nextIndex._nodeCount - transferCount, transferCount);
-                            nextIndex._nodes.Clear(nextIndex._nodeCount - transferCount, transferCount);
+                            nextIndex._offsets.MarkAsUnused(nextIndex._nodeCount - transferCount, transferCount);
+                            nextIndex._nodes.MarkAsUnused(nextIndex._nodeCount - transferCount, transferCount);
                             for (int i = 0; i < transferCount; i++)
                             {
                                 _offsets[_nodeCount + i] = _offsets[_nodeCount + i - 1] + _nodes[_nodeCount + i - 1].Count;
@@ -781,8 +781,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                     nextNode._nodes.Copy(elementsToMove, ref nextNode._nodes, 0, nextNode._nodeCount - elementsToMove);
                     nextNode._nodeCount -= elementsToMove;
-                    nextNode._offsets.Clear(nextNode._nodeCount, elementsToMove);
-                    nextNode._nodes.Clear(nextNode._nodeCount, elementsToMove);
+                    nextNode._offsets.MarkAsUnused(nextNode._nodeCount, elementsToMove);
+                    nextNode._nodes.MarkAsUnused(nextNode._nodeCount, elementsToMove);
                     for (int i = 1; i < nextNode._nodeCount; i++)
                     {
                         nextNode._offsets[i] = nextNode._offsets[i - 1] + nextNode._nodes[i - 1].Count;
@@ -873,8 +873,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                     _nodes.Copy(splitPoint, ref splitNode._nodes, 0, _nodeCount - splitPoint);
                     _offsets.Copy(splitPoint, ref splitNode._offsets, 0, _nodeCount - splitPoint);
-                    _nodes.Clear(splitPoint, _nodeCount - splitPoint);
-                    _offsets.Clear(splitPoint, _nodeCount - splitPoint);
+                    _nodes.MarkAsUnused(splitPoint, _nodeCount - splitPoint);
+                    _offsets.MarkAsUnused(splitPoint, _nodeCount - splitPoint);
 
                     splitNode._nodeCount = _nodeCount - splitPoint;
                     int adjustment = splitNode._offsets[0];

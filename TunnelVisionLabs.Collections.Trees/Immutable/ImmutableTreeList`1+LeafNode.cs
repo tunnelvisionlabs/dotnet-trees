@@ -144,7 +144,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 #endif
 
                 _data.Copy(splitPoint, ref splitNode._data, 0, _count - splitPoint);
-                _data.Clear(splitPoint, _count - splitPoint);
+                _data.MarkAsUnused(splitPoint, _count - splitPoint);
 
                 splitNode._count = _count - splitPoint;
                 _count = splitPoint;
@@ -261,7 +261,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         int transferCount = nextNode.Count - minimumNodeCount;
                         ((LeafNode)nextNode)._data.Copy(0, ref _data, _count, transferCount);
                         ((LeafNode)nextNode)._data.Copy(transferCount, ref ((LeafNode)nextNode)._data, 0, nextNode.Count - transferCount);
-                        ((LeafNode)nextNode)._data.Clear(nextNode.Count - transferCount, transferCount);
+                        ((LeafNode)nextNode)._data.MarkAsUnused(nextNode.Count - transferCount, transferCount);
                         _count += transferCount;
                         ((LeafNode)nextNode)._count -= transferCount;
                         return (this, nextNode);
@@ -326,7 +326,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 {
                     nextLeaf._data.Copy(elementsToMove, ref nextLeaf._data, 0, nextLeaf._count - elementsToMove);
                     nextLeaf._count -= elementsToMove;
-                    nextLeaf._data.Clear(nextLeaf._count, elementsToMove);
+                    nextLeaf._data.MarkAsUnused(nextLeaf._count, elementsToMove);
                 }
 
                 return (this, nextLeaf);
