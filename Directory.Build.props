@@ -69,7 +69,7 @@
 
   <!-- Public API -->
   <ItemGroup>
-    <PackageReference Include="DotNetAnalyzers.PublicApiAnalyzer" Version="1.0.0-beta.12" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.0-beta3.20367.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
