@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
@@ -18,7 +16,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestUnionWith()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.UnionWith(null));
+            Assert.Throws<ArgumentNullException>(() => set.UnionWith(null!));
 
             set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(0, 7)));
             set.UnionWith(TransformEnumerableForSetOperation(Enumerable.Range(5, 5)));
@@ -29,7 +27,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestExceptWith()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.ExceptWith(null));
+            Assert.Throws<ArgumentNullException>(() => set.ExceptWith(null!));
 
             // Return without iterating if the set is already empty
             set.ExceptWith(EverythingThrowsEnumerable<int>.Instance);
@@ -51,7 +49,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestIntersectWith()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.IntersectWith(null));
+            Assert.Throws<ArgumentNullException>(() => set.IntersectWith(null!));
 
             // Return without iterating if the set is already empty
             set.IntersectWith(EverythingThrowsEnumerable<int>.Instance);
@@ -78,7 +76,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         {
             ISet<int> set = CreateSet<int>();
             ISet<int> second = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.SymmetricExceptWith(null));
+            Assert.Throws<ArgumentNullException>(() => set.SymmetricExceptWith(null!));
 
             // Test behavior when the current set is empty
             set.SymmetricExceptWith(TransformEnumerableForSetOperation(new[] { 1, 5, 3 }));
@@ -112,7 +110,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestIsProperSubsetOf()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.IsProperSubsetOf(null));
+            Assert.Throws<ArgumentNullException>(() => set.IsProperSubsetOf(null!));
 
             // Test behavior when the current set is empty
             Assert.False(set.IsProperSubsetOf(TransformEnumerableForSetOperation(Enumerable.Empty<int>())));
@@ -147,7 +145,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestIsProperSupersetOf()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.IsProperSupersetOf(null));
+            Assert.Throws<ArgumentNullException>(() => set.IsProperSupersetOf(null!));
 
             // Return without iterating if the set is already empty
             Assert.False(set.IsProperSupersetOf(EverythingThrowsEnumerable<int>.Instance));
@@ -185,7 +183,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestIsSubsetOf()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.IsSubsetOf(null));
+            Assert.Throws<ArgumentNullException>(() => set.IsSubsetOf(null!));
 
             // Return without iterating if the set is already empty
             Assert.True(set.IsSubsetOf(EverythingThrowsEnumerable<int>.Instance));
@@ -219,7 +217,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestIsSupersetOf()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.IsSupersetOf(null));
+            Assert.Throws<ArgumentNullException>(() => set.IsSupersetOf(null!));
 
             // Test IsSupersetOf self
             set.Add(1);
@@ -254,7 +252,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestOverlaps()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.Overlaps(null));
+            Assert.Throws<ArgumentNullException>(() => set.Overlaps(null!));
 
             // Return without iterating if the set is already empty
             Assert.False(set.Overlaps(EverythingThrowsEnumerable<int>.Instance));
@@ -274,7 +272,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestSetEquals()
         {
             ISet<int> set = CreateSet<int>();
-            Assert.Throws<ArgumentNullException>(() => set.SetEquals(null));
+            Assert.Throws<ArgumentNullException>(() => set.SetEquals(null!));
 
             // Test behavior when the current set is empty
             Assert.True(set.SetEquals(TransformEnumerableForSetOperation(Enumerable.Empty<int>())));
@@ -343,7 +341,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new object[collection.Count];
 
-                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null!, 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(new object[1, collection.Count], 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(object), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
@@ -370,7 +368,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             {
                 var copy = new int[collection.Count];
 
-                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentNullException>(() => collection.CopyTo(null!, 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[1, collection.Count], 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { -1 }), 0));
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));

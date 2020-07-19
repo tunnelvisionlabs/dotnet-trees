@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed class ReverseComparer<T> : IComparer<T>
     {
@@ -13,12 +12,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
         private readonly IComparer<T> _comparer;
 
-        public ReverseComparer(IComparer<T> comparer)
+        public ReverseComparer(IComparer<T>? comparer)
         {
             _comparer = comparer ?? Comparer<T>.Default;
         }
 
-        public int Compare(T x, T y)
+        public int Compare([AllowNull] T x, [AllowNull] T y)
         {
             var direct = _comparer.Compare(x, y);
             if (direct == int.MinValue)

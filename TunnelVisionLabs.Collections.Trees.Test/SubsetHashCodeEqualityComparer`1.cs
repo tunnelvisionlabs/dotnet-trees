@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed class SubsetHashCodeEqualityComparer<T> : IEqualityComparer<T>
     {
@@ -24,7 +23,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             _getHashCode = getHashCode;
         }
 
-        public bool Equals(T x, T y) => _equalityComparer.Equals(x, y);
+        public bool Equals([AllowNull] T x, [AllowNull] T y) => _equalityComparer.Equals(x, y);
 
         public int GetHashCode(T obj) => _getHashCode(obj);
     }
