@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
@@ -19,11 +17,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestTryGetValueWithCollidingHashCodes()
         {
-            var set = new TreeSet<string>(new ZeroHashCodeEqualityComparer<string>(StringComparer.OrdinalIgnoreCase));
+            var set = new TreeSet<string?>(new ZeroHashCodeEqualityComparer<string?>(StringComparer.OrdinalIgnoreCase));
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
-            Assert.True(set.TryGetValue("a", out string value));
+            Assert.True(set.TryGetValue("a", out string? value));
             Assert.Equal("a", value);
 
             Assert.True(set.TryGetValue("A", out value));
@@ -34,7 +32,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             // The test below forces coverage of an edge case. We don't know if the hash code for 'aa' or 'bb' comes
             // first, so write the test in a way that either will cover the early-exit branch in TryGetValue.
-            set = new TreeSet<string>(new SubsetHashCodeEqualityComparer<string>(StringComparer.Ordinal, StringComparer.OrdinalIgnoreCase));
+            set = new TreeSet<string?>(new SubsetHashCodeEqualityComparer<string?>(StringComparer.Ordinal, StringComparer.OrdinalIgnoreCase));
             Assert.True(set.Add("aa"));
             Assert.True(set.Add("Aa"));
             Assert.True(set.Add("bb"));

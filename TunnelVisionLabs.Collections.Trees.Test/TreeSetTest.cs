@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
@@ -22,8 +20,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestCollectionConstructors()
         {
-            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(collection: null));
-            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(branchingFactor: 4, collection: null, comparer: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(collection: null!));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeSet<int>(branchingFactor: 4, collection: null!, comparer: null));
 
             var set = new TreeSet<int>(new[] { 1, 1 });
             Assert.Single(set);
@@ -152,7 +150,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestCopyToValidation()
         {
             TreeSet<int> set = new TreeSet<int>(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("array", () => set.CopyTo(null, 0, set.Count));
+            Assert.Throws<ArgumentNullException>("array", () => set.CopyTo(null!, 0, set.Count));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => set.CopyTo(new int[set.Count], -1, set.Count));
             Assert.Throws<ArgumentOutOfRangeException>("count", () => set.CopyTo(new int[set.Count], 0, -1));
             Assert.Throws<ArgumentException>(string.Empty, () => set.CopyTo(new int[set.Count], 1, set.Count));
@@ -310,11 +308,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestTryGetValue()
         {
-            var set = new TreeSet<string>(StringComparer.OrdinalIgnoreCase);
+            var set = new TreeSet<string?>(StringComparer.OrdinalIgnoreCase);
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
-            Assert.True(set.TryGetValue("a", out string value));
+            Assert.True(set.TryGetValue("a", out string? value));
             Assert.Equal("a", value);
 
             Assert.True(set.TryGetValue("A", out value));
@@ -400,7 +398,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestRemoveWhere()
         {
             var set = new TreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
-            Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null));
+            Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null!));
 
             Assert.Equal(5, set.RemoveWhere(i => (i % 2) == 0));
             Assert.Equal(new[] { 1, 3, 5, 7, 9 }, set);
@@ -411,10 +409,10 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestSetComparer()
         {
-            IEqualityComparer<TreeSet<int>> setComparer = TreeSet<int>.CreateSetComparer();
+            IEqualityComparer<TreeSet<int>?> setComparer = TreeSet<int>.CreateSetComparer();
             Assert.True(setComparer.Equals(TreeSet<int>.CreateSetComparer()));
             Assert.False(setComparer.Equals(null));
-            Assert.Equal(setComparer.GetHashCode(), TreeSet<int>.CreateSetComparer().GetHashCode());
+            Assert.Equal(setComparer!.GetHashCode(), TreeSet<int>.CreateSetComparer().GetHashCode());
 
             var set = new TreeSet<int>();
             var other = new TreeSet<int>();
@@ -431,7 +429,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(setComparer.GetHashCode(set), setComparer.GetHashCode(other));
 
             // Test behavior with non-empty sets
-            set.UnionWith(Enumerable.Range(0, 10));
+            set!.UnionWith(Enumerable.Range(0, 10));
             Assert.False(setComparer.Equals(set, other));
             other.UnionWith(Enumerable.Range(0, 5));
             Assert.False(setComparer.Equals(set, other));
