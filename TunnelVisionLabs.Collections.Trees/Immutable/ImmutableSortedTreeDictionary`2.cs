@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
@@ -10,9 +8,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public sealed partial class ImmutableSortedTreeDictionary<TKey, TValue> : IImmutableDictionary<TKey, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
+        where TKey : notnull
     {
         public static readonly ImmutableSortedTreeDictionary<TKey, TValue> Empty
             = new ImmutableSortedTreeDictionary<TKey, TValue>(ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>>.Empty.WithComparer(KeyOfPairComparer<TKey, TValue>.Default), keyComparer: null, valueComparer: null);
@@ -21,7 +21,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         private readonly IComparer<TKey> _keyComparer;
         private readonly IEqualityComparer<TValue> _valueComparer;
 
-        private ImmutableSortedTreeDictionary(ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> treeSet, IComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        private ImmutableSortedTreeDictionary(ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> treeSet, IComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             keyComparer = keyComparer ?? Comparer<TKey>.Default;
             valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
@@ -73,7 +73,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         {
             get
             {
-                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> value))
+                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default!), out KeyValuePair<TKey, TValue> value))
                     throw new KeyNotFoundException();
 
                 return value.Value;
@@ -86,7 +86,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             set => throw new NotSupportedException();
         }
 
-        object IDictionary.this[object key]
+        object? IDictionary.this[object key]
         {
             get
             {
@@ -145,7 +145,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         }
 
         public bool ContainsKey(TKey key)
-            => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default));
+            => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default!));
 
         public bool ContainsValue(TValue value)
             => _treeSet.Any(pair => ValueComparer.Equals(pair.Value, value));
@@ -155,7 +155,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableSortedTreeDictionary<TKey, TValue> Remove(TKey key)
         {
-            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
+            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default!));
             if (result == _treeSet)
             {
                 return this;
@@ -169,7 +169,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             if (keys is null)
                 throw new ArgumentNullException(nameof(keys));
 
-            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Except(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default)));
+            ImmutableSortedTreeSet<KeyValuePair<TKey, TValue>> result = _treeSet.Except(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default!)));
             if (result == _treeSet)
             {
                 return this;
@@ -195,9 +195,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return result.ToImmutable();
         }
 
-        public bool TryGetKey(TKey equalKey, out TKey actualKey)
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public bool TryGetKey(TKey equalKey, [MaybeNullWhen(false)] out TKey actualKey)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
         {
-            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(equalKey, default), out KeyValuePair<TKey, TValue> value))
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(equalKey, default!), out KeyValuePair<TKey, TValue> value))
             {
                 actualKey = default;
                 return false;
@@ -207,9 +209,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return true;
         }
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> actualValue))
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default!), out KeyValuePair<TKey, TValue> actualValue))
             {
                 value = default;
                 return false;
@@ -219,10 +221,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return true;
         }
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer)
+        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey>? keyComparer)
             => WithComparers(keyComparer, valueComparer: null);
 
-        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        public ImmutableSortedTreeDictionary<TKey, TValue> WithComparers(IComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             keyComparer = keyComparer ?? Comparer<TKey>.Default;
             valueComparer = valueComparer ?? EqualityComparer<TValue>.Default;
@@ -356,7 +358,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => throw new NotSupportedException();
 
-        void IDictionary.Add(object key, object value) => throw new NotSupportedException();
+        void IDictionary.Add(object key, object? value) => throw new NotSupportedException();
 
         void IDictionary.Clear() => throw new NotSupportedException();
 

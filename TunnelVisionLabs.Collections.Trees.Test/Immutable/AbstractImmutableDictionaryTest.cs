@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
@@ -164,6 +162,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 dictionary.Remove(1));
         }
 
-        protected abstract IImmutableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>();
+        protected abstract IImmutableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
+            where TKey : notnull;
     }
 }
