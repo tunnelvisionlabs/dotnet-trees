@@ -699,7 +699,7 @@ TunnelVisionLabs.Collections.Trees.TreeSet<T>.TryGetValue(T equalValue, out T ac
 TunnelVisionLabs.Collections.Trees.TreeStack<T>
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Clear() -> void
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Contains(T item) -> bool
-~TunnelVisionLabs.Collections.Trees.TreeStack<T>.CopyTo(T[] array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.CopyTo(T[]! array, int arrayIndex) -> void
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Enumerator.Current.get -> T
@@ -709,7 +709,7 @@ TunnelVisionLabs.Collections.Trees.TreeStack<T>.GetEnumerator() -> TunnelVisionL
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Peek() -> T
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Pop() -> T
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.Push(T item) -> void
-~TunnelVisionLabs.Collections.Trees.TreeStack<T>.ToArray() -> T[]
+TunnelVisionLabs.Collections.Trees.TreeStack<T>.ToArray() -> T[]!
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.TreeStack() -> void
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.TreeStack(int branchingFactor) -> void
 TunnelVisionLabs.Collections.Trees.TreeStack<T>.TrimExcess() -> void

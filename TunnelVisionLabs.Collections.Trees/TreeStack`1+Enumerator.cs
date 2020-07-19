@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System.Collections;
@@ -21,7 +19,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
             public T Current => _enumerator.Current;
 
-            object IEnumerator.Current => _enumerator.Current;
+            object? IEnumerator.Current => _enumerator.Current;
 
             public void Dispose() => _enumerator.Dispose();
 
