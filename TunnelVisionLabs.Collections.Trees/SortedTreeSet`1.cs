@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public partial class SortedTreeSet<T> : ISet<T>, IReadOnlyCollection<T>, ICollection
@@ -26,12 +25,12 @@ namespace TunnelVisionLabs.Collections.Trees
             UnionWith(collection);
         }
 
-        public SortedTreeSet(IComparer<T> comparer)
+        public SortedTreeSet(IComparer<T>? comparer)
         {
             _sortedList = new SortedTreeList<T>(comparer);
         }
 
-        public SortedTreeSet(IEnumerable<T> collection, IComparer<T> comparer)
+        public SortedTreeSet(IEnumerable<T> collection, IComparer<T>? comparer)
         {
             _sortedList = new SortedTreeList<T>(comparer);
             UnionWith(collection);
@@ -42,12 +41,12 @@ namespace TunnelVisionLabs.Collections.Trees
             _sortedList = new SortedTreeList<T>(branchingFactor);
         }
 
-        public SortedTreeSet(int branchingFactor, IComparer<T> comparer)
+        public SortedTreeSet(int branchingFactor, IComparer<T>? comparer)
         {
             _sortedList = new SortedTreeList<T>(branchingFactor, comparer);
         }
 
-        public SortedTreeSet(int branchingFactor, IEnumerable<T> collection, IComparer<T> comparer)
+        public SortedTreeSet(int branchingFactor, IEnumerable<T> collection, IComparer<T>? comparer)
         {
             _sortedList = new SortedTreeList<T>(branchingFactor, comparer);
             UnionWith(collection);
@@ -57,8 +56,10 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public int Count => _sortedList.Count;
 
+        [MaybeNull]
         public T Max => _sortedList.Count == 0 ? default : _sortedList[Count - 1];
 
+        [MaybeNull]
         public T Min => _sortedList.Count == 0 ? default : _sortedList[0];
 
         bool ICollection<T>.IsReadOnly => false;
@@ -67,12 +68,12 @@ namespace TunnelVisionLabs.Collections.Trees
 
         object ICollection.SyncRoot => this;
 
-        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer()
+        public static IEqualityComparer<SortedTreeSet<T>?> CreateSetComparer()
         {
             return SortedTreeSetEqualityComparer.Default;
         }
 
-        public static IEqualityComparer<SortedTreeSet<T>> CreateSetComparer(IEqualityComparer<T> memberEqualityComparer)
+        public static IEqualityComparer<SortedTreeSet<T>?> CreateSetComparer(IEqualityComparer<T>? memberEqualityComparer)
         {
             if (memberEqualityComparer == null || memberEqualityComparer == EqualityComparer<T>.Default)
                 return CreateSetComparer();
@@ -393,7 +394,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public void TrimExcess() => _sortedList.TrimExcess();
 
-        public bool TryGetValue(T equalValue, out T actualValue)
+        public bool TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
         {
             int index = _sortedList.BinarySearch(equalValue);
             if (index < 0)
@@ -425,9 +426,9 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        private class SortedTreeSetEqualityComparer : IEqualityComparer<SortedTreeSet<T>>
+        private class SortedTreeSetEqualityComparer : IEqualityComparer<SortedTreeSet<T>?>
         {
-            public static readonly IEqualityComparer<SortedTreeSet<T>> Default = new SortedTreeSetEqualityComparer();
+            public static readonly IEqualityComparer<SortedTreeSet<T>?> Default = new SortedTreeSetEqualityComparer();
 
             private readonly IComparer<T> _comparer = Comparer<T>.Default;
             private readonly IEqualityComparer<T> _equalityComparer;
@@ -437,12 +438,12 @@ namespace TunnelVisionLabs.Collections.Trees
             {
             }
 
-            public SortedTreeSetEqualityComparer(IEqualityComparer<T> memberEqualityComparer)
+            public SortedTreeSetEqualityComparer(IEqualityComparer<T>? memberEqualityComparer)
             {
                 _equalityComparer = memberEqualityComparer ?? EqualityComparer<T>.Default;
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is SortedTreeSetEqualityComparer comparer))
                     return false;
@@ -455,7 +456,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return _comparer.GetHashCode() ^ _equalityComparer.GetHashCode();
             }
 
-            public bool Equals(SortedTreeSet<T> x, SortedTreeSet<T> y)
+            public bool Equals(SortedTreeSet<T>? x, SortedTreeSet<T>? y)
             {
                 if (x is null)
                 {
@@ -493,7 +494,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            public int GetHashCode(SortedTreeSet<T> obj)
+            public int GetHashCode(SortedTreeSet<T>? obj)
             {
                 if (obj == null)
                     return 0;
