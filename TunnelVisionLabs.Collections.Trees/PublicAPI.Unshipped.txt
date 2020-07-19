@@ -541,7 +541,7 @@ TunnelVisionLabs.Collections.Trees.SortedTreeSet<T>.UnionWith(System.Collections
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Add(TKey key, TValue value) -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Clear() -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Comparer.get -> System.Collections.Generic.IEqualityComparer<TKey>
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Comparer.get -> System.Collections.Generic.IEqualityComparer<TKey>!
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ContainsValue(TValue value) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Count.get -> int
@@ -553,7 +553,7 @@ TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.GetEnumerator() 
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Clear() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.CopyTo(TKey[] array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.CopyTo(TKey[]! array, int arrayIndex) -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
@@ -564,18 +564,18 @@ TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection.Re
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Keys.get -> TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.KeyCollection
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.Remove(TKey key) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary() -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> collection) -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> collection, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEqualityComparer<TKey> comparer) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingFactor) -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingFactor, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>> collection, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> void
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingFactor, System.Collections.Generic.IEqualityComparer<TKey> comparer) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingFactor, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TreeDictionary(int branchingFactor, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TryAdd(TKey key, TValue value) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Clear() -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Contains(TValue item) -> bool
-~TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.CopyTo(TValue[] array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.CopyTo(TValue[]! array, int arrayIndex) -> void
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue

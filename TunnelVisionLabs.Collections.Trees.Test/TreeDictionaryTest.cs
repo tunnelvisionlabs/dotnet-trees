@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
@@ -23,8 +21,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestCollectionConstructors()
         {
-            Assert.Throws<ArgumentNullException>("collection", () => new TreeDictionary<int, int>(collection: null));
-            Assert.Throws<ArgumentNullException>("collection", () => new TreeDictionary<int, int>(branchingFactor: 4, collection: null, comparer: null));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeDictionary<int, int>(collection: null!));
+            Assert.Throws<ArgumentNullException>("collection", () => new TreeDictionary<int, int>(branchingFactor: 4, collection: null!, comparer: null));
 
             Assert.Throws<ArgumentException>(() => new TreeDictionary<int, int>(new[] { new KeyValuePair<int, int>(1, 1), new KeyValuePair<int, int>(1, 2) }));
             Assert.Throws<ArgumentException>(() => new TreeDictionary<int, int>(branchingFactor: 4, new[] { new KeyValuePair<int, int>(1, 1), new KeyValuePair<int, int>(1, 2) }, comparer: null));
@@ -97,7 +95,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(Enumerable.Range(0, 9), dictionary.Values);
 
             Assert.Throws<NotSupportedException>(() => dictionary.Keys.Add(0));
-            Assert.Throws<ArgumentNullException>("array", () => dictionary.Keys.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => dictionary.Keys.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Keys.CopyTo(new int[dictionary.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Keys.CopyTo(new int[dictionary.Count], dictionary.Count + 1));
             Assert.Throws<ArgumentException>(() => dictionary.Keys.CopyTo(new int[dictionary.Count], 1));
@@ -115,7 +113,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(0, keyEnumerator.Current);
 
             Assert.Throws<NotSupportedException>(() => dictionary.Values.Add(0));
-            Assert.Throws<ArgumentNullException>("array", () => dictionary.Values.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => dictionary.Values.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Values.CopyTo(new int[dictionary.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Values.CopyTo(new int[dictionary.Count], dictionary.Count + 1));
             Assert.Throws<ArgumentException>(() => dictionary.Values.CopyTo(new int[dictionary.Count], 1));
@@ -168,7 +166,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.False(dictionary.IsReadOnly);
             Assert.False(dictionary.IsSynchronized);
 
-            Assert.Throws<ArgumentNullException>("key", () => dictionary.Add(key: null, value: 1));
+            Assert.Throws<ArgumentNullException>("key", () => dictionary.Add(key: null!, value: 1));
             Assert.Throws<ArgumentException>("value", () => dictionary.Add(key: 1, value: null));
             Assert.Throws<ArgumentException>("key", () => dictionary.Add(key: "string value", value: 0));
             Assert.Throws<ArgumentException>("value", () => dictionary.Add(key: 0, value: "string value"));
@@ -176,11 +174,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             for (int i = 0; i < 11; i++)
                 dictionary.Add(i, i + 1);
 
-            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null]);
+            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null!]);
             Assert.Null(dictionary["string key"]);
             Assert.Equal(11, dictionary[10]);
 
-            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null] = 12);
+            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null!] = 12);
             Assert.Throws<ArgumentException>("key", () => dictionary["string key"] = 12);
             Assert.Throws<ArgumentException>("value", () => dictionary[10] = null);
             Assert.Throws<ArgumentException>("value", () => dictionary[10] = "string value");
@@ -195,11 +193,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(entries.Select(i => i.Key), dictionary.Keys.Cast<object>());
             Assert.Equal(entries.Select(i => i.Value), dictionary.Values.Cast<object>());
 
-            Assert.Throws<ArgumentNullException>(() => dictionary.Contains(null));
+            Assert.Throws<ArgumentNullException>(() => dictionary.Contains(null!));
             Assert.False(dictionary.Contains("string value"));
             Assert.True(dictionary.Contains(10));
 
-            Assert.Throws<ArgumentNullException>(() => dictionary.Remove(null));
+            Assert.Throws<ArgumentNullException>(() => dictionary.Remove(null!));
             Assert.Equal(11, dictionary.Count);
             dictionary.Remove("string value");
             Assert.Equal(11, dictionary.Count);
@@ -248,7 +246,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
                 Assert.False(collection.IsSynchronized);
                 Assert.Same(dictionary, collection.SyncRoot);
 
-                Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null!, 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0));
                 Assert.Throws<ArgumentOutOfRangeException>("index", () => collection.CopyTo(new int[collection.Count], -1));
