@@ -645,7 +645,7 @@ TunnelVisionLabs.Collections.Trees.TreeList<T>.this[int index].set -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Clear() -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Contains(T item) -> bool
-~TunnelVisionLabs.Collections.Trees.TreeQueue<T>.CopyTo(T[] array, int arrayIndex) -> void
+TunnelVisionLabs.Collections.Trees.TreeQueue<T>.CopyTo(T[]! array, int arrayIndex) -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Count.get -> int
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Dequeue() -> T
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Enqueue(T item) -> void
@@ -655,7 +655,7 @@ TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Enumerator.Dispose() -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Enumerator.MoveNext() -> bool
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Enumerator
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.Peek() -> T
-~TunnelVisionLabs.Collections.Trees.TreeQueue<T>.ToArray() -> T[]
+TunnelVisionLabs.Collections.Trees.TreeQueue<T>.ToArray() -> T[]!
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.TreeQueue() -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.TreeQueue(int branchingFactor) -> void
 TunnelVisionLabs.Collections.Trees.TreeQueue<T>.TrimExcess() -> void
