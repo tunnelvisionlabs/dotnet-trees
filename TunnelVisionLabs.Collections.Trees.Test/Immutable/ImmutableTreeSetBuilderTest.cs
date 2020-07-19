@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
@@ -30,7 +28,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(2, objectSet.Count);
             Assert.Equal(new[] { instance1, instance2 }, objectSet);
 
-            ImmutableTreeSet<string>.Builder stringSet = ImmutableTreeSet.CreateBuilder<string>();
+            ImmutableTreeSet<string?>.Builder stringSet = ImmutableTreeSet.CreateBuilder<string?>();
             Assert.Same(EqualityComparer<string>.Default, stringSet.KeyComparer);
 
             stringSet = ImmutableTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
@@ -108,7 +106,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestCopyToValidation()
         {
             var set = ImmutableTreeSet.CreateRange<int>(Enumerable.Range(0, 10)).ToBuilder();
-            Assert.Throws<ArgumentNullException>("array", () => ((ICollection<int>)set).CopyTo(array: null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => ((ICollection<int>)set).CopyTo(array: null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => ((ICollection<int>)set).CopyTo(new int[set.Count], -1));
             Assert.Throws<ArgumentException>(string.Empty, () => ((ICollection<int>)set).CopyTo(new int[set.Count - 1], 0));
             Assert.Throws<ArgumentException>(() => ((ICollection<int>)set).CopyTo(new int[set.Count], 1));
@@ -265,11 +263,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestTryGetValue()
         {
-            ImmutableTreeSet<string>.Builder set = ImmutableTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
+            ImmutableTreeSet<string?>.Builder set = ImmutableTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
-            Assert.True(set.TryGetValue("a", out string value));
+            Assert.True(set.TryGetValue("a", out string? value));
             Assert.Equal("a", value);
 
             Assert.True(set.TryGetValue("A", out value));

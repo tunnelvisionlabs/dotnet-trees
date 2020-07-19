@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System.Collections;
@@ -21,7 +19,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public T Current => _enumerator.Current.value;
 
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public void Dispose() => _enumerator.Dispose();
 

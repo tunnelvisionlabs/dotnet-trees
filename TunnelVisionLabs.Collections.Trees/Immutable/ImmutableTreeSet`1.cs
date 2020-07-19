@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
 
     public sealed partial class ImmutableTreeSet<T> : IImmutableSet<T>, ISet<T>, ICollection
     {
@@ -102,7 +101,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return builder.ToImmutable();
         }
 
-        public bool TryGetValue(T equalValue, out T actualValue)
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public bool TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
             => ToBuilder().TryGetValue(equalValue, out actualValue);
 
         public ImmutableTreeSet<T> Union(IEnumerable<T> other)
@@ -115,7 +116,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public Builder ToBuilder()
             => new Builder(this);
 
-        public ImmutableTreeSet<T> WithComparer(IEqualityComparer<T> equalityComparer)
+        public ImmutableTreeSet<T> WithComparer(IEqualityComparer<T>? equalityComparer)
         {
             equalityComparer = equalityComparer ?? EqualityComparer<T>.Default;
             if (equalityComparer == _comparer)

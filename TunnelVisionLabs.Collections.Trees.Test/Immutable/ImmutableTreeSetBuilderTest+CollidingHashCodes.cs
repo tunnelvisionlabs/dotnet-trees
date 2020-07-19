@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
@@ -22,11 +20,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             [Fact]
             public void TestTryGetValueWithCollidingHashCodes()
             {
-                ImmutableTreeSet<string>.Builder set = ImmutableTreeSet.CreateBuilder(new ZeroHashCodeEqualityComparer<string>(StringComparer.OrdinalIgnoreCase));
+                ImmutableTreeSet<string?>.Builder set = ImmutableTreeSet.CreateBuilder(new ZeroHashCodeEqualityComparer<string?>(StringComparer.OrdinalIgnoreCase));
                 Assert.True(set.Add("a"));
                 Assert.False(set.Add("A"));
 
-                Assert.True(set.TryGetValue("a", out string value));
+                Assert.True(set.TryGetValue("a", out string? value));
                 Assert.Equal("a", value);
 
                 Assert.True(set.TryGetValue("A", out value));
@@ -37,7 +35,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
                 // The test below forces coverage of an edge case. We don't know if the hash code for 'aa' or 'bb' comes
                 // first, so write the test in a way that either will cover the early-exit branch in TryGetValue.
-                set = ImmutableTreeSet.CreateBuilder(new SubsetHashCodeEqualityComparer<string>(StringComparer.Ordinal, StringComparer.OrdinalIgnoreCase));
+                set = ImmutableTreeSet.CreateBuilder(new SubsetHashCodeEqualityComparer<string?>(StringComparer.Ordinal, StringComparer.OrdinalIgnoreCase));
                 Assert.True(set.Add("aa"));
                 Assert.True(set.Add("Aa"));
                 Assert.True(set.Add("bb"));

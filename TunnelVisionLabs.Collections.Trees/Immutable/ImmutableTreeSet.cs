@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
@@ -19,31 +17,31 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public static ImmutableTreeSet<T> Create<T>(params T[] items)
             => ImmutableTreeSet<T>.Empty.Union(items);
 
-        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T> equalityComparer)
+        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T>? equalityComparer)
             => ImmutableTreeSet<T>.Empty.WithComparer(equalityComparer);
 
-        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T> equalityComparer, T item)
+        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T>? equalityComparer, T item)
             => ImmutableTreeSet<T>.Empty.WithComparer(equalityComparer).Add(item);
 
-        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T> equalityComparer, params T[] items)
+        public static ImmutableTreeSet<T> Create<T>(IEqualityComparer<T>? equalityComparer, params T[] items)
             => ImmutableTreeSet<T>.Empty.WithComparer(equalityComparer).Union(items);
 
         public static ImmutableTreeSet<T>.Builder CreateBuilder<T>()
             => Create<T>().ToBuilder();
 
-        public static ImmutableTreeSet<T>.Builder CreateBuilder<T>(IEqualityComparer<T> equalityComparer)
+        public static ImmutableTreeSet<T>.Builder CreateBuilder<T>(IEqualityComparer<T>? equalityComparer)
             => Create(equalityComparer).ToBuilder();
 
         public static ImmutableTreeSet<T> CreateRange<T>(IEnumerable<T> items)
             => ImmutableTreeSet<T>.Empty.Union(items);
 
-        public static ImmutableTreeSet<T> CreateRange<T>(IEqualityComparer<T> equalityComparer, IEnumerable<T> items)
+        public static ImmutableTreeSet<T> CreateRange<T>(IEqualityComparer<T>? equalityComparer, IEnumerable<T> items)
             => ImmutableTreeSet<T>.Empty.WithComparer(equalityComparer).Union(items);
 
         public static ImmutableTreeSet<TSource> ToImmutableTreeSet<TSource>(this IEnumerable<TSource> source)
             => ToImmutableTreeSet(source, equalityComparer: null);
 
-        public static ImmutableTreeSet<TSource> ToImmutableTreeSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource> equalityComparer)
+        public static ImmutableTreeSet<TSource> ToImmutableTreeSet<TSource>(this IEnumerable<TSource> source, IEqualityComparer<TSource>? equalityComparer)
         {
             if (source is null)
                 throw new ArgumentNullException(nameof(source));
