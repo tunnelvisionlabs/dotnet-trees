@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 {
     using System;
@@ -62,7 +60,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Throws<NotSupportedException>(() => list.Remove("Text"));
             Assert.Equal(originalCount, list.Count);
 
-            object removedItem = list[0];
+            object? removedItem = list[0];
             Assert.Throws<NotSupportedException>(() => list.Remove(list[0]));
             Assert.Equal(originalCount, list.Count);
             Assert.True(list.Contains(removedItem));
@@ -117,29 +115,29 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         {
             Assert.True(list.IsReadOnly);
 
-            Assert.Equal<object>(600, list[0]);
-            Assert.Equal<object>(601, list[1]);
+            Assert.Equal<object?>(600, list[0]);
+            Assert.Equal<object?>(601, list[1]);
 
             Assert.True(list.Contains((T)(object)600));
-            Assert.False(list.Contains(default));
+            Assert.False(list.Contains(default!));
 
             Assert.Equal(0, list.IndexOf((T)(object)600));
             Assert.Equal(1, list.IndexOf((T)(object)601));
-            Assert.Equal(-1, list.IndexOf(default));
+            Assert.Equal(-1, list.IndexOf(default!));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list[-1]);
-            Assert.Throws<NotSupportedException>(() => list[-1] = default);
+            Assert.Throws<NotSupportedException>(() => list[-1] = default!);
             Assert.Throws<ArgumentOutOfRangeException>(() => list[list.Count]);
-            Assert.Throws<NotSupportedException>(() => list[list.Count] = default);
-            Assert.Throws<NotSupportedException>(() => list.Insert(-1, default));
-            Assert.Throws<NotSupportedException>(() => list.Insert(list.Count + 1, default));
+            Assert.Throws<NotSupportedException>(() => list[list.Count] = default!);
+            Assert.Throws<NotSupportedException>(() => list.Insert(-1, default!));
+            Assert.Throws<NotSupportedException>(() => list.Insert(list.Count + 1, default!));
 
             Assert.NotEqual(list[1], list[0]);
             Assert.Throws<NotSupportedException>(() => list.Insert(0, list[0]));
             Assert.NotEqual(list[1], list[0]);
 
             int originalCount = list.Count;
-            Assert.Throws<NotSupportedException>(() => list.Remove(default));
+            Assert.Throws<NotSupportedException>(() => list.Remove(default!));
             Assert.Equal(originalCount, list.Count);
             Assert.Throws<NotSupportedException>(() => list.RemoveAt(0));
             Assert.Equal(originalCount, list.Count);
@@ -151,27 +149,27 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             if (supportsNullValues)
             {
-                Assert.Throws<NotSupportedException>(() => list.Add(default));
-                Assert.NotEqual(default, list[list.Count - 1]);
-                Assert.False(list.Contains(default));
+                Assert.Throws<NotSupportedException>(() => list.Add(default!));
+                Assert.NotEqual(default!, list[list.Count - 1]);
+                Assert.False(list.Contains(default!));
                 Assert.Equal(list.Count - 1, list.IndexOf((T)(object)601));
 
-                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default);
+                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default!);
                 Assert.Equal((T)(object)601, list[list.Count - 1]);
-                Assert.False(list.Contains(default));
-                Assert.Equal(-1, list.IndexOf(default));
+                Assert.False(list.Contains(default!));
+                Assert.Equal(-1, list.IndexOf(default!));
 
-                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default);
-                Assert.NotEqual(default, list[list.Count - 1]);
+                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default!);
+                Assert.NotEqual(default!, list[list.Count - 1]);
             }
             else
             {
                 // In the face of two errors, verify consistent behavior
-                Assert.Throws<NotSupportedException>(() => list[list.Count] = default);
-                Assert.Throws<NotSupportedException>(() => list.Insert(-1, default));
+                Assert.Throws<NotSupportedException>(() => list[list.Count] = default!);
+                Assert.Throws<NotSupportedException>(() => list.Insert(-1, default!));
 
-                Assert.Throws<NotSupportedException>(() => list.Add(default));
-                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default);
+                Assert.Throws<NotSupportedException>(() => list.Add(default!));
+                Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = default!);
                 Assert.Throws<NotSupportedException>(() => list.Add(Activator.CreateInstance<T>()));
                 Assert.Throws<NotSupportedException>(() => list[list.Count - 1] = Activator.CreateInstance<T>());
                 Assert.Throws<NotSupportedException>(() => list.Insert(0, Activator.CreateInstance<T>()));
@@ -210,7 +208,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.NotNull(collection.SyncRoot);
             Assert.Same(collection, collection.SyncRoot);
 
-            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null!, 0));
             Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
 
             void CopyToArrayWithNonZeroLowerBound() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0);
@@ -293,45 +291,45 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 var copy = new T[collection.Count];
 
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, item => Assert.Equal(default, item));
+                Assert.All(copy, item => Assert.Equal(default!, item));
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, 1));
-                Assert.All(copy, item => Assert.Equal(default, item));
+                Assert.All(copy, item => Assert.Equal(default!, item));
 
                 collection.CopyTo(copy, 0);
-                Assert.Equal<object>(600, copy[0]);
-                Assert.Equal<object>(601, copy[1]);
+                Assert.Equal<object?>(600, copy[0]);
+                Assert.Equal<object?>(601, copy[1]);
 
                 copy = new T[collection.Count + 2];
                 collection.CopyTo(copy, 1);
-                Assert.Equal(default, copy[0]);
-                Assert.Equal<object>(600, copy[1]);
-                Assert.Equal<object>(601, copy[2]);
-                Assert.Equal(default, copy[3]);
+                Assert.Equal(default!, copy[0]);
+                Assert.Equal<object?>(600, copy[1]);
+                Assert.Equal<object?>(601, copy[2]);
+                Assert.Equal(default!, copy[3]);
             }
             else
             {
                 var copy = new T[collection.Count];
 
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, -1));
-                Assert.All(copy, item => Assert.Equal(default, item));
+                Assert.All(copy, item => Assert.Equal(default!, item));
                 Assert.Throws<ArgumentOutOfRangeException>(() => collection.CopyTo(copy, 1));
-                Assert.All(copy, item => Assert.Equal(default, item));
+                Assert.All(copy, item => Assert.Equal(default!, item));
 
                 collection.CopyTo(copy, 0);
-                Assert.Equal<object>(600, copy[0]);
-                Assert.Equal<object>(601, copy[1]);
+                Assert.Equal<object?>(600, copy[0]);
+                Assert.Equal<object?>(601, copy[1]);
 
                 copy = new T[collection.Count + 2];
                 collection.CopyTo(copy, 1);
-                Assert.Equal(default, copy[0]);
-                Assert.Equal<object>(600, copy[1]);
-                Assert.Equal<object>(601, copy[2]);
-                Assert.Equal(default, copy[3]);
+                Assert.Equal(default!, copy[0]);
+                Assert.Equal<object?>(600, copy[1]);
+                Assert.Equal<object?>(601, copy[2]);
+                Assert.Equal(default!, copy[3]);
             }
 
             Assert.Throws<NotSupportedException>(() => collection.Clear());
-            Assert.Throws<NotSupportedException>(() => collection.Add(default));
-            Assert.Throws<NotSupportedException>(() => collection.Remove(default));
+            Assert.Throws<NotSupportedException>(() => collection.Add(default!));
+            Assert.Throws<NotSupportedException>(() => collection.Remove(default!));
         }
 
         [Fact]
@@ -364,8 +362,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestCopyToValidation()
         {
             ImmutableTreeList<int> list = ImmutableTreeList.CreateRange(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("array", () => list.CopyTo(null));
-            Assert.Throws<ArgumentNullException>("array", () => list.CopyTo(0, null, 0, list.Count));
+            Assert.Throws<ArgumentNullException>("array", () => list.CopyTo(null!));
+            Assert.Throws<ArgumentNullException>("array", () => list.CopyTo(0, null!, 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("index", () => list.CopyTo(-1, new int[list.Count], 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => list.CopyTo(0, new int[list.Count], -1, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("count", () => list.CopyTo(0, new int[list.Count], 0, -1));
@@ -440,7 +438,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
             CollectionAssert.EnumeratorNotInvalidated(list, () => list = list.AddRange(expected));
 
-            Assert.Throws<ArgumentNullException>("collection", () => list.AddRange(null));
+            Assert.Throws<ArgumentNullException>("collection", () => list.AddRange(null!));
             CollectionAssert.EnumeratorNotInvalidated(list, () => list.AddRange(Enumerable.Empty<int>()));
 
             Assert.Equal(expected.Length, list.Count);
@@ -550,7 +548,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             ImmutableTreeList<int> list = ImmutableTreeList.Create<int>();
             List<int> reference = new List<int>();
 
-            Assert.Throws<ArgumentNullException>("collection", () => list.InsertRange(0, null));
+            Assert.Throws<ArgumentNullException>("collection", () => list.InsertRange(0, null!));
             Assert.Throws<ArgumentOutOfRangeException>("index", () => list.InsertRange(-1, Enumerable.Empty<int>()));
             Assert.Throws<ArgumentOutOfRangeException>(null, () => list.InsertRange(1, Enumerable.Empty<int>()));
 
@@ -768,9 +766,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 reference.Insert(index, i);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(null));
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, null));
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, 0, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, 0, null!));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(-1, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, -1, i => true));
@@ -809,9 +807,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 reference.Insert(index, i);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null));
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, null));
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, 0, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, 0, null!));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, -1, i => true));
@@ -997,7 +995,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 reference.Insert(index, item);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.Sort((Comparison<int>)null));
+            Assert.Throws<ArgumentNullException>(() => list.Sort((Comparison<int>)null!));
 
             Comparison<int> comparison = (x, y) => x - y;
             list = list.Sort(comparison);
@@ -1077,7 +1075,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.IsType<ImmutableTreeList<int>>(prunedViaInterface);
             Assert.Equal(referencePruned, prunedViaInterface);
 
-            Assert.Throws<ArgumentNullException>("items", () => list.RemoveRange(items: null));
+            Assert.Throws<ArgumentNullException>("items", () => list.RemoveRange(items: null!));
         }
 
         [Fact]
@@ -1365,7 +1363,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestRemoveAll()
         {
             var list = ImmutableTreeList.CreateRange(Enumerable.Range(0, 20));
-            Assert.Throws<ArgumentNullException>(() => list.RemoveAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.RemoveAll(null!));
 
             Assert.Equal(10, list.Count - list.RemoveAll(i => (i % 2) == 0).Count);
             Assert.Equal(Enumerable.Range(0, 20), list);
@@ -1383,7 +1381,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestExists()
         {
             var list = ImmutableTreeList.CreateRange(Enumerable.Range(0, 20));
-            Assert.Throws<ArgumentNullException>(() => list.Exists(null));
+            Assert.Throws<ArgumentNullException>(() => list.Exists(null!));
 
             Assert.False(list.Exists(value => value < 0));
             foreach (var i in list)
@@ -1398,7 +1396,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestFind()
         {
             var list = ImmutableTreeList.CreateRange(Enumerable.Range(1, 20));
-            Assert.Throws<ArgumentNullException>(() => list.Find(null));
+            Assert.Throws<ArgumentNullException>(() => list.Find(null!));
 
             Assert.Equal(0, list.Find(value => value < 0));
             foreach (var i in list)
@@ -1413,7 +1411,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestFindAll()
         {
             var list = ImmutableTreeList.CreateRange(Enumerable.Range(0, 20));
-            Assert.Throws<ArgumentNullException>(() => list.FindAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindAll(null!));
 
             ImmutableTreeList<int> found = list.FindAll(i => (i % 2) == 0);
 
@@ -1429,7 +1427,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         {
             var list = ImmutableTreeList.CreateRange(Enumerable.Range(1, 20));
             var reference = new List<int>(Enumerable.Range(1, 20));
-            Assert.Throws<ArgumentNullException>(() => list.FindLast(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLast(null!));
 
             Assert.Equal(0, list.FindLast(i => i < 0));
             Assert.Equal(0, reference.FindLast(i => i < 0));
@@ -1446,7 +1444,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         {
             var list = ImmutableTreeList.Create<int>();
             Assert.True(list.TrueForAll(i => false));
-            Assert.Throws<ArgumentNullException>(() => list.TrueForAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.TrueForAll(null!));
 
             list = list.Add(1);
             Assert.True(list.TrueForAll(i => i > 0));

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Immutable
 {
     using System;
@@ -23,12 +21,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 get;
             }
 
-            internal abstract LeafNode FirstLeaf
+            internal abstract LeafNode? FirstLeaf
             {
                 get;
             }
 
-            internal abstract Node FirstChild
+            internal abstract Node? FirstChild
             {
                 get;
             }
@@ -54,7 +52,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (index > root.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                (Node newRoot, Node splitNode) = root.Insert(index == root.Count, index, item);
+                (Node newRoot, Node? splitNode) = root.Insert(index == root.Count, index, item);
                 if (splitNode == null)
                     return newRoot;
 
@@ -77,7 +75,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (root == Empty)
                     root = new LeafNode();
 
-                ImmutableTreeList<Node>.Node splitNode = root.InsertRange(index == root.Count, index, collection);
+                ImmutableTreeList<Node>.Node? splitNode = root.InsertRange(index == root.Count, index, collection);
                 while (splitNode != null)
                 {
                     if (splitNode.Count == 1)
@@ -163,7 +161,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal static Node TrimExcess(Node root)
             {
-                (Node newRoot, Node mustBeNull) = root.TrimExcessImpl(null);
+                (Node newRoot, Node? mustBeNull) = root.TrimExcessImpl(null);
                 Debug.Assert(mustBeNull == null, $"Assertion failed: {nameof(mustBeNull)} == null");
                 while (newRoot.FirstChild != null && ((IndexNode)newRoot).NodeCount == 1)
                 {
@@ -196,13 +194,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal abstract int LastIndexOf(T item, TreeSpan span, IEqualityComparer<T> equalityComparer);
 
-            internal abstract (Node currentNode, Node splitNode) Insert(bool isAppend, int index, T item);
+            internal abstract (Node currentNode, Node? splitNode) Insert(bool isAppend, int index, T item);
 
             internal abstract ImmutableTreeList<Node>.Node InsertRange(bool isAppend, int index, IEnumerable<T> collection);
 
             internal abstract Node RemoveLast();
 
-            internal abstract (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode);
+            internal abstract (Node currentNode, Node? nextNode) RemoveAt(int index, Node? nextNode);
 
             internal abstract Node Sort(TreeSpan span, IComparer<T> comparer);
 
@@ -217,19 +215,19 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return ConvertAll(converter, null);
             }
 
-            internal abstract ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node convertedNextNode);
+            internal abstract ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node? convertedNextNode);
 
-            internal abstract (Node currentNode, Node nextNode) TrimExcessImpl(Node nextNode);
+            internal abstract (Node currentNode, Node? nextNode) TrimExcessImpl(Node? nextNode);
 
-            internal abstract void Validate(ValidationRules rules, Node nextNode);
+            internal abstract void Validate(ValidationRules rules, Node? nextNode);
 
             private sealed class EmptyNode : Node
             {
                 internal override int Count => 0;
 
-                internal override LeafNode FirstLeaf => null;
+                internal override LeafNode? FirstLeaf => null;
 
-                internal override Node FirstChild => null;
+                internal override Node? FirstChild => null;
 
                 internal override bool IsFrozen => true;
 
@@ -271,7 +269,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     throw ExceptionUtilities.Unreachable;
                 }
 
-                internal override (Node currentNode, Node splitNode) Insert(bool isAppend, int index, T item)
+                internal override (Node currentNode, Node? splitNode) Insert(bool isAppend, int index, T item)
                 {
                     Debug.Assert(index == 0 && isAppend, "index == 0 && isAppend");
                     return new LeafNode().Insert(isAppend, index, item);
@@ -290,7 +288,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
 
                 [ExcludeFromCodeCoverage]
-                internal override (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode)
+                internal override (Node currentNode, Node? nextNode) RemoveAt(int index, Node? nextNode)
                 {
                     throw ExceptionUtilities.Unreachable;
                 }
@@ -327,19 +325,19 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     return ~0;
                 }
 
-                internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node convertedNextNode)
+                internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node? convertedNextNode)
                 {
                     return ImmutableTreeList<TOutput>.Node.Empty;
                 }
 
-                internal override (Node currentNode, Node nextNode) TrimExcessImpl(Node nextNode)
+                internal override (Node currentNode, Node? nextNode) TrimExcessImpl(Node? nextNode)
                 {
                     Debug.Assert(nextNode == null, $"Assertion failed: {nameof(nextNode)} == null");
 
                     return (this, null);
                 }
 
-                internal override void Validate(ValidationRules rules, Node nextNode)
+                internal override void Validate(ValidationRules rules, Node? nextNode)
                 {
                     Debug.Assert(this == Empty, $"Assertion failed: this == {nameof(Empty)}");
                     Debug.Assert(nextNode == null, $"Assertion failed: {nameof(nextNode)} == null");
