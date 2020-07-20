@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
@@ -79,7 +77,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             list.Remove("Text");
             Assert.Equal(originalCount, list.Count);
 
-            object removedItem = list[0];
+            object? removedItem = list[0];
             list.Remove(list[0]);
             Assert.Equal(originalCount - 1, list.Count);
             Assert.True(list.Contains(removedItem));
@@ -210,8 +208,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestCopyToValidation()
         {
             TreeList<int> list = new TreeList<int>(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(null));
-            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(0, null, 0, list.Count));
+            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(null!));
+            Assert.Throws<ArgumentNullException>("dest", () => list.CopyTo(0, null!, 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("srcIndex", () => list.CopyTo(-1, new int[list.Count], 0, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => list.CopyTo(0, new int[list.Count], -1, list.Count));
             Assert.Throws<ArgumentOutOfRangeException>("length", () => list.CopyTo(0, new int[list.Count], 0, -1));
@@ -219,7 +217,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Throws<ArgumentException>(string.Empty, () => list.CopyTo(0, new int[list.Count], 1, list.Count));
 
             ICollection collection = list;
-            Assert.Throws<ArgumentNullException>("dest", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("dest", () => collection.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(new int[collection.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(Array.CreateInstance(typeof(int), new[] { list.Count }, new[] { 1 }), 0));
             Assert.Throws<ArgumentException>(string.Empty, () => collection.CopyTo(new int[collection.Count], collection.Count + 1));
@@ -476,9 +474,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
                 reference.Insert(index, i);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(null));
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, null));
-            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, 0, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindIndex(0, 0, null!));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(-1, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindIndex(0, -1, i => true));
@@ -517,9 +515,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test
                 reference.Insert(index, i);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null));
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, null));
-            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, 0, null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, null!));
+            Assert.Throws<ArgumentNullException>(() => list.FindLastIndex(-1, 0, null!));
 
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count, i => true));
             Assert.Throws<ArgumentOutOfRangeException>(() => list.FindLastIndex(list.Count - 1, -1, i => true));
@@ -716,7 +714,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
                 reference.Insert(index, item);
             }
 
-            Assert.Throws<ArgumentNullException>(() => list.Sort((Comparison<int>)null));
+            Assert.Throws<ArgumentNullException>(() => list.Sort((Comparison<int>)null!));
 
             Comparison<int> comparison = (x, y) => x - y;
             list.Sort(comparison);
@@ -937,7 +935,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestRemoveAll()
         {
             var list = new TreeList<int>(4, Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>(() => list.RemoveAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.RemoveAll(null!));
 
             Assert.Equal(5, list.RemoveAll(i => (i % 2) == 0));
             Assert.Equal(new[] { 1, 3, 5, 7, 9 }, list);
@@ -949,7 +947,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestExists()
         {
             var list = new TreeList<int>(4, Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>(() => list.Exists(null));
+            Assert.Throws<ArgumentNullException>(() => list.Exists(null!));
 
             Assert.False(list.Exists(value => value < 0));
             foreach (var i in list)
@@ -964,7 +962,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestFind()
         {
             var list = new TreeList<int>(4, Enumerable.Range(1, 10));
-            Assert.Throws<ArgumentNullException>(() => list.Find(null));
+            Assert.Throws<ArgumentNullException>(() => list.Find(null!));
 
             Assert.Equal(0, list.Find(value => value < 0));
             foreach (var i in list)
@@ -979,7 +977,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestFindAll()
         {
             var list = new TreeList<int>(4, Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>(() => list.FindAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindAll(null!));
 
             TreeList<int> found = list.FindAll(i => (i % 2) == 0);
 
@@ -995,7 +993,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         {
             var list = new TreeList<int>(4, Enumerable.Range(1, 10));
             var reference = new List<int>(Enumerable.Range(1, 10));
-            Assert.Throws<ArgumentNullException>(() => list.FindLast(null));
+            Assert.Throws<ArgumentNullException>(() => list.FindLast(null!));
 
             Assert.Equal(0, list.FindLast(i => i < 0));
             Assert.Equal(0, reference.FindLast(i => i < 0));
@@ -1012,7 +1010,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         {
             var list = new TreeList<int>();
             Assert.True(list.TrueForAll(i => false));
-            Assert.Throws<ArgumentNullException>(() => list.TrueForAll(null));
+            Assert.Throws<ArgumentNullException>(() => list.TrueForAll(null!));
 
             list.Add(1);
             Assert.True(list.TrueForAll(i => i > 0));

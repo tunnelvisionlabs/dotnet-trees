@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System.Collections.Generic;
@@ -54,7 +52,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest4: Add null object to the list")]
         public void PosTest4()
         {
-            TreeList<string> listObject = new TreeList<string>();
+            TreeList<string?> listObject = new TreeList<string?>();
             listObject.Add(null);
             Assert.Null(listObject[0]);
         }

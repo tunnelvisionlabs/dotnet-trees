@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System;
@@ -28,7 +26,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             }
 
             IList myIList = myList;
-            object element = null;
+            object? element = null;
             for (int i = 1; i <= count; i++)
             {
                 element = 0;
@@ -46,7 +44,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int j = 0;
             for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                int current = (int)itr.Current;
+                int current = (int)itr.Current!;
                 Assert.Equal(expectValue[j], current);
 
                 j++;
@@ -58,13 +56,13 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
-            string[] expectValue = new string[20];
+            string?[] expectValue = new string?[20];
             for (int z = 0; z < 20; z++)
             {
                 expectValue[z] = string.Empty;
             }
 
-            object element = null;
+            object? element = null;
             IList myIList = myList;
             for (int i = 1; i <= count; i++)
             {
@@ -83,7 +81,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int j = 0;
             for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                string current = (string)itr.Current;
+                string current = (string)itr.Current!;
                 Assert.Equal(expectValue[j], current);
 
                 j++;

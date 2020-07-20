@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System.Collections;
@@ -22,7 +20,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int count = 10;
             int[] expectValue = new int[10];
             IList myIList = myList;
-            object element = null;
+            object? element = null;
             for (int i = 1; i <= count; i++)
             {
                 element = i * count;
@@ -42,8 +40,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
-            string[] expectValue = new string[10];
-            object element = null;
+            string?[] expectValue = new string?[10];
+            object? element = null;
             IList myIList = myList;
             for (int i = 1; i <= count; i++)
             {
@@ -64,8 +62,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
-            string[] expectValue = new string[10];
-            object element = null;
+            string?[] expectValue = new string?[10];
+            object? element = null;
             IList myIList = myList;
             for (int i = 1; i <= count; i++)
             {

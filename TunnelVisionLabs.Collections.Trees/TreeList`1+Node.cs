@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System;
@@ -23,17 +21,17 @@ namespace TunnelVisionLabs.Collections.Trees
                 get;
             }
 
-            internal abstract LeafNode FirstLeaf
+            internal abstract LeafNode? FirstLeaf
             {
                 get;
             }
 
-            internal abstract Node NextNode
+            internal abstract Node? NextNode
             {
                 get;
             }
 
-            internal abstract Node FirstChild
+            internal abstract Node? FirstChild
             {
                 get;
             }
@@ -51,7 +49,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 if (index > root.Count)
                     throw new ArgumentOutOfRangeException(nameof(index));
 
-                Node splitNode = root.Insert(branchingFactor, index == root.Count, index, item);
+                Node? splitNode = root.Insert(branchingFactor, index == root.Count, index, item);
                 if (splitNode == null)
                     return root;
 
@@ -79,11 +77,11 @@ namespace TunnelVisionLabs.Collections.Trees
                 if (root == Empty)
                     root = new LeafNode(branchingFactor);
 
-                Node splitNode = root.InsertRange(branchingFactor, index == root.Count, index, collection);
+                Node? splitNode = root.InsertRange(branchingFactor, index == root.Count, index, collection);
                 while (splitNode != null)
                 {
                     // Make a new level, walking nodes on the previous root level from 'node' to 'splitNode'
-                    IndexNode newRoot = new IndexNode(branchingFactor, root, splitNode, out IndexNode newSplitNode);
+                    IndexNode newRoot = new IndexNode(branchingFactor, root, splitNode, out IndexNode? newSplitNode);
                     root = newRoot;
                     splitNode = newSplitNode == newRoot ? null : newSplitNode;
                 }
@@ -184,9 +182,9 @@ namespace TunnelVisionLabs.Collections.Trees
 
             internal abstract int LastIndexOf(T item, TreeSpan span);
 
-            internal abstract Node Insert(int branchingFactor, bool isAppend, int index, T item);
+            internal abstract Node? Insert(int branchingFactor, bool isAppend, int index, T item);
 
-            internal abstract Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection);
+            internal abstract Node? InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection);
 
             internal abstract bool RemoveLast();
 
@@ -207,7 +205,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return ConvertAll(converter, null);
             }
 
-            internal abstract TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode);
+            internal abstract TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node? convertedNextNode);
 
             internal abstract bool TrimExcess();
 
@@ -223,11 +221,11 @@ namespace TunnelVisionLabs.Collections.Trees
                     }
                 }
 
-                internal override LeafNode FirstLeaf => null;
+                internal override LeafNode? FirstLeaf => null;
 
-                internal override Node NextNode => null;
+                internal override Node? NextNode => null;
 
-                internal override Node FirstChild => null;
+                internal override Node? FirstChild => null;
 
                 [ExcludeFromCodeCoverage]
                 internal override T this[int index]
@@ -318,7 +316,7 @@ namespace TunnelVisionLabs.Collections.Trees
                     return ~0;
                 }
 
-                internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+                internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node? convertedNextNode)
                 {
                     return TreeList<TOutput>.Node.Empty;
                 }

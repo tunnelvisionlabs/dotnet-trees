@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System;
@@ -59,15 +57,15 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
             TreeList<int> listObject = new TreeList<int>(iArray);
-            Action<int> action = null;
-            Assert.Throws<ArgumentNullException>(() => listObject.ForEach(action));
+            Action<int>? action = null;
+            Assert.Throws<ArgumentNullException>(() => listObject.ForEach(action!));
         }
 
         public class MyClass
         {
             public int Sum { get; set; } = 0;
 
-            public string Result { get; set; }
+            public string? Result { get; set; }
 
             public void SumCalc(int a)
             {

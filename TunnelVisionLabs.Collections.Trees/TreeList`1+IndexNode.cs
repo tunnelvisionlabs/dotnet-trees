@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System;
@@ -15,7 +13,7 @@ namespace TunnelVisionLabs.Collections.Trees
         {
             private readonly int[] _offsets;
             private readonly Node[] _nodes;
-            private IndexNode _next;
+            private IndexNode? _next;
             private int _nodeCount;
             private int _count;
 
@@ -37,11 +35,11 @@ namespace TunnelVisionLabs.Collections.Trees
                 _count = child1.Count + child2.Count;
             }
 
-            internal IndexNode(int branchingFactor, Node firstChild, Node lastChild, out IndexNode lastNode)
+            internal IndexNode(int branchingFactor, Node firstChild, Node lastChild, out IndexNode? lastNode)
                 : this(branchingFactor)
             {
                 lastNode = null;
-                for (Node current = firstChild; current != null; current = current == lastChild ? null : current.NextNode)
+                for (Node? current = firstChild; current != null; current = current == lastChild ? null : current.NextNode)
                 {
                     if (_nodeCount == _nodes.Length)
                     {
@@ -61,13 +59,21 @@ namespace TunnelVisionLabs.Collections.Trees
 
             internal override int Count => _count;
 
-            internal override LeafNode FirstLeaf => _nodes[0].FirstLeaf;
+            internal override LeafNode FirstLeaf
+            {
+                get
+                {
+                    LeafNode? firstLeaf = _nodes[0].FirstLeaf;
+                    Debug.Assert(firstLeaf is object, $"Assertion failed: {nameof(firstLeaf)} is object");
+                    return firstLeaf;
+                }
+            }
 
-            internal override Node NextNode => Next;
+            internal override Node? NextNode => Next;
 
             internal override Node FirstChild => _nodes[0];
 
-            internal IndexNode Next => _next;
+            internal IndexNode? Next => _next;
 
             internal override T this[int index]
             {
@@ -140,10 +146,10 @@ namespace TunnelVisionLabs.Collections.Trees
                 return -1;
             }
 
-            internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
+            internal override Node? Insert(int branchingFactor, bool isAppend, int index, T item)
             {
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
-                Node splitChild = _nodes[pageIndex].Insert(branchingFactor, isAppend, index - _offsets[pageIndex], item);
+                Node? splitChild = _nodes[pageIndex].Insert(branchingFactor, isAppend, index - _offsets[pageIndex], item);
                 if (splitChild == null)
                 {
                     for (int i = pageIndex + 1; i < _nodeCount; i++)
@@ -160,11 +166,11 @@ namespace TunnelVisionLabs.Collections.Trees
                 return InsertIndex(branchingFactor, isAppend, pageIndex + 1, splitChild);
             }
 
-            internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+            internal override Node? InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
             {
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
                 int previousCount = _nodes[pageIndex].Count;
-                Node lastImpactedChild = _nodes[pageIndex].InsertRange(branchingFactor, isAppend, index - _offsets[pageIndex], collection);
+                Node? lastImpactedChild = _nodes[pageIndex].InsertRange(branchingFactor, isAppend, index - _offsets[pageIndex], collection);
                 if (lastImpactedChild == null)
                 {
                     int insertionCount = _nodes[pageIndex].Count - previousCount;
@@ -182,13 +188,13 @@ namespace TunnelVisionLabs.Collections.Trees
                 pageIndex++;
 
                 IndexNode insertionNode = this;
-                Node lastIndexNode = null;
-                for (Node item = _nodes[pageIndex - 1].NextNode; true; item = item.NextNode)
+                Node? lastIndexNode = null;
+                for (Node? item = _nodes[pageIndex - 1].NextNode; true; item = item.NextNode)
                 {
                     Debug.Assert(item != null, "Assertion failed: item != null");
                     Debug.Assert(pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length, "Assertion failed: pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length");
 
-                    IndexNode newLastIndex = insertionNode.InsertIndex(branchingFactor, isAppend, pageIndex, item);
+                    IndexNode? newLastIndex = insertionNode.InsertIndex(branchingFactor, isAppend, pageIndex, item);
                     if (newLastIndex != null)
                     {
                         // this insertion resulted in a split, so at minimum 'pageIndex' must be updated
@@ -261,7 +267,7 @@ namespace TunnelVisionLabs.Collections.Trees
                         Debug.Assert(removedChild, $"Assertion failed: removedChild");
                         _nodeCount--;
                         _offsets[_nodeCount] = 0;
-                        _nodes[_nodeCount] = null;
+                        _nodes[_nodeCount] = null!;
                         _count--;
                         return false;
                     }
@@ -283,8 +289,8 @@ namespace TunnelVisionLabs.Collections.Trees
 
                 // _next cannot be null if (pageIndex == _nodeCount - 1), because there is no way we needed to rebalance
                 // the children nodes for that case. This method would have already returned above.
-                Node expectedNext = pageIndex == _nodeCount - 1 ? _next._nodes[0] : _nodes[pageIndex + 1];
-                Node nextChild = _nodes[pageIndex].NextNode;
+                Node expectedNext = pageIndex == _nodeCount - 1 ? _next!._nodes[0] : _nodes[pageIndex + 1];
+                Node? nextChild = _nodes[pageIndex].NextNode;
                 bool removedChild = nextChild != expectedNext;
                 if (!removedChild)
                 {
@@ -299,24 +305,28 @@ namespace TunnelVisionLabs.Collections.Trees
 
                     _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
 
-                    bool affectedNextPage = pageIndex == _nodeCount - 1 && _next != null;
-                    if (affectedNextPage)
+                    if (pageIndex == _nodeCount - 1 && _next != null)
                     {
+                        // The next page was affected
                         for (int i = 1; i < _next._nodeCount; i++)
                         {
                             _next._offsets[i] = _next._offsets[i - 1] + _next._nodes[i - 1].Count;
                         }
 
                         _next._count = _next._offsets[_next._nodeCount - 1] + _next._nodes[_next._nodeCount - 1].Count;
+                        return true;
                     }
-
-                    return affectedNextPage;
+                    else
+                    {
+                        return false;
+                    }
                 }
                 else
                 {
                     bool removedFromNextPage = pageIndex == _nodeCount - 1;
                     if (removedFromNextPage)
                     {
+                        Debug.Assert(_next is object, $"Per the explanation above, {nameof(_next)} cannot be null when {nameof(removedFromNextPage)} is true.");
                         if (_next._nodeCount == 1)
                         {
                             // Removed the only child of the next page
@@ -332,7 +342,7 @@ namespace TunnelVisionLabs.Collections.Trees
                         _next._nodes[0] = _nodes[_nodeCount - 1];
                         _count = _offsets[_nodeCount - 1];
                         _offsets[_nodeCount - 1] = 0;
-                        _nodes[_nodeCount - 1] = null;
+                        _nodes[_nodeCount - 1] = null!;
                         _nodeCount--;
                         for (int i = 1; i < _next._nodeCount; i++)
                         {
@@ -350,7 +360,7 @@ namespace TunnelVisionLabs.Collections.Trees
                         }
 
                         _offsets[_nodeCount - 1] = 0;
-                        _nodes[_nodeCount - 1] = default;
+                        _nodes[_nodeCount - 1] = null!;
                         _nodeCount--;
                         _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
                     }
@@ -557,7 +567,7 @@ namespace TunnelVisionLabs.Collections.Trees
                     int page = lowPage + ((highPage - lowPage + 1) >> 1);
                     Debug.Assert(page > firstPage, $"Assertion failed: {nameof(page)} > {nameof(firstPage)}");
 
-                    T value = _nodes[page].FirstLeaf[0];
+                    T value = _nodes[page].FirstLeaf![0];
 
                     int c;
                     try
@@ -598,11 +608,11 @@ namespace TunnelVisionLabs.Collections.Trees
                 }
             }
 
-            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node? convertedNextNode)
             {
                 var result = new TreeList<TOutput>.IndexNode(_nodes.Length);
 
-                TreeList<TOutput>.Node convertedNextChild = convertedNextNode?.FirstChild;
+                TreeList<TOutput>.Node? convertedNextChild = convertedNextNode?.FirstChild;
                 for (int i = _nodeCount - 1; i >= 0; i--)
                 {
                     convertedNextChild = _nodes[i].ConvertAll(converter, convertedNextChild);
@@ -610,7 +620,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 }
 
                 Array.Copy(_offsets, result._offsets, _nodeCount);
-                result._next = (TreeList<TOutput>.IndexNode)convertedNextNode;
+                result._next = (TreeList<TOutput>.IndexNode?)convertedNextNode;
                 result._count = _count;
                 result._nodeCount = _nodeCount;
                 return result;
@@ -622,14 +632,16 @@ namespace TunnelVisionLabs.Collections.Trees
                     return false;
 
                 // Simply rebuild this level by walking child nodes
-                IndexNode first = this;
+                IndexNode? first = this;
                 int firstOffset = 0;
                 _nodeCount = 0;
                 _count = 0;
-                for (Node child = FirstChild; child != null; child = child.NextNode)
+                for (Node? child = FirstChild; child != null; child = child.NextNode)
                 {
                     if (firstOffset == first._nodes.Length)
                     {
+                        Debug.Assert(first.Next is object, "'child.NextNode' was not null, but it pointed to a node which is not a direct child of 'first'.");
+
                         first = first.Next;
                         firstOffset = 0;
                         first._nodeCount = 0;
@@ -660,7 +672,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return TreeSpan.Intersect(mappedFullSpan, _nodes[childIndex].Span);
             }
 
-            private IndexNode InsertIndex(int branchingFactor, bool isAppend, int index, Node node)
+            private IndexNode? InsertIndex(int branchingFactor, bool isAppend, int index, Node node)
             {
                 if (_nodeCount < _nodes.Length)
                 {

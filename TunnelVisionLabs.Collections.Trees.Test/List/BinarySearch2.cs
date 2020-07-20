@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System;
@@ -51,18 +49,29 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             MyClass myclass1 = new MyClass(10);
             MyClass myclass2 = new MyClass(20);
             MyClass myclass3 = new MyClass(30);
-            MyClass[] mc = new MyClass[3] { myclass1, myclass2, myclass3 };
-            TreeList<MyClass> listObject = new TreeList<MyClass>(mc);
+            MyClass?[] mc = new MyClass?[4] { myclass1, null, myclass2, myclass3 };
+            TreeList<MyClass?> listObject = new TreeList<MyClass?>(mc);
             MyClassIC myclassIC = new MyClassIC();
             listObject.Sort(myclassIC);
-            Assert.Equal(2, listObject.BinarySearch(new MyClass(10), myclassIC));
+            Assert.Equal(3, listObject.BinarySearch(new MyClass(10), myclassIC));
+            Assert.Equal(0, listObject.BinarySearch(null, myclassIC));
+        }
+
+        [Fact]
+        public void TestComparable()
+        {
+            MyClass first = new MyClass(10);
+            MyClass second = new MyClass(20);
+            Assert.Equal(-1, first.CompareTo(second));
+            Assert.Equal(1, second.CompareTo(first));
+            Assert.Equal(1, first.CompareTo(null));
         }
 
         [Fact(DisplayName = "PosTest5: The item to be search is a null reference")]
         public void PosTest5()
         {
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             listObject.Sort();
             StrClass strClass = new StrClass();
             Assert.Equal(-1, listObject.BinarySearch(null, strClass));
@@ -72,8 +81,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact]
         public void PosTest5Ext()
         {
-            string[] strArray = { null, "banana", "chocolate", "dog", "food" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            string?[] strArray = { null, "banana", "chocolate", "dog", "food" };
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             listObject.Sort();
             StrClass strClass = new StrClass();
             Assert.Equal(~1, listObject.BinarySearch(string.Empty, strClass));
@@ -112,8 +121,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
 
             public int Value => _value;
 
-            public int CompareTo(object obj)
+            public int CompareTo(object? obj)
             {
+                if (obj is null)
+                    return 1;
+
                 return _value.CompareTo(((MyClass)obj)._value);
             }
         }
@@ -130,9 +142,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             }
         }
 
-        public class StrClass : IComparer<string>
+        public class StrClass : IComparer<string?>
         {
-            public int Compare(string x, string y)
+            public int Compare(string? x, string? y)
             {
                 {
                     if (x == null)
@@ -182,10 +194,19 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             }
         }
 
-        public class MyClassIC : IComparer<MyClass>
+        public class MyClassIC : IComparer<MyClass?>
         {
-            public int Compare(MyClass x, MyClass y)
+            public int Compare(MyClass? x, MyClass? y)
             {
+                if (x is null)
+                {
+                    return y is null ? 0 : -1;
+                }
+                else if (y is null)
+                {
+                    return 1;
+                }
+
                 return (-1) * x.Value.CompareTo(y.Value);
             }
         }

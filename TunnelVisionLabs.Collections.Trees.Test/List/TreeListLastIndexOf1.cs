@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System.Collections.Generic;
@@ -72,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         public void PosTest6()
         {
             string[] strArray = { "apple", "banana", "chocolate" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             int result = listObject.LastIndexOf(null);
             Assert.Equal(-1, result);
         }

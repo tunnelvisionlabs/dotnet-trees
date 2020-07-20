@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System;
@@ -14,7 +12,7 @@ namespace TunnelVisionLabs.Collections.Trees
         private sealed class LeafNode : Node
         {
             private readonly T[] _data;
-            private LeafNode _next;
+            private LeafNode? _next;
             private int _count;
 
             internal LeafNode(int branchingFactor)
@@ -26,11 +24,11 @@ namespace TunnelVisionLabs.Collections.Trees
 
             internal override LeafNode FirstLeaf => this;
 
-            internal override Node NextNode => Next;
+            internal override Node? NextNode => Next;
 
-            internal override Node FirstChild => null;
+            internal override Node? FirstChild => null;
 
-            internal LeafNode Next => _next;
+            internal LeafNode? Next => _next;
 
             internal override T this[int index]
             {
@@ -71,7 +69,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return Array.LastIndexOf(_data, item, span.EndInclusive, span.Count);
             }
 
-            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node convertedNextNode)
+            internal override TreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, TreeList<TOutput>.Node? convertedNextNode)
             {
                 var result = new TreeList<TOutput>.LeafNode(_data.Length);
 
@@ -80,12 +78,12 @@ namespace TunnelVisionLabs.Collections.Trees
                     result._data[i] = converter(_data[i]);
                 }
 
-                result._next = (TreeList<TOutput>.LeafNode)convertedNextNode;
+                result._next = (TreeList<TOutput>.LeafNode?)convertedNextNode;
                 result._count = _count;
                 return result;
             }
 
-            internal override Node Insert(int branchingFactor, bool isAppend, int index, T item)
+            internal override Node? Insert(int branchingFactor, bool isAppend, int index, T item)
             {
                 if (_count < _data.Length)
                 {
@@ -100,7 +98,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 if (isAppend)
                 {
                     // optimize the case of adding at the end of the overall list
-                    var result = (LeafNode)Empty.Insert(branchingFactor, isAppend, 0, item);
+                    var result = (LeafNode?)Empty.Insert(branchingFactor, isAppend, 0, item);
                     _next = result;
                     return result;
                 }
@@ -144,15 +142,15 @@ namespace TunnelVisionLabs.Collections.Trees
                 }
             }
 
-            internal override Node InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
+            internal override Node? InsertRange(int branchingFactor, bool isAppend, int index, IEnumerable<T> collection)
             {
                 Node insertionNode = this;
-                Node lastLeaf = null;
+                Node? lastLeaf = null;
                 foreach (T item in collection)
                 {
                     Debug.Assert(index >= 0 && index <= ((LeafNode)insertionNode)._data.Length, "Assertion failed: index >= 0 && index <= ((LeafNode)insertionNode)._data.Length");
 
-                    Node newLastLeaf = insertionNode.Insert(branchingFactor, isAppend, index, item);
+                    Node? newLastLeaf = insertionNode.Insert(branchingFactor, isAppend, index, item);
                     if (newLastLeaf != null)
                     {
                         // this insertion resulted in a split, so at minimum 'index' must be updated
@@ -206,7 +204,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 {
                     Debug.Assert(_count > 1, $"Assertion failed: _count > 1");
                     _count--;
-                    _data[_count] = default;
+                    _data[_count] = default!;
                     return false;
                 }
             }
@@ -218,7 +216,7 @@ namespace TunnelVisionLabs.Collections.Trees
                     _data[i] = _data[i + 1];
                 }
 
-                _data[_count - 1] = default;
+                _data[_count - 1] = default!;
                 _count--;
 
                 if (_count < _data.Length / 2 && _next != null)
@@ -283,9 +281,9 @@ namespace TunnelVisionLabs.Collections.Trees
             internal override bool TrimExcess()
             {
                 bool changedAnything = false;
-                LeafNode first = this;
+                LeafNode? first = this;
                 int firstOffset = 0;
-                LeafNode second = null;
+                LeafNode? second = null;
                 int secondOffset = 0;
                 while (first != null)
                 {
@@ -312,7 +310,7 @@ namespace TunnelVisionLabs.Collections.Trees
                         first._count = firstOffset;
                         for (int i = firstOffset; i < first._data.Length; i++)
                         {
-                            first._data[i] = default;
+                            first._data[i] = default!;
                         }
 
                         first._next = null;

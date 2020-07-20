@@ -1,14 +1,13 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using ICollection = System.Collections.ICollection;
     using IList = System.Collections.IList;
@@ -94,7 +93,7 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get
             {
@@ -113,10 +112,11 @@ namespace TunnelVisionLabs.Collections.Trees
 
                 try
                 {
-                    this[index] = (T)value;
+                    this[index] = (T)value!;
                 }
                 catch (InvalidCastException)
                 {
+                    Debug.Assert(value is object, $"Assertion failed: {nameof(value)} is object");
                     throw new ArgumentException($"The value \"{value.GetType()}\" isn't of type \"{typeof(T)}\" and can't be used in this generic collection.", nameof(value));
                 }
             }
@@ -136,17 +136,18 @@ namespace TunnelVisionLabs.Collections.Trees
                 _version++;
         }
 
-        int IList.Add(object value)
+        int IList.Add(object? value)
         {
             if (value == null && default(T) != null)
                 throw new ArgumentNullException(nameof(value));
 
             try
             {
-                Add((T)value);
+                Add((T)value!);
             }
             catch (InvalidCastException)
             {
+                Debug.Assert(value is object, $"Assertion failed: {nameof(value)} is object");
                 throw new ArgumentException($"The value \"{value.GetType()}\" isn't of type \"{typeof(T)}\" and can't be used in this generic collection.", nameof(value));
             }
 
@@ -167,12 +168,12 @@ namespace TunnelVisionLabs.Collections.Trees
             return IndexOf(item) >= 0;
         }
 
-        bool IList.Contains(object value)
+        bool IList.Contains(object? value)
         {
             if (value == null)
             {
                 if (default(T) == null)
-                    return Contains(default);
+                    return Contains(default!);
             }
             else if (value is T)
             {
@@ -225,7 +226,7 @@ namespace TunnelVisionLabs.Collections.Trees
             try
             {
                 int offset = index;
-                LeafNode leaf = _root.FirstLeaf;
+                LeafNode? leaf = _root.FirstLeaf;
                 while (leaf != null)
                 {
                     leaf.CopyToArray(dest, offset);
@@ -270,12 +271,12 @@ namespace TunnelVisionLabs.Collections.Trees
             return _root.IndexOf(item, new TreeSpan(index, count));
         }
 
-        int IList.IndexOf(object value)
+        int IList.IndexOf(object? value)
         {
             if (value == null)
             {
                 if (default(T) == null)
-                    return IndexOf(default);
+                    return IndexOf(default!);
             }
             else if (value is T)
             {
@@ -297,7 +298,7 @@ namespace TunnelVisionLabs.Collections.Trees
             _version++;
         }
 
-        void IList.Insert(int index, object value)
+        void IList.Insert(int index, object? value)
         {
             if (value == null && default(T) != null)
                 throw new ArgumentNullException(nameof(value));
@@ -306,10 +307,11 @@ namespace TunnelVisionLabs.Collections.Trees
 
             try
             {
-                Insert(index, (T)value);
+                Insert(index, (T)value!);
             }
             catch (InvalidCastException)
             {
+                Debug.Assert(value is object, $"Assertion failed: {nameof(value)} is object");
                 throw new ArgumentException(string.Format("The value \"{0}\" isn't of type \"{1}\" and can't be used in this generic collection.", value.GetType(), typeof(T)), nameof(value));
             }
         }
@@ -326,7 +328,7 @@ namespace TunnelVisionLabs.Collections.Trees
             return false;
         }
 
-        void IList.Remove(object value)
+        void IList.Remove(object? value)
         {
             int index = ((IList)this).IndexOf(value);
             if (index >= 0)
@@ -362,12 +364,12 @@ namespace TunnelVisionLabs.Collections.Trees
             return BinarySearch(0, Count, item, null);
         }
 
-        public int BinarySearch(T item, IComparer<T> comparer)
+        public int BinarySearch(T item, IComparer<T>? comparer)
         {
             return BinarySearch(0, Count, item, comparer);
         }
 
-        public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+        public int BinarySearch(int index, int count, T item, IComparer<T>? comparer)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -390,6 +392,7 @@ namespace TunnelVisionLabs.Collections.Trees
             return FindIndex(match) >= 0;
         }
 
+        [return: MaybeNull]
         public T Find(Predicate<T> match)
         {
             if (match == null)
@@ -436,6 +439,7 @@ namespace TunnelVisionLabs.Collections.Trees
             return _root.FindIndex(new TreeSpan(startIndex, count), match);
         }
 
+        [return: MaybeNull]
         public T FindLast(Predicate<T> match)
         {
             int index = FindLastIndex(match);
@@ -559,12 +563,12 @@ namespace TunnelVisionLabs.Collections.Trees
             Sort(0, Count, null);
         }
 
-        public void Sort(IComparer<T> comparer)
+        public void Sort(IComparer<T>? comparer)
         {
             Sort(0, Count, comparer);
         }
 
-        public void Sort(int index, int count, IComparer<T> comparer)
+        public void Sort(int index, int count, IComparer<T>? comparer)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));

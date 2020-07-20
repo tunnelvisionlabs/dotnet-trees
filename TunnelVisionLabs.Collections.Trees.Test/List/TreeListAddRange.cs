@@ -1,8 +1,6 @@
 ﻿// Copyright (c) Tunnel Vision Laboratories, LLC. All Rights Reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-#nullable disable
-
 namespace TunnelVisionLabs.Collections.Trees.Test.List
 {
     using System;
@@ -57,9 +55,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact(DisplayName = "NegTest1: The argument is a null reference")]
         public void NegTest1()
         {
-            IEnumerable<string> i = null;
+            IEnumerable<string>? i = null;
             TreeList<string> listObject = new TreeList<string>();
-            Assert.Throws<ArgumentNullException>(() => listObject.AddRange(i));
+            Assert.Throws<ArgumentNullException>(() => listObject.AddRange(i!));
         }
 
         public class MyClass
