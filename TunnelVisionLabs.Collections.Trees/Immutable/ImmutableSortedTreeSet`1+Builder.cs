@@ -7,6 +7,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public partial class ImmutableSortedTreeSet<T>
@@ -26,8 +27,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public int Count => _sortedList.Count;
 
+            [MaybeNull]
             public T Max => Count > 0 ? this[Count - 1] : default;
 
+            [MaybeNull]
             public T Min => Count > 0 ? this[0] : default;
 
             bool ICollection<T>.IsReadOnly => false;
@@ -392,7 +395,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             internal void TrimExcess()
                 => _sortedList.TrimExcess();
 
-            internal bool TryGetValue(T equalValue, out T actualValue)
+            internal bool TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
             {
                 int index = _sortedList.BinarySearch(equalValue);
                 if (index < 0)

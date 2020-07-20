@@ -58,15 +58,15 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             {
                 int[] iArray = { 1, 9, 3, 6, -1, 8, 7, 1, 2, 4 };
                 var listObject = ImmutableSortedTreeList.Create(iArray);
-                Action<int> action = null;
-                Assert.Throws<ArgumentNullException>(() => listObject.ForEach(action));
+                Action<int>? action = null;
+                Assert.Throws<ArgumentNullException>(() => listObject.ForEach(action!));
             }
 
             public class MyClass
             {
                 public int Sum { get; set; } = 0;
 
-                public string Result
+                public string? Result
                 {
                     get; set;
                 }

@@ -5,6 +5,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed class SubsetHashCodeEqualityComparer<T> : IEqualityComparer<T>
     {
@@ -22,7 +23,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             _getHashCode = getHashCode;
         }
 
-        public bool Equals(T x, T y) => _equalityComparer.Equals(x, y);
+        public bool Equals([AllowNull] T x, [AllowNull] T y) => _equalityComparer.Equals(x, y);
 
         public int GetHashCode(T obj) => _getHashCode(obj);
     }

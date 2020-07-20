@@ -54,8 +54,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact(DisplayName = "NegTest1: The argument is a null reference")]
         public void NegTest1()
         {
-            IEnumerable<char> i = null;
-            Assert.Throws<ArgumentNullException>(() => new TreeList<char>(i));
+            IEnumerable<char>? i = null;
+            Assert.Throws<ArgumentNullException>(() => new TreeList<char>(i!));
         }
 
         public class MyClass

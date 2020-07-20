@@ -19,7 +19,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             TreeList<int> myList = new TreeList<int>();
             int count = 10;
             IList myIList = myList;
-            object element = null;
+            object? element = null;
             for (int i = 1; i <= count; i++)
             {
                 element = i * count;
@@ -39,7 +39,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
-            object element = null;
+            object? element = null;
             IList myIList = myList;
             for (int i = 1; i <= count; i++)
             {

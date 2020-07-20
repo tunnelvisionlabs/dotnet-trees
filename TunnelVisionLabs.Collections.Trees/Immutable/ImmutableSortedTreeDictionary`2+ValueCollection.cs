@@ -70,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 {
                     ((ICollection<TValue>)this).CopyTo(values, index);
                 }
-                else if (array is object[] objects)
+                else if (array is object?[] objects)
                 {
                     try
                     {

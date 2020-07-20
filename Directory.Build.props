@@ -2,9 +2,20 @@
 <Project>
 
   <PropertyGroup>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <Features>strict</Features>
   </PropertyGroup>
+
+  <!-- Enable nullable reference types -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <GenerateNullableAttributes>false</GenerateNullableAttributes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.154" PrivateAssets="all" />
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
+  </ItemGroup>
 
   <PropertyGroup Condition="'$(BuildingInsideVisualStudio)' != 'true'">
     <!-- Ideally this is always enabled, but that tends to hurt developer productivity -->
@@ -58,7 +69,7 @@
 
   <!-- Public API -->
   <ItemGroup>
-    <PackageReference Include="DotNetAnalyzers.PublicApiAnalyzer" Version="1.0.0-beta.12" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.3.0-beta3.20367.1" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

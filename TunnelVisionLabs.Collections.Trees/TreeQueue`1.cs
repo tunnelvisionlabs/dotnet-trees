@@ -6,6 +6,7 @@ namespace TunnelVisionLabs.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using ICollection = System.Collections.ICollection;
 
     public partial class TreeQueue<T> : IReadOnlyCollection<T>, ICollection
@@ -58,7 +59,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public void TrimExcess() => _treeList.TrimExcess();
 
-        public bool TryPeek(out T result)
+        public bool TryPeek([MaybeNullWhen(false)] out T result)
         {
             if (_treeList.Count == 0)
             {
@@ -70,7 +71,7 @@ namespace TunnelVisionLabs.Collections.Trees
             return true;
         }
 
-        public bool TryDequeue(out T result)
+        public bool TryDequeue([MaybeNullWhen(false)] out T result)
         {
             if (_treeList.Count == 0)
             {

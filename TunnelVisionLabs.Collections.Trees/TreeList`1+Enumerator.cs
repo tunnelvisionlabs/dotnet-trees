@@ -16,7 +16,7 @@ namespace TunnelVisionLabs.Collections.Trees
             private readonly int _version;
 
             private int _index;
-            private LeafNode _leafNode;
+            private LeafNode? _leafNode;
             private int _leafIndex;
             private T _current;
 
@@ -33,12 +33,12 @@ namespace TunnelVisionLabs.Collections.Trees
                 _index = -1;
                 _leafNode = null;
                 _leafIndex = -1;
-                _current = default;
+                _current = default!;
             }
 
             public T Current => _current;
 
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public void Dispose()
             {
@@ -70,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees
                     _index = _span.Start - 1;
                     _leafIndex--;
                 }
-                else if (_leafIndex == _leafNode.Count - 1)
+                else if (_leafIndex == _leafNode!.Count - 1)
                 {
                     // Need to move to the next leaf
                     _leafNode = _leafNode.Next;
@@ -85,7 +85,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 }
 
                 _leafIndex++;
-                _current = _leafNode[_leafIndex];
+                _current = _leafNode![_leafIndex];
                 return true;
             }
 
@@ -99,7 +99,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 _leafNode = null;
                 _index = -1;
                 _leafIndex = -1;
-                _current = default;
+                _current = default!;
             }
         }
     }

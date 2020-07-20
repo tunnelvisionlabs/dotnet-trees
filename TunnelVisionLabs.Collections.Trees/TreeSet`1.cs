@@ -7,6 +7,7 @@ namespace TunnelVisionLabs.Collections.Trees
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public partial class TreeSet<T> : ISet<T>, IReadOnlyCollection<T>, ICollection
@@ -15,7 +16,7 @@ namespace TunnelVisionLabs.Collections.Trees
         private readonly SortedTreeList<(int hashCode, T value)> _sortedList;
 
         public TreeSet()
-            : this(default(IEqualityComparer<T>))
+            : this(default(IEqualityComparer<T>?))
         {
         }
 
@@ -24,13 +25,13 @@ namespace TunnelVisionLabs.Collections.Trees
         {
         }
 
-        public TreeSet(IEqualityComparer<T> comparer)
+        public TreeSet(IEqualityComparer<T>? comparer)
         {
             _comparer = comparer ?? EqualityComparer<T>.Default;
             _sortedList = new SortedTreeList<(int hashCode, T value)>(SetHelper.WrapperComparer<T>.Instance);
         }
 
-        public TreeSet(IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        public TreeSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : this(comparer)
         {
             if (collection == null)
@@ -44,13 +45,13 @@ namespace TunnelVisionLabs.Collections.Trees
         {
         }
 
-        public TreeSet(int branchingFactor, IEqualityComparer<T> comparer)
+        public TreeSet(int branchingFactor, IEqualityComparer<T>? comparer)
         {
             _comparer = comparer ?? EqualityComparer<T>.Default;
             _sortedList = new SortedTreeList<(int hashCode, T value)>(branchingFactor, SetHelper.WrapperComparer<T>.Instance);
         }
 
-        public TreeSet(int branchingFactor, IEnumerable<T> collection, IEqualityComparer<T> comparer)
+        public TreeSet(int branchingFactor, IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : this(branchingFactor, comparer)
         {
             if (collection == null)
@@ -69,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         object ICollection.SyncRoot => this;
 
-        public static IEqualityComparer<TreeSet<T>> CreateSetComparer()
+        public static IEqualityComparer<TreeSet<T>?> CreateSetComparer()
         {
             return TreeSetEqualityComparer.Default;
         }
@@ -449,7 +450,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public void TrimExcess() => _sortedList.TrimExcess();
 
-        public bool TryGetValue(T equalValue, out T actualValue)
+        public bool TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
         {
             int hashCode = _comparer.GetHashCode(equalValue);
 
@@ -519,9 +520,9 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        private class TreeSetEqualityComparer : IEqualityComparer<TreeSet<T>>
+        private class TreeSetEqualityComparer : IEqualityComparer<TreeSet<T>?>
         {
-            public static readonly IEqualityComparer<TreeSet<T>> Default = new TreeSetEqualityComparer();
+            public static readonly IEqualityComparer<TreeSet<T>?> Default = new TreeSetEqualityComparer();
 
             private readonly IEqualityComparer<T> _comparer = EqualityComparer<T>.Default;
 
@@ -529,7 +530,7 @@ namespace TunnelVisionLabs.Collections.Trees
             {
             }
 
-            public override bool Equals(object obj)
+            public override bool Equals(object? obj)
             {
                 if (!(obj is TreeSetEqualityComparer comparer))
                     return false;
@@ -542,7 +543,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return _comparer.GetHashCode();
             }
 
-            public bool Equals(TreeSet<T> x, TreeSet<T> y)
+            public bool Equals(TreeSet<T>? x, TreeSet<T>? y)
             {
                 if (x is null)
                 {
@@ -580,7 +581,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 return true;
             }
 
-            public int GetHashCode(TreeSet<T> obj)
+            public int GetHashCode(TreeSet<T>? obj)
             {
                 if (obj == null)
                     return 0;

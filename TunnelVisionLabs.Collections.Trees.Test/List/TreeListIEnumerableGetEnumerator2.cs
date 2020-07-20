@@ -30,7 +30,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int j = 0;
             for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                int current = (int)itr.Current;
+                int current = (int)itr.Current!;
                 Assert.Equal(expectValue[j], current);
 
                 j++;
@@ -55,7 +55,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int j = 0;
             for (IEnumerator itr = returnValue; itr.MoveNext();)
             {
-                string current = (string)itr.Current;
+                string? current = (string?)itr.Current;
                 Assert.Equal(expectValue[j], current);
 
                 j++;

@@ -51,11 +51,21 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             Assert.Equal(1, listObject.BinarySearch(new MyClass(20)));
         }
 
+        [Fact]
+        public void TestComparable()
+        {
+            MyClass first = new MyClass(10);
+            MyClass second = new MyClass(20);
+            Assert.Equal(-1, first.CompareTo(second));
+            Assert.Equal(1, second.CompareTo(first));
+            Assert.Equal(1, first.CompareTo(null));
+        }
+
         [Fact(DisplayName = "PosTest5: The item to be search is a null reference")]
         public void PosTest5()
         {
             string[] strArray = { "apple", "banana", "chocolate", "dog", "food" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             Assert.Equal(-1, listObject.BinarySearch(null));
         }
 
@@ -76,8 +86,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
                 _value = a;
             }
 
-            public int CompareTo(object obj)
+            public int CompareTo(object? obj)
             {
+                if (obj is null)
+                    return 1;
+
                 return _value.CompareTo(((MyClass)obj)._value);
             }
         }

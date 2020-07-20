@@ -8,6 +8,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections.Generic;
     using System.Collections.Immutable;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public sealed partial class ImmutableTreeList<T> : IImmutableList<T>, IReadOnlyList<T>, IList<T>, IList
@@ -55,7 +56,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             set => throw new NotSupportedException();
         }
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get => this[index];
             set => throw new NotSupportedException();
@@ -80,9 +81,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public int BinarySearch(T item) => BinarySearch(0, Count, item, comparer: null);
 
-        public int BinarySearch(T item, IComparer<T> comparer) => BinarySearch(0, Count, item, comparer);
+        public int BinarySearch(T item, IComparer<T>? comparer) => BinarySearch(0, Count, item, comparer);
 
-        public int BinarySearch(int index, int count, T item, IComparer<T> comparer)
+        public int BinarySearch(int index, int count, T item, IComparer<T>? comparer)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -132,6 +133,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public bool Exists(Predicate<T> match) => FindIndex(match) >= 0;
 
+        [return: MaybeNull]
         public T Find(Predicate<T> match)
         {
             if (match == null)
@@ -172,6 +174,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return _root.FindIndex(new TreeSpan(startIndex, count), match);
         }
 
+        [return: MaybeNull]
         public T FindLast(Predicate<T> match)
         {
             int index = FindLastIndex(match);
@@ -235,7 +238,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public int IndexOf(T value) => IndexOf(value, 0, Count, equalityComparer: null);
 
-        public int IndexOf(T item, int index, int count, IEqualityComparer<T> equalityComparer)
+        public int IndexOf(T item, int index, int count, IEqualityComparer<T>? equalityComparer)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -264,7 +267,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return new ImmutableTreeList<T>(root);
         }
 
-        public int LastIndexOf(T item, int index, int count, IEqualityComparer<T> equalityComparer)
+        public int LastIndexOf(T item, int index, int count, IEqualityComparer<T>? equalityComparer)
         {
             if (Count == 0)
             {
@@ -289,7 +292,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> Remove(T value) => Remove(value, equalityComparer: null);
 
-        public ImmutableTreeList<T> Remove(T value, IEqualityComparer<T> equalityComparer)
+        public ImmutableTreeList<T> Remove(T value, IEqualityComparer<T>? equalityComparer)
         {
             int index = IndexOf(value, 0, Count, equalityComparer);
             if (index >= 0)
@@ -320,7 +323,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items) => RemoveRange(items, equalityComparer: null);
 
-        public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items, IEqualityComparer<T> equalityComparer)
+        public ImmutableTreeList<T> RemoveRange(IEnumerable<T> items, IEqualityComparer<T>? equalityComparer)
         {
             if (items is null)
                 throw new ArgumentNullException(nameof(items));
@@ -346,7 +349,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> Replace(T oldValue, T newValue) => Replace(oldValue, newValue, equalityComparer: null);
 
-        public ImmutableTreeList<T> Replace(T oldValue, T newValue, IEqualityComparer<T> equalityComparer)
+        public ImmutableTreeList<T> Replace(T oldValue, T newValue, IEqualityComparer<T>? equalityComparer)
         {
             int index = IndexOf(oldValue, 0, Count, equalityComparer);
             if (index < 0)
@@ -393,7 +396,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public ImmutableTreeList<T> Sort() => Sort(0, Count, comparer: null);
 
-        public ImmutableTreeList<T> Sort(IComparer<T> comparer) => Sort(0, Count, comparer);
+        public ImmutableTreeList<T> Sort(IComparer<T>? comparer) => Sort(0, Count, comparer);
 
         public ImmutableTreeList<T> Sort(Comparison<T> comparison)
         {
@@ -403,7 +406,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return Sort(0, Count, new ComparisonComparer<T>(comparison));
         }
 
-        public ImmutableTreeList<T> Sort(int index, int count, IComparer<T> comparer)
+        public ImmutableTreeList<T> Sort(int index, int count, IComparer<T>? comparer)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -474,16 +477,16 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         bool ICollection<T>.Remove(T item) => throw new NotSupportedException();
 
-        int IList.Add(object value) => throw new NotSupportedException();
+        int IList.Add(object? value) => throw new NotSupportedException();
 
         void IList.Clear() => throw new NotSupportedException();
 
-        bool IList.Contains(object value)
+        bool IList.Contains(object? value)
         {
             if (value == null)
             {
                 if (default(T) == null)
-                    return Contains(default);
+                    return Contains(default!);
             }
             else if (value is T)
             {
@@ -493,12 +496,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return false;
         }
 
-        int IList.IndexOf(object value)
+        int IList.IndexOf(object? value)
         {
             if (value == null)
             {
                 if (default(T) == null)
-                    return IndexOf(default);
+                    return IndexOf(default!);
             }
             else if (value is T)
             {
@@ -508,9 +511,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return -1;
         }
 
-        void IList.Insert(int index, object value) => throw new NotSupportedException();
+        void IList.Insert(int index, object? value) => throw new NotSupportedException();
 
-        void IList.Remove(object value) => throw new NotSupportedException();
+        void IList.Remove(object? value) => throw new NotSupportedException();
 
         void IList.RemoveAt(int index) => throw new NotSupportedException();
 

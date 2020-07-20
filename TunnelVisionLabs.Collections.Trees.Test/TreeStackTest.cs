@@ -108,12 +108,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestCopyToValidation()
         {
             TreeStack<int> stack = CreateTreeStack(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("dest", () => stack.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("dest", () => stack.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => stack.CopyTo(new int[stack.Count], -1));
             Assert.Throws<ArgumentException>(string.Empty, () => stack.CopyTo(new int[stack.Count], 1));
 
             ICollection collection = stack;
-            Assert.Throws<ArgumentNullException>("dest", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("dest", () => collection.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(new int[collection.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => collection.CopyTo(Array.CreateInstance(typeof(int), new[] { stack.Count }, new[] { 1 }), 0));
             Assert.Throws<ArgumentException>(string.Empty, () => collection.CopyTo(new int[collection.Count], collection.Count + 1));

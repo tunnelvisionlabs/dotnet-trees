@@ -70,7 +70,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         public void PosTest6()
         {
             string[] strArray = { "apple", "banana", "chocolate" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             int result = listObject.LastIndexOf(null);
             Assert.Equal(-1, result);
         }

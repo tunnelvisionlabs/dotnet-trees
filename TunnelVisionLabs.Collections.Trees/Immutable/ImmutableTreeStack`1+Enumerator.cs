@@ -20,7 +20,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public T Current => _enumerator.Current;
 
-            object IEnumerator.Current => _enumerator.Current;
+            object? IEnumerator.Current => _enumerator.Current;
 
             public bool MoveNext() => _enumerator.MoveNext();
 

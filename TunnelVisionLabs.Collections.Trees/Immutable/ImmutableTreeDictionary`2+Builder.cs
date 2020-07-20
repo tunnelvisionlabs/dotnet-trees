@@ -6,6 +6,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public partial class ImmutableTreeDictionary<TKey, TValue>
@@ -65,12 +66,12 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                 set
                 {
-                    _treeSetBuilder.Remove(new KeyValuePair<TKey, TValue>(key, default));
+                    _treeSetBuilder.Remove(new KeyValuePair<TKey, TValue>(key, default!));
                     _treeSetBuilder.Add(new KeyValuePair<TKey, TValue>(key, value));
                 }
             }
 
-            object IDictionary.this[object key]
+            object? IDictionary.this[object key]
             {
                 get
                 {
@@ -97,7 +98,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         var typedKey = (TKey)key;
                         try
                         {
-                            this[typedKey] = (TValue)value;
+                            this[typedKey] = (TValue)value!;
                         }
                         catch (InvalidCastException)
                         {
@@ -144,7 +145,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             }
 
             public bool ContainsKey(TKey key)
-                => _treeSetBuilder.Contains(new KeyValuePair<TKey, TValue>(key, default));
+                => _treeSetBuilder.Contains(new KeyValuePair<TKey, TValue>(key, default!));
 
             public bool ContainsValue(TValue value)
                 => _treeSetBuilder.Any(pair => ValueComparer.Equals(pair.Value, value));
@@ -152,8 +153,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             public Enumerator GetEnumerator()
                 => new Enumerator(_treeSetBuilder.GetEnumerator(), Enumerator.ReturnType.KeyValuePair);
 
+            [return: MaybeNull]
             public TValue GetValueOrDefault(TKey key)
-                => GetValueOrDefault(key, default);
+            {
+                if (TryGetValue(key, out TValue value))
+                    return value;
+
+                return default;
+            }
 
             public TValue GetValueOrDefault(TKey key, TValue defaultValue)
             {
@@ -164,7 +171,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             }
 
             public bool Remove(TKey key)
-                => _treeSetBuilder.Remove(new KeyValuePair<TKey, TValue>(key, default));
+                => _treeSetBuilder.Remove(new KeyValuePair<TKey, TValue>(key, default!));
 
             public bool Remove(KeyValuePair<TKey, TValue> item)
             {
@@ -182,13 +189,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (keys is null)
                     throw new ArgumentNullException(nameof(keys));
 
-                _treeSetBuilder.ExceptWith(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default)));
+                _treeSetBuilder.ExceptWith(keys.Select(key => new KeyValuePair<TKey, TValue>(key, default!)));
             }
 
-            public bool TryGetKey(TKey equalKey, out TKey actualKey)
+            public bool TryGetKey(TKey equalKey, [MaybeNullWhen(false)] out TKey actualKey)
                 => ToImmutable().TryGetKey(equalKey, out actualKey);
 
-            public bool TryGetValue(TKey key, out TValue value)
+            public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
                 => ToImmutable().TryGetValue(key, out value);
 
             public ImmutableTreeDictionary<TKey, TValue> ToImmutable()
@@ -222,7 +229,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return key is TKey typedKey && ContainsKey(typedKey);
             }
 
-            void IDictionary.Add(object key, object value)
+            void IDictionary.Add(object key, object? value)
             {
                 if (key == null)
                     throw new ArgumentNullException(nameof(key));
@@ -234,7 +241,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     var typedKey = (TKey)key;
                     try
                     {
-                        Add(typedKey, (TValue)value);
+                        Add(typedKey, (TValue)value!);
                     }
                     catch (InvalidCastException)
                     {

@@ -52,7 +52,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest4: Add null object to the list")]
         public void PosTest4()
         {
-            TreeList<string> listObject = new TreeList<string>();
+            TreeList<string?> listObject = new TreeList<string?>();
             listObject.Add(null);
             Assert.Null(listObject[0]);
         }

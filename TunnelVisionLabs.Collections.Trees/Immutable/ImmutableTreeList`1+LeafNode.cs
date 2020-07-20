@@ -29,7 +29,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal override LeafNode FirstLeaf => this;
 
-            internal override Node FirstChild => null;
+            internal override Node? FirstChild => null;
 
             internal override bool IsFrozen => _frozen;
 
@@ -79,7 +79,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return _data.LastIndexOf(item, span.EndInclusive, span.Count, equalityComparer);
             }
 
-            internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node convertedNextNode)
+            internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node? convertedNextNode)
             {
                 var result = new ImmutableTreeList<TOutput>.LeafNode();
 
@@ -92,7 +92,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return result;
             }
 
-            internal override (Node currentNode, Node splitNode) Insert(bool isAppend, int index, T item)
+            internal override (Node currentNode, Node? splitNode) Insert(bool isAppend, int index, T item)
             {
                 if (_count < _data.Length)
                 {
@@ -142,7 +142,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 #endif
 
                 _data.Copy(splitPoint, ref splitNode._data, 0, _count - splitPoint);
-                _data.Clear(splitPoint, _count - splitPoint);
+                _data.MarkAsUnused(splitPoint, _count - splitPoint);
 
                 splitNode._count = _count - splitPoint;
                 _count = splitPoint;
@@ -173,7 +173,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 {
                     Debug.Assert(index >= 0 && index <= ((LeafNode)insertionNode)._data.Length, "Assertion failed: index >= 0 && index <= ((LeafNode)insertionNode)._data.Length");
 
-                    (_, Node newLastLeaf) = insertionNode.Insert(isAppend, index, item);
+                    (_, Node? newLastLeaf) = insertionNode.Insert(isAppend, index, item);
                     if (newLastLeaf != null)
                     {
                         // this insertion resulted in a split, so at minimum 'index' must be updated
@@ -225,11 +225,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                 LeafNode result = AsMutable();
                 result._count--;
-                result._data[result._count] = default;
+                result._data[result._count] = default!;
                 return result;
             }
 
-            internal override (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode)
+            internal override (Node currentNode, Node? nextNode) RemoveAt(int index, Node? nextNode)
             {
                 if (IsFrozen)
                     return AsMutable().RemoveAt(index, nextNode);
@@ -239,7 +239,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     _data[i] = _data[i + 1];
                 }
 
-                _data[_count - 1] = default;
+                _data[_count - 1] = default!;
                 _count--;
 
                 if (_count < _data.Length / 2 && nextNode != null)
@@ -259,7 +259,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         int transferCount = nextNode.Count - minimumNodeCount;
                         ((LeafNode)nextNode)._data.Copy(0, ref _data, _count, transferCount);
                         ((LeafNode)nextNode)._data.Copy(transferCount, ref ((LeafNode)nextNode)._data, 0, nextNode.Count - transferCount);
-                        ((LeafNode)nextNode)._data.Clear(nextNode.Count - transferCount, transferCount);
+                        ((LeafNode)nextNode)._data.MarkAsUnused(nextNode.Count - transferCount, transferCount);
                         _count += transferCount;
                         ((LeafNode)nextNode)._count -= transferCount;
                         return (this, nextNode);
@@ -303,7 +303,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return _data.BinarySearch(span.Start, span.Count, item, comparer);
             }
 
-            internal override (Node currentNode, Node nextNode) TrimExcessImpl(Node nextNode)
+            internal override (Node currentNode, Node? nextNode) TrimExcessImpl(Node? nextNode)
             {
                 if (_count == _data.Length || nextNode == null)
                     return (this, nextNode);
@@ -311,7 +311,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 if (IsFrozen)
                     return AsMutable().TrimExcessImpl(nextNode);
 
-                LeafNode nextLeaf = ((LeafNode)nextNode).AsMutable();
+                LeafNode? nextLeaf = ((LeafNode)nextNode).AsMutable();
                 int elementsToMove = Math.Min(_data.Length - _count, nextNode.Count);
                 nextLeaf._data.Copy(0, ref _data, _count, elementsToMove);
                 _count += elementsToMove;
@@ -324,13 +324,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 {
                     nextLeaf._data.Copy(elementsToMove, ref nextLeaf._data, 0, nextLeaf._count - elementsToMove);
                     nextLeaf._count -= elementsToMove;
-                    nextLeaf._data.Clear(nextLeaf._count, elementsToMove);
+                    nextLeaf._data.MarkAsUnused(nextLeaf._count, elementsToMove);
                 }
 
                 return (this, nextLeaf);
             }
 
-            internal override void Validate(ValidationRules rules, Node nextNode)
+            internal override void Validate(ValidationRules rules, Node? nextNode)
             {
                 Debug.Assert(_data.Length >= 2, $"Assertion failed: {nameof(_data.Length)} >= 2");
                 Debug.Assert(_count >= 0 && _count <= _data.Length, $"Assertion failed: {nameof(_count)} >= 0 && {nameof(_count)} <= {nameof(_data)}.Length");

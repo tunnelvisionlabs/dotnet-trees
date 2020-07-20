@@ -21,7 +21,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
             int count = 10;
             int[] expectValue = new int[10];
             IList myIList = myList;
-            object element = null;
+            object? element = null;
             for (int i = 1; i <= count; i++)
             {
                 element = i * count;
@@ -31,7 +31,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
 
             for (int j = 0; j < myIList.Count; j++)
             {
-                int current = (int)myIList[j];
+                int current = (int)myIList[j]!;
                 Assert.Equal(expectValue[j], current);
             }
         }
@@ -41,8 +41,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             TreeList<string> myList = new TreeList<string>();
             int count = 10;
-            string[] expectValue = new string[10];
-            object element = null;
+            string?[] expectValue = new string?[10];
+            object? element = null;
             IList myIList = myList;
             for (int i = 1; i <= count; i++)
             {
@@ -53,7 +53,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
 
             for (int j = 0; j < myIList.Count; j++)
             {
-                string current = (string)myIList[j];
+                string current = (string)myIList[j]!;
                 Assert.Equal(expectValue[j], current);
             }
         }

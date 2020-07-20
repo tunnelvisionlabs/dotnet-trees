@@ -39,7 +39,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestImmutableTreeQueueCreateValidation()
         {
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeQueue.Create<int>(null));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeQueue.Create<int>(null!));
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestImmutableTreeQueueCreateRangeValidation()
         {
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeQueue.CreateRange<int>(null));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeQueue.CreateRange<int>(null!));
         }
 
         [Fact]

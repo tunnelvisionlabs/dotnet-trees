@@ -162,6 +162,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 dictionary.Remove(1));
         }
 
-        protected abstract IImmutableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>();
+        protected abstract IImmutableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
+            where TKey : notnull;
     }
 }

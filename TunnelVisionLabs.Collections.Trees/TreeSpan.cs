@@ -66,7 +66,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public bool IsProperSubspanOf(TreeSpan other) => Count < other.Count && IsSubspanOf(other);
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (!(obj is TreeSpan other))
                 return false;

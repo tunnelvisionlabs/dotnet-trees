@@ -3,6 +3,7 @@
 
 namespace TunnelVisionLabs.Collections.Trees.Test
 {
+    using System.Diagnostics;
     using System.Reflection;
     using Xunit;
 
@@ -23,7 +24,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             void ResetSeed(int? seed)
             {
-                FieldInfo seedField = typeof(Generator).GetField("_seed", BindingFlags.Static | BindingFlags.NonPublic);
+                FieldInfo? seedField = typeof(Generator).GetField("_seed", BindingFlags.Static | BindingFlags.NonPublic);
+                Debug.Assert(seedField is object, $"Assertion failed: {nameof(seedField)} is object");
                 seedField.SetValue(null, seed);
             }
         }

@@ -17,31 +17,31 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public static ImmutableSortedTreeSet<T> Create<T>(params T[] items)
             => ImmutableSortedTreeSet<T>.Empty.Union(items);
 
-        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T> comparer)
+        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T>? comparer)
             => ImmutableSortedTreeSet<T>.Empty.WithComparer(comparer);
 
-        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T> comparer, T item)
+        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T>? comparer, T item)
             => ImmutableSortedTreeSet<T>.Empty.WithComparer(comparer).Add(item);
 
-        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T> comparer, params T[] items)
+        public static ImmutableSortedTreeSet<T> Create<T>(IComparer<T>? comparer, params T[] items)
             => ImmutableSortedTreeSet<T>.Empty.WithComparer(comparer).Union(items);
 
         public static ImmutableSortedTreeSet<T>.Builder CreateBuilder<T>()
             => Create<T>().ToBuilder();
 
-        public static ImmutableSortedTreeSet<T>.Builder CreateBuilder<T>(IComparer<T> comparer)
+        public static ImmutableSortedTreeSet<T>.Builder CreateBuilder<T>(IComparer<T>? comparer)
             => Create(comparer).ToBuilder();
 
         public static ImmutableSortedTreeSet<T> CreateRange<T>(IEnumerable<T> items)
             => ImmutableSortedTreeSet<T>.Empty.Union(items);
 
-        public static ImmutableSortedTreeSet<T> CreateRange<T>(IComparer<T> comparer, IEnumerable<T> items)
+        public static ImmutableSortedTreeSet<T> CreateRange<T>(IComparer<T>? comparer, IEnumerable<T> items)
             => ImmutableSortedTreeSet<T>.Empty.WithComparer(comparer).Union(items);
 
         public static ImmutableSortedTreeSet<TSource> ToImmutableSortedTreeSet<TSource>(this IEnumerable<TSource> source)
             => ToImmutableSortedTreeSet(source, comparer: null);
 
-        public static ImmutableSortedTreeSet<TSource> ToImmutableSortedTreeSet<TSource>(this IEnumerable<TSource> source, IComparer<TSource> comparer)
+        public static ImmutableSortedTreeSet<TSource> ToImmutableSortedTreeSet<TSource>(this IEnumerable<TSource> source, IComparer<TSource>? comparer)
         {
             if (source is null)
                 throw new ArgumentNullException(nameof(source));

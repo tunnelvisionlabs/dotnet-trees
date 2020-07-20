@@ -73,7 +73,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             int[] iArray = { 1, 9, 3, 6, 5, 8, 7, 2, 4, 0 };
             TreeList<int> listObject = new TreeList<int>(iArray);
-            Assert.Throws<ArgumentNullException>(() => listObject.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>(() => listObject.CopyTo(null!, 0));
         }
 
         [Fact(DisplayName = "NegTest2: The number of elements in the source List is greater than the number of elements that the destination array can contain")]

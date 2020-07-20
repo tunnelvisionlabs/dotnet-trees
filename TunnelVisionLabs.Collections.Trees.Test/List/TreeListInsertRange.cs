@@ -67,8 +67,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         public void PosTest4()
         {
             string[] strArray = { "apple", "dog", "banana", "food" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
-            string[] insert = new string[2] { null, null };
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
+            string?[] insert = new string?[2] { null, null };
             int index = Generator.GetInt32(0, 4);
             listObject.InsertRange(index, insert);
             Assert.Equal(6, listObject.Count);
@@ -81,9 +81,9 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         {
             string[] strArray = { "apple", "dog", "banana", "food" };
             TreeList<string> listObject = new TreeList<string>(strArray);
-            string[] insert = null;
+            string[]? insert = null;
             int index = Generator.GetInt32(0, 4);
-            Assert.Throws<ArgumentNullException>(() => listObject.InsertRange(index, insert));
+            Assert.Throws<ArgumentNullException>(() => listObject.InsertRange(index, insert!));
         }
 
         [Fact(DisplayName = "NegTest2: The index is negative")]

@@ -19,7 +19,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             public T Current => _enumerator.Current.value;
 
-            object IEnumerator.Current => Current;
+            object? IEnumerator.Current => Current;
 
             public void Dispose() => _enumerator.Dispose();
 

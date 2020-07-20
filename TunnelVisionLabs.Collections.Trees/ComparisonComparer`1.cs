@@ -6,6 +6,7 @@ namespace TunnelVisionLabs.Collections.Trees
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     internal sealed class ComparisonComparer<T> : IComparer<T>
     {
@@ -17,6 +18,8 @@ namespace TunnelVisionLabs.Collections.Trees
             _comparison = comparison;
         }
 
-        public int Compare(T x, T y) => _comparison(x, y);
+#pragma warning disable CS8604 // Possible null reference argument. (.NET 5 corrected the signature of Comparison<T>)
+        public int Compare([AllowNull] T x, [AllowNull] T y) => _comparison(x, y);
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 }

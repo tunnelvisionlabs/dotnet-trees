@@ -54,8 +54,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.List
         [Fact(DisplayName = "PosTest5: The argument is a null reference")]
         public void PosTest5()
         {
-            string[] strArray = { "apple", "banana", "chocolate", null, "food" };
-            TreeList<string> listObject = new TreeList<string>(strArray);
+            string?[] strArray = { "apple", "banana", "chocolate", null, "food" };
+            TreeList<string?> listObject = new TreeList<string?>(strArray);
             Assert.True(listObject.Contains(null));
         }
 

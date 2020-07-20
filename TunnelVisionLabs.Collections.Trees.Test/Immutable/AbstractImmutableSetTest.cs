@@ -331,7 +331,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.NotNull(collection.SyncRoot);
             Assert.Same(collection, collection.SyncRoot);
 
-            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null!, 0));
             Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
 
             void CopyToArrayWithNonZeroLowerBound() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0);

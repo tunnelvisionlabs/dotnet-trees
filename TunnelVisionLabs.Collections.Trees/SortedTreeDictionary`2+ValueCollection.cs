@@ -72,7 +72,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 {
                     CopyTo(values, index);
                 }
-                else if (array is object[] objects)
+                else if (array is object?[] objects)
                 {
                     try
                     {

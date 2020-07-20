@@ -7,6 +7,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Diagnostics.CodeAnalysis;
 
     public sealed partial class ImmutableSortedTreeSet<T> : IImmutableSet<T>, ISet<T>, IList<T>, IReadOnlyList<T>, IList
     {
@@ -25,8 +26,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         public bool IsEmpty => _sortedList.IsEmpty;
 
+        [MaybeNull]
         public T Max => !IsEmpty ? this[Count - 1] : default;
 
+        [MaybeNull]
         public T Min => !IsEmpty ? this[0] : default;
 
         bool ICollection<T>.IsReadOnly => true;
@@ -47,7 +50,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             set => throw new NotSupportedException();
         }
 
-        object IList.this[int index]
+        object? IList.this[int index]
         {
             get => _sortedList[index];
             set => throw new NotSupportedException();
@@ -126,7 +129,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             return builder.ToImmutable();
         }
 
-        public bool TryGetValue(T equalValue, out T actualValue)
+#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+        public bool TryGetValue(T equalValue, [MaybeNullWhen(false)] out T actualValue)
+#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
             => ToBuilder().TryGetValue(equalValue, out actualValue);
 
         public ImmutableSortedTreeSet<T> Union(IEnumerable<T> other)
@@ -139,7 +144,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         public Builder ToBuilder()
             => new Builder(this);
 
-        public ImmutableSortedTreeSet<T> WithComparer(IComparer<T> comparer)
+        public ImmutableSortedTreeSet<T> WithComparer(IComparer<T>? comparer)
         {
             comparer = comparer ?? Comparer<T>.Default;
             if (comparer == _sortedList.Comparer)
@@ -189,13 +194,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
             collection.CopyTo(array, index);
         }
 
-        bool IList.Contains(object value)
+        bool IList.Contains(object? value)
         {
             IList sortedList = _sortedList;
             return sortedList.Contains(value);
         }
 
-        int IList.IndexOf(object value)
+        int IList.IndexOf(object? value)
         {
             IList sortedList = _sortedList;
             return sortedList.IndexOf(value);
@@ -227,13 +232,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
         void IList<T>.RemoveAt(int index) => throw new NotSupportedException();
 
-        int IList.Add(object value) => throw new NotSupportedException();
+        int IList.Add(object? value) => throw new NotSupportedException();
 
         void IList.Clear() => throw new NotSupportedException();
 
-        void IList.Insert(int index, object value) => throw new NotSupportedException();
+        void IList.Insert(int index, object? value) => throw new NotSupportedException();
 
-        void IList.Remove(object value) => throw new NotSupportedException();
+        void IList.Remove(object? value) => throw new NotSupportedException();
 
         void IList.RemoveAt(int index) => throw new NotSupportedException();
 

@@ -6,6 +6,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Xunit;
 
@@ -21,7 +22,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestCollectionConstructor()
         {
-            Assert.Throws<ArgumentNullException>(() => new SortedTreeSet<int>(collection: null));
+            Assert.Throws<ArgumentNullException>(() => new SortedTreeSet<int>(collection: null!));
 
             var set = new SortedTreeSet<int>(new[] { 1, 1 });
             Assert.Single(set);
@@ -52,8 +53,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         private void TestEmptySetMinMaxImpl<T>()
         {
             var set = new SortedTreeSet<T>();
-            Assert.Equal(default, set.Min);
-            Assert.Equal(default, set.Max);
+            Assert.Equal(default!, set.Min!);
+            Assert.Equal(default!, set.Max!);
         }
 
         [Fact]
@@ -147,7 +148,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestCopyToValidation()
         {
             SortedTreeSet<int> set = new SortedTreeSet<int>(Enumerable.Range(0, 10));
-            Assert.Throws<ArgumentNullException>("dest", () => set.CopyTo(null, 0, set.Count));
+            Assert.Throws<ArgumentNullException>("dest", () => set.CopyTo(null!, 0, set.Count));
             Assert.Throws<ArgumentOutOfRangeException>("dstIndex", () => set.CopyTo(new int[set.Count], -1, set.Count));
             Assert.Throws<ArgumentOutOfRangeException>("length", () => set.CopyTo(new int[set.Count], 0, -1));
             Assert.Throws<ArgumentException>(string.Empty, () => set.CopyTo(new int[set.Count], 1, set.Count));
@@ -305,11 +306,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestTryGetValue()
         {
-            var set = new SortedTreeSet<string>(StringComparer.OrdinalIgnoreCase);
+            var set = new SortedTreeSet<string?>(StringComparer.OrdinalIgnoreCase);
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
-            Assert.True(set.TryGetValue("a", out string value));
+            Assert.True(set.TryGetValue("a", out string? value));
             Assert.Equal("a", value);
 
             Assert.True(set.TryGetValue("A", out value));
@@ -395,7 +396,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         public void TestRemoveWhere()
         {
             var set = new SortedTreeSet<int>(4, Enumerable.Range(0, 10), comparer: null);
-            Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null));
+            Assert.Throws<ArgumentNullException>(() => set.RemoveWhere(null!));
 
             Assert.Equal(5, set.RemoveWhere(i => (i % 2) == 0));
             Assert.Equal(new[] { 1, 3, 5, 7, 9 }, set);
@@ -406,10 +407,10 @@ namespace TunnelVisionLabs.Collections.Trees.Test
         [Fact]
         public void TestSetComparer()
         {
-            IEqualityComparer<SortedTreeSet<int>> setComparer = SortedTreeSet<int>.CreateSetComparer();
+            IEqualityComparer<SortedTreeSet<int>?> setComparer = SortedTreeSet<int>.CreateSetComparer();
             Assert.True(setComparer.Equals(SortedTreeSet<int>.CreateSetComparer()));
             Assert.False(setComparer.Equals(null));
-            Assert.Equal(setComparer.GetHashCode(), SortedTreeSet<int>.CreateSetComparer().GetHashCode());
+            Assert.Equal(setComparer!.GetHashCode(), SortedTreeSet<int>.CreateSetComparer().GetHashCode());
 
             var set = new SortedTreeSet<int>();
             var other = new SortedTreeSet<int>();
@@ -426,7 +427,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test
             Assert.Equal(setComparer.GetHashCode(set), setComparer.GetHashCode(other));
 
             // Test behavior with non-empty sets
-            set.UnionWith(Enumerable.Range(0, 10));
+            set!.UnionWith(Enumerable.Range(0, 10));
             Assert.False(setComparer.Equals(set, other));
             other.UnionWith(Enumerable.Range(0, 5));
             Assert.False(setComparer.Equals(set, other));
@@ -478,12 +479,12 @@ namespace TunnelVisionLabs.Collections.Trees.Test
 
             private readonly IComparer<T> _comparer;
 
-            public ReversingComparer(IComparer<T> comparer)
+            public ReversingComparer(IComparer<T>? comparer)
             {
                 _comparer = comparer ?? Comparer<T>.Default;
             }
 
-            public int Compare(T x, T y) => -_comparer.Compare(x, y);
+            public int Compare([AllowNull] T x, [AllowNull] T y) => -_comparer.Compare(x, y);
         }
     }
 }

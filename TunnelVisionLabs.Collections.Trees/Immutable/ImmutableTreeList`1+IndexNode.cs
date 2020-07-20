@@ -38,7 +38,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 _count = child1.Count + child2.Count;
             }
 
-            internal IndexNode(ImmutableTreeList<Node>.Node children, out ImmutableTreeList<Node>.Node lastNode)
+            internal IndexNode(ImmutableTreeList<Node>.Node children, out ImmutableTreeList<Node>.Node? lastNode)
             {
                 if (children.Count > _offsets.Length)
                 {
@@ -71,7 +71,15 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             internal int NodeCount => _nodeCount;
 
-            internal override LeafNode FirstLeaf => _nodes[0].FirstLeaf;
+            internal override LeafNode FirstLeaf
+            {
+                get
+                {
+                    LeafNode? firstLeaf = _nodes[0].FirstLeaf;
+                    Debug.Assert(firstLeaf is object, $"Assertion failed: {nameof(firstLeaf)} is object");
+                    return firstLeaf;
+                }
+            }
 
             internal override Node FirstChild => _nodes[0];
 
@@ -172,13 +180,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return -1;
             }
 
-            internal override (Node currentNode, Node splitNode) Insert(bool isAppend, int index, T item)
+            internal override (Node currentNode, Node? splitNode) Insert(bool isAppend, int index, T item)
             {
                 if (IsFrozen)
                     return AsMutable().Insert(isAppend, index, item);
 
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
-                (Node currentChild, Node splitChild) = _nodes[pageIndex].Insert(isAppend, index - _offsets[pageIndex], item);
+                (Node currentChild, Node? splitChild) = _nodes[pageIndex].Insert(isAppend, index - _offsets[pageIndex], item);
                 _nodes[pageIndex] = currentChild;
                 if (splitChild == null)
                 {
@@ -241,7 +249,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     Debug.Assert(pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length, "Assertion failed: pageIndex >= 0 && pageIndex <= insertionNode._nodes.Length");
 
                     Debug.Assert(!insertionNode.IsFrozen, $"Assertion failed: !{nameof(insertionNode)}.IsFrozen");
-                    (_, Node newLastIndex) = insertionNode.InsertIndex(isAppend, pageIndex, item);
+                    (_, Node? newLastIndex) = insertionNode.InsertIndex(isAppend, pageIndex, item);
                     if (newLastIndex != null)
                     {
                         // this insertion resulted in a split, so at minimum 'pageIndex' must be updated
@@ -297,7 +305,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 {
                     result._nodeCount--;
                     result._offsets[result._nodeCount] = default;
-                    result._nodes[result._nodeCount] = default;
+                    result._nodes[result._nodeCount] = null!;
                 }
                 else
                 {
@@ -308,15 +316,15 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return result;
             }
 
-            internal override (Node currentNode, Node nextNode) RemoveAt(int index, Node nextNode)
+            internal override (Node currentNode, Node? nextNode) RemoveAt(int index, Node? nextNode)
             {
                 if (IsFrozen)
                     return AsMutable().RemoveAt(index, nextNode);
 
                 int pageIndex = FindLowerBound(_offsets, _nodeCount, index);
-                Node originalNextChild = pageIndex < _nodeCount - 1 ? _nodes[pageIndex + 1] : nextNode?.FirstChild;
+                Node? originalNextChild = pageIndex < _nodeCount - 1 ? _nodes[pageIndex + 1] : nextNode?.FirstChild;
                 int? originalNextChildCount = originalNextChild?.Count;
-                (Node modifiedChild, Node modifiedNextChild) = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex], originalNextChild);
+                (Node modifiedChild, Node? modifiedNextChild) = _nodes[pageIndex].RemoveAt(index - _offsets[pageIndex], originalNextChild);
                 _nodes[pageIndex] = modifiedChild;
                 if (modifiedNextChild == originalNextChild && modifiedNextChild?.Count == originalNextChildCount)
                 {
@@ -327,11 +335,13 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     return (this, nextNode);
                 }
 
-                IndexNode nextIndex = (IndexNode)nextNode;
+                IndexNode? nextIndex = (IndexNode?)nextNode;
 
                 bool removedChild = modifiedNextChild == null;
                 if (!removedChild)
                 {
+                    Debug.Assert(modifiedNextChild is object, $"Assertion failed: {nameof(modifiedNextChild)} is object");
+
                     bool affectedNextPage;
                     if (pageIndex < _nodeCount - 1)
                     {
@@ -340,6 +350,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     }
                     else
                     {
+                        // nextIndex cannot be null if (pageIndex == _nodeCount - 1), because there is no way we needed
+                        // to rebalance the children nodes for that case. This method would have already returned above.
+                        Debug.Assert(nextIndex is object, $"Assertion failed: {nameof(nextIndex)} is object");
+
                         affectedNextPage = true;
                         nextIndex = nextIndex.AsMutable();
                         nextIndex._nodes[0] = modifiedNextChild;
@@ -358,6 +372,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                     if (affectedNextPage)
                     {
+                        Debug.Assert(nextIndex is object, $"Per the explanation above, {nameof(nextIndex)} cannot be null when {nameof(affectedNextPage)} is true.");
+
                         for (int i = 1; i < nextIndex._nodeCount; i++)
                         {
                             nextIndex._offsets[i] = nextIndex._offsets[i - 1] + nextIndex._nodes[i - 1].Count;
@@ -373,6 +389,10 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     bool removedFromNextPage = pageIndex == _nodeCount - 1;
                     if (removedFromNextPage)
                     {
+                        // nextIndex cannot be null if (pageIndex == _nodeCount - 1), because there is no way we needed
+                        // to rebalance the children nodes for that case. This method would have already returned above.
+                        Debug.Assert(nextIndex is object, $"Assertion failed: {nameof(nextIndex)} is object");
+
                         if (nextIndex._nodeCount == 1)
                         {
                             // Removed the only child of the next page
@@ -388,7 +408,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         nextIndex._nodes[0] = _nodes[_nodeCount - 1];
                         _count = _offsets[_nodeCount - 1];
                         _offsets[_nodeCount - 1] = 0;
-                        _nodes[_nodeCount - 1] = null;
+                        _nodes[_nodeCount - 1] = null!;
                         _nodeCount--;
                         for (int i = 1; i < nextIndex._nodeCount; i++)
                         {
@@ -406,7 +426,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         }
 
                         _offsets[_nodeCount - 1] = 0;
-                        _nodes[_nodeCount - 1] = default;
+                        _nodes[_nodeCount - 1] = null!;
                         _nodeCount--;
                         _count = _offsets[_nodeCount - 1] + _nodes[_nodeCount - 1].Count;
                     }
@@ -432,8 +452,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                             int transferCount = nextIndex._nodeCount - minimumNodeCount;
                             nextIndex._nodes.Copy(0, ref _nodes, _nodeCount, transferCount);
                             nextIndex._nodes.Copy(transferCount, ref nextIndex._nodes, 0, nextIndex._nodeCount - transferCount);
-                            nextIndex._offsets.Clear(nextIndex._nodeCount - transferCount, transferCount);
-                            nextIndex._nodes.Clear(nextIndex._nodeCount - transferCount, transferCount);
+                            nextIndex._offsets.MarkAsUnused(nextIndex._nodeCount - transferCount, transferCount);
+                            nextIndex._nodes.MarkAsUnused(nextIndex._nodeCount - transferCount, transferCount);
                             for (int i = 0; i < transferCount; i++)
                             {
                                 _offsets[_nodeCount + i] = _offsets[_nodeCount + i - 1] + _nodes[_nodeCount + i - 1].Count;
@@ -622,7 +642,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                     int page = lowPage + ((highPage - lowPage + 1) >> 1);
                     Debug.Assert(page > firstPage, $"Assertion failed: {nameof(page)} > {nameof(firstPage)}");
 
-                    T value = _nodes[page].FirstLeaf[0];
+                    T value = _nodes[page].FirstLeaf![0];
 
                     int c;
                     try
@@ -663,11 +683,11 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
             }
 
-            internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node convertedNextNode)
+            internal override ImmutableTreeList<TOutput>.Node ConvertAll<TOutput>(Func<T, TOutput> converter, ImmutableTreeList<TOutput>.Node? convertedNextNode)
             {
                 var result = new ImmutableTreeList<TOutput>.IndexNode();
 
-                ImmutableTreeList<TOutput>.Node convertedNextChild = convertedNextNode?.FirstChild;
+                ImmutableTreeList<TOutput>.Node? convertedNextChild = convertedNextNode?.FirstChild;
                 for (int i = _nodeCount - 1; i >= 0; i--)
                 {
                     convertedNextChild = _nodes[i].ConvertAll(converter, convertedNextChild);
@@ -680,14 +700,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return result;
             }
 
-            private static (Node currentNode, Node nextNode) TrimExcessImpl(IndexNode currentNode, IndexNode nextNode)
+            private static (Node currentNode, Node? nextNode) TrimExcessImpl(IndexNode currentNode, IndexNode? nextNode)
             {
                 for (int i = 0; i < currentNode._nodeCount; i++)
                 {
                     Node originalChild = currentNode._nodes[i];
                     int originalChildCount = originalChild.Count;
-                    Node originalNextChild = i < currentNode._nodeCount - 1 ? currentNode._nodes[i + 1] : nextNode?.FirstChild;
-                    (Node currentChild, Node nextChild) = originalChild.TrimExcessImpl(originalNextChild);
+                    Node? originalNextChild = i < currentNode._nodeCount - 1 ? currentNode._nodes[i + 1] : nextNode?.FirstChild;
+                    (Node currentChild, Node? nextChild) = originalChild.TrimExcessImpl(originalNextChild);
                     if (originalChildCount == currentChild.Count)
                         continue;
 
@@ -705,31 +725,36 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                             }
 
                             currentNode._offsets[currentNode._nodeCount - 1] = default;
-                            currentNode._nodes[currentNode._nodeCount - 1] = default;
+                            currentNode._nodes[currentNode._nodeCount - 1] = null!;
                             currentNode._nodeCount--;
-                        }
-                        else if (nextNode._nodeCount == 1)
-                        {
-                            int movedCount = currentChild.Count - originalChildCount;
-                            currentNode._count += movedCount;
-                            nextNode = null;
                         }
                         else
                         {
                             // nextChild belonged to nextNode
-                            int movedCount = currentChild.Count - originalChildCount;
-                            nextNode = nextNode.AsMutable();
-                            for (int j = 0; j < nextNode._nodeCount - 1; j++)
-                            {
-                                nextNode._offsets[j] = nextNode._offsets[j + 1] - movedCount;
-                                nextNode._nodes[j] = nextNode._nodes[j + 1];
-                            }
+                            Debug.Assert(nextNode is object, $"Assertion failed: {nameof(nextNode)} is object");
 
-                            nextNode._offsets[nextNode._nodeCount - 1] = default;
-                            nextNode._nodes[nextNode._nodeCount - 1] = default;
-                            nextNode._nodeCount--;
-                            currentNode._count += movedCount;
-                            nextNode._count -= movedCount;
+                            if (nextNode._nodeCount == 1)
+                            {
+                                int movedCount = currentChild.Count - originalChildCount;
+                                currentNode._count += movedCount;
+                                nextNode = null;
+                            }
+                            else
+                            {
+                                int movedCount = currentChild.Count - originalChildCount;
+                                nextNode = nextNode.AsMutable();
+                                for (int j = 0; j < nextNode._nodeCount - 1; j++)
+                                {
+                                    nextNode._offsets[j] = nextNode._offsets[j + 1] - movedCount;
+                                    nextNode._nodes[j] = nextNode._nodes[j + 1];
+                                }
+
+                                nextNode._offsets[nextNode._nodeCount - 1] = default;
+                                nextNode._nodes[nextNode._nodeCount - 1] = null!;
+                                nextNode._nodeCount--;
+                                currentNode._count += movedCount;
+                                nextNode._count -= movedCount;
+                            }
                         }
                     }
                     else
@@ -746,6 +771,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                         else
                         {
                             // nextChild belongs to nextNode
+                            Debug.Assert(nextNode is object, $"Assertion failed: {nameof(nextNode)} is object");
+
                             nextNode = nextNode.AsMutable();
                             int movedCount = currentChild.Count - originalChildCount;
                             nextNode._nodes[0] = nextChild;
@@ -779,8 +806,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                     nextNode._nodes.Copy(elementsToMove, ref nextNode._nodes, 0, nextNode._nodeCount - elementsToMove);
                     nextNode._nodeCount -= elementsToMove;
-                    nextNode._offsets.Clear(nextNode._nodeCount, elementsToMove);
-                    nextNode._nodes.Clear(nextNode._nodeCount, elementsToMove);
+                    nextNode._offsets.MarkAsUnused(nextNode._nodeCount, elementsToMove);
+                    nextNode._nodes.MarkAsUnused(nextNode._nodeCount, elementsToMove);
                     for (int i = 1; i < nextNode._nodeCount; i++)
                     {
                         nextNode._offsets[i] = nextNode._offsets[i - 1] + nextNode._nodes[i - 1].Count;
@@ -795,9 +822,9 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return (currentNode, nextNode);
             }
 
-            internal override (Node currentNode, Node nextNode) TrimExcessImpl(Node nextNode)
+            internal override (Node currentNode, Node? nextNode) TrimExcessImpl(Node? nextNode)
             {
-                return TrimExcessImpl(this, (IndexNode)nextNode);
+                return TrimExcessImpl(this, (IndexNode?)nextNode);
             }
 
             private TreeSpan MapSpanDownToChild(TreeSpan span, int childIndex)
@@ -811,7 +838,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 return TreeSpan.Intersect(mappedFullSpan, _nodes[childIndex].Span);
             }
 
-            private (Node currentNode, Node splitNode) InsertIndex(bool isAppend, int index, Node node)
+            private (Node currentNode, Node? splitNode) InsertIndex(bool isAppend, int index, Node node)
             {
                 Debug.Assert(!IsFrozen, $"Assertion failed: !{nameof(IsFrozen)}");
 
@@ -871,8 +898,8 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
                     _nodes.Copy(splitPoint, ref splitNode._nodes, 0, _nodeCount - splitPoint);
                     _offsets.Copy(splitPoint, ref splitNode._offsets, 0, _nodeCount - splitPoint);
-                    _nodes.Clear(splitPoint, _nodeCount - splitPoint);
-                    _offsets.Clear(splitPoint, _nodeCount - splitPoint);
+                    _nodes.MarkAsUnused(splitPoint, _nodeCount - splitPoint);
+                    _offsets.MarkAsUnused(splitPoint, _nodeCount - splitPoint);
 
                     splitNode._nodeCount = _nodeCount - splitPoint;
                     int adjustment = splitNode._offsets[0];
@@ -894,7 +921,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
                 }
             }
 
-            internal override void Validate(ValidationRules rules, Node nextNode)
+            internal override void Validate(ValidationRules rules, Node? nextNode)
             {
                 Debug.Assert(_nodes.Length >= 2, $"Assertion failed: {nameof(_nodes.Length)} >= 2");
                 Debug.Assert(_offsets.Length == _nodes.Length, $"Assertion failed: {nameof(_offsets)}.Length == {nameof(_nodes)}.Length");

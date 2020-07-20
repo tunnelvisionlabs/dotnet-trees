@@ -43,7 +43,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(2, objectSet.Count);
             Assert.Equal(new[] { instance1, instance2 }, objectSet);
 
-            ImmutableSortedTreeSet<string>.Builder stringSet = ImmutableSortedTreeSet.CreateBuilder<string>();
+            ImmutableSortedTreeSet<string?>.Builder stringSet = ImmutableSortedTreeSet.CreateBuilder<string?>();
             Assert.Same(Comparer<string>.Default, stringSet.KeyComparer);
 
             stringSet = ImmutableSortedTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
@@ -121,7 +121,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         public void TestCopyToValidation()
         {
             var set = ImmutableSortedTreeSet.CreateRange<int>(Enumerable.Range(0, 10)).ToBuilder();
-            Assert.Throws<ArgumentNullException>("array", () => ((ICollection<int>)set).CopyTo(array: null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => ((ICollection<int>)set).CopyTo(array: null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => ((ICollection<int>)set).CopyTo(new int[set.Count], -1));
             Assert.Throws<ArgumentException>(string.Empty, () => ((ICollection<int>)set).CopyTo(new int[set.Count - 1], 0));
             Assert.Throws<ArgumentException>(string.Empty, () => ((ICollection<int>)set).CopyTo(new int[set.Count], 1));
@@ -278,11 +278,11 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestTryGetValue()
         {
-            ImmutableSortedTreeSet<string>.Builder set = ImmutableSortedTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
+            ImmutableSortedTreeSet<string?>.Builder set = ImmutableSortedTreeSet.CreateBuilder(StringComparer.OrdinalIgnoreCase);
             Assert.True(set.Add("a"));
             Assert.False(set.Add("A"));
 
-            Assert.True(set.TryGetValue("a", out string value));
+            Assert.True(set.TryGetValue("a", out string? value));
             Assert.Equal("a", value);
 
             Assert.True(set.TryGetValue("A", out value));

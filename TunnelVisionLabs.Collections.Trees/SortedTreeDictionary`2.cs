@@ -6,11 +6,12 @@ namespace TunnelVisionLabs.Collections.Trees
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using IDictionary = System.Collections.IDictionary;
 
     public partial class SortedTreeDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IDictionary
+        where TKey : notnull
     {
         private readonly IComparer<TKey> _comparer;
         private readonly SortedTreeSet<KeyValuePair<TKey, TValue>> _treeSet;
@@ -25,13 +26,13 @@ namespace TunnelVisionLabs.Collections.Trees
         {
         }
 
-        public SortedTreeDictionary(IComparer<TKey> comparer)
+        public SortedTreeDictionary(IComparer<TKey>? comparer)
         {
             _comparer = comparer ?? Comparer<TKey>.Default;
             _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
-        public SortedTreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey> comparer)
+        public SortedTreeDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey>? comparer)
             : this(comparer)
         {
             if (collection == null)
@@ -48,13 +49,13 @@ namespace TunnelVisionLabs.Collections.Trees
         {
         }
 
-        public SortedTreeDictionary(int branchingFactor, IComparer<TKey> comparer)
+        public SortedTreeDictionary(int branchingFactor, IComparer<TKey>? comparer)
         {
             _comparer = comparer ?? Comparer<TKey>.Default;
             _treeSet = new SortedTreeSet<KeyValuePair<TKey, TValue>>(branchingFactor, new KeyOfPairComparer<TKey, TValue>(_comparer));
         }
 
-        public SortedTreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey> comparer)
+        public SortedTreeDictionary(int branchingFactor, IEnumerable<KeyValuePair<TKey, TValue>> collection, IComparer<TKey>? comparer)
             : this(branchingFactor, comparer)
         {
             if (collection == null)
@@ -100,7 +101,7 @@ namespace TunnelVisionLabs.Collections.Trees
         {
             get
             {
-                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> value))
+                if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default!), out KeyValuePair<TKey, TValue> value))
                     throw new KeyNotFoundException();
 
                 return value.Value;
@@ -108,12 +109,12 @@ namespace TunnelVisionLabs.Collections.Trees
 
             set
             {
-                _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
+                _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default!));
                 _treeSet.Add(new KeyValuePair<TKey, TValue>(key, value));
             }
         }
 
-        object IDictionary.this[object key]
+        object? IDictionary.this[object key]
         {
             get
             {
@@ -140,7 +141,7 @@ namespace TunnelVisionLabs.Collections.Trees
                     var typedKey = (TKey)key;
                     try
                     {
-                        this[typedKey] = (TValue)value;
+                        this[typedKey] = (TValue)value!;
                     }
                     catch (InvalidCastException)
                     {
@@ -154,17 +155,17 @@ namespace TunnelVisionLabs.Collections.Trees
             }
         }
 
-        public bool ContainsKey(TKey key) => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default));
+        public bool ContainsKey(TKey key) => _treeSet.Contains(new KeyValuePair<TKey, TValue>(key, default!));
 
-        public int IndexOfKey(TKey key) => _treeSet.IndexOf(new KeyValuePair<TKey, TValue>(key, default));
+        public int IndexOfKey(TKey key) => _treeSet.IndexOf(new KeyValuePair<TKey, TValue>(key, default!));
 
         public bool ContainsValue(TValue value) => _treeSet.Any(pair => EqualityComparer<TValue>.Default.Equals(pair.Value, value));
 
         public int IndexOfValue(TValue value) => _treeSet.FindIndex(pair => EqualityComparer<TValue>.Default.Equals(pair.Value, value));
 
-        public bool TryGetValue(TKey key, out TValue value)
+        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default), out KeyValuePair<TKey, TValue> pair))
+            if (!_treeSet.TryGetValue(new KeyValuePair<TKey, TValue>(key, default!), out KeyValuePair<TKey, TValue> pair))
             {
                 value = default;
                 return false;
@@ -186,7 +187,7 @@ namespace TunnelVisionLabs.Collections.Trees
 
         public void Clear() => _treeSet.Clear();
 
-        public bool Remove(TKey key) => _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default));
+        public bool Remove(TKey key) => _treeSet.Remove(new KeyValuePair<TKey, TValue>(key, default!));
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
 
@@ -213,7 +214,7 @@ namespace TunnelVisionLabs.Collections.Trees
             return true;
         }
 
-        void IDictionary.Add(object key, object value)
+        void IDictionary.Add(object key, object? value)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -225,7 +226,7 @@ namespace TunnelVisionLabs.Collections.Trees
                 var typedKey = (TKey)key;
                 try
                 {
-                    Add(typedKey, (TValue)value);
+                    Add(typedKey, (TValue)value!);
                 }
                 catch (InvalidCastException)
                 {

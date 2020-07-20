@@ -45,7 +45,7 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
 
             object IDictionaryEnumerator.Key => Current.Key;
 
-            object IDictionaryEnumerator.Value => Current.Value;
+            object? IDictionaryEnumerator.Value => Current.Value;
 
             public void Dispose() => _enumerator.Dispose();
 

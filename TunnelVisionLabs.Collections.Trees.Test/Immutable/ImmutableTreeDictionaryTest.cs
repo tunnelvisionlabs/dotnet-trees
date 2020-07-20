@@ -133,24 +133,24 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
         [Fact]
         public void TestImmutableTreeDictionaryCreateRangeValidation()
         {
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(null));
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(EqualityComparer<string>.Default, null));
-            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(EqualityComparer<string>.Default, EqualityComparer<int>.Default, null));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(null!));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(EqualityComparer<string>.Default, null!));
+            Assert.Throws<ArgumentNullException>("items", () => ImmutableTreeDictionary.CreateRange<string, int>(EqualityComparer<string>.Default, EqualityComparer<int>.Default, null!));
 
-            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary());
-            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(EqualityComparer<string>.Default, EqualityComparer<int>.Default));
-            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(x => x));
-            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(x => x.Key, EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(x => x.Key, x => x.Value, EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>).ToImmutableTreeDictionary(x => x.Key, x => x.Value, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary());
+            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("items", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(EqualityComparer<string>.Default, EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(x => x));
+            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(x => x.Key, EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(x => x.Key, x => x.Value, EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("source", () => default(IEnumerable<KeyValuePair<string, int>>)!.ToImmutableTreeDictionary(x => x.Key, x => x.Value, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
 
-            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null, EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null, x => x.Value, EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null, x => x.Value, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null!, EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null!, x => x.Value, EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("keySelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(keySelector: null!, x => x.Value, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
 
-            Assert.Throws<ArgumentNullException>("elementSelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary<KeyValuePair<string, int>, string, int>(x => x.Key, elementSelector: null, EqualityComparer<string>.Default));
-            Assert.Throws<ArgumentNullException>("elementSelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(x => x.Key, elementSelector: null, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
+            Assert.Throws<ArgumentNullException>("elementSelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary<KeyValuePair<string, int>, string, int>(x => x.Key, elementSelector: null!, EqualityComparer<string>.Default));
+            Assert.Throws<ArgumentNullException>("elementSelector", () => Enumerable.Empty<KeyValuePair<string, int>>().ToImmutableTreeDictionary(x => x.Key, elementSelector: null!, EqualityComparer<string>.Default, EqualityComparer<int>.Default));
         }
 
         [Fact]
@@ -248,8 +248,8 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: objComparer).KeyComparer);
             Assert.Same(objComparer, ImmutableTreeDictionary.Create<object, object>(keyComparer: null, valueComparer: objComparer).ValueComparer);
-            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null).WithComparers(keyComparer: null, valueComparer: objComparer).KeyComparer);
-            Assert.Same(objComparer, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null).WithComparers(keyComparer: null, valueComparer: objComparer).ValueComparer);
+            Assert.Same(EqualityComparer<object>.Default, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null!).WithComparers(keyComparer: null, valueComparer: objComparer).KeyComparer);
+            Assert.Same(objComparer, ImmutableTreeDictionary.Create<object, object>().Add(new object(), null!).WithComparers(keyComparer: null, valueComparer: objComparer).ValueComparer);
         }
 
         [Fact]
@@ -282,7 +282,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(Enumerable.Range(0, 9), dictionary.Values);
 
             Assert.Throws<NotSupportedException>(() => dictionary.Keys.Add(0));
-            Assert.Throws<ArgumentNullException>("array", () => dictionary.Keys.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => dictionary.Keys.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Keys.CopyTo(new int[dictionary.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Keys.CopyTo(new int[dictionary.Count], dictionary.Count + 1));
             Assert.Throws<ArgumentException>(() => dictionary.Keys.CopyTo(new int[dictionary.Count], 1));
@@ -300,7 +300,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(0, keyEnumerator.Current);
 
             Assert.Throws<NotSupportedException>(() => dictionary.Values.Add(0));
-            Assert.Throws<ArgumentNullException>("array", () => dictionary.Values.CopyTo(null, 0));
+            Assert.Throws<ArgumentNullException>("array", () => dictionary.Values.CopyTo(null!, 0));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Values.CopyTo(new int[dictionary.Count], -1));
             Assert.Throws<ArgumentOutOfRangeException>("arrayIndex", () => dictionary.Values.CopyTo(new int[dictionary.Count], dictionary.Count + 1));
             Assert.Throws<ArgumentException>(() => dictionary.Values.CopyTo(new int[dictionary.Count], 1));
@@ -354,7 +354,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
 
             dictionary = Enumerable.Range(0, 11).ToImmutableTreeDictionary(x => x, x => x + 1);
 
-            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null]);
+            Assert.Throws<ArgumentNullException>("key", () => dictionary[key: null!]);
             Assert.Null(dictionary["string key"]);
             Assert.Equal(11, dictionary[10]);
 
@@ -369,7 +369,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
             Assert.Equal(entries.Select(i => i.Key), dictionary.Keys.Cast<object>());
             Assert.Equal(entries.Select(i => i.Value), dictionary.Values.Cast<object>());
 
-            Assert.Throws<ArgumentNullException>(() => dictionary.Contains(null));
+            Assert.Throws<ArgumentNullException>(() => dictionary.Contains(null!));
             Assert.False(dictionary.Contains("string value"));
             Assert.True(dictionary.Contains(10));
 
@@ -421,7 +421,7 @@ namespace TunnelVisionLabs.Collections.Trees.Test.Immutable
                 Assert.True(collection.IsSynchronized);
                 Assert.Same(dictionary, collection.SyncRoot);
 
-                Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null, 0));
+                Assert.Throws<ArgumentNullException>("array", () => collection.CopyTo(null!, 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(new int[collection.Count, 1], 0));
                 Assert.Throws<ArgumentException>(() => collection.CopyTo(Array.CreateInstance(typeof(int), lengths: new[] { collection.Count }, lowerBounds: new[] { 1 }), 0));
                 Assert.Throws<ArgumentOutOfRangeException>("index", () => collection.CopyTo(new int[collection.Count], -1));
