@@ -7,10 +7,14 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
+    [StructLayout(LayoutKind.Sequential)]
     internal struct FixedArray8<T>
     {
         private T _item0;
+#pragma warning disable IDE0044 // Add readonly modifier
+#pragma warning disable CS0169 // The field 'name' is never used
         private T _item1;
         private T _item2;
         private T _item3;
@@ -18,83 +22,29 @@ namespace TunnelVisionLabs.Collections.Trees.Immutable
         private T _item5;
         private T _item6;
         private T _item7;
+#pragma warning restore CS0169 // The field 'name' is never used
+#pragma warning restore IDE0044 // Add readonly modifier
 
         public int Length => 8;
 
         public T this[int index]
         {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                switch (index)
-                {
-                case 0:
-                    return _item0;
+                if ((uint)index >= 8)
+                    ThrowHelper.ThrowIndexOutOfRangeException();
 
-                case 1:
-                    return _item1;
-
-                case 2:
-                    return _item2;
-
-                case 3:
-                    return _item3;
-
-                case 4:
-                    return _item4;
-
-                case 5:
-                    return _item5;
-
-                case 6:
-                    return _item6;
-
-                case 7:
-                    return _item7;
-
-                default:
-                    throw new IndexOutOfRangeException();
-                }
+                return Unsafe.Add(ref _item0, index);
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             set
             {
-                switch (index)
-                {
-                case 0:
-                    _item0 = value;
-                    break;
+                if ((uint)index >= 8)
+                    ThrowHelper.ThrowIndexOutOfRangeException();
 
-                case 1:
-                    _item1 = value;
-                    break;
-
-                case 2:
-                    _item2 = value;
-                    break;
-
-                case 3:
-                    _item3 = value;
-                    break;
-
-                case 4:
-                    _item4 = value;
-                    break;
-
-                case 5:
-                    _item5 = value;
-                    break;
-
-                case 6:
-                    _item6 = value;
-                    break;
-
-                case 7:
-                    _item7 = value;
-                    break;
-
-                default:
-                    throw new IndexOutOfRangeException();
-                }
+                Unsafe.Add(ref _item0, index) = value;
             }
         }
 
