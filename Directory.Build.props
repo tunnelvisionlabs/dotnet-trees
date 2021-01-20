@@ -89,6 +89,9 @@
     <Copyright>Copyright © Tunnel Vision Laboratories, LLC 2015</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Authors>sharwell</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/tunnelvisionlabs/dotnet-trees</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
 
     <IncludeSymbols>true</IncludeSymbols>
     <IncludeSource>true</IncludeSource>
