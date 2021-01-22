@@ -1,1 +1,117 @@
 #nullable enable
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Add(T item) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.ConcurrentTreeBag() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.ConcurrentTreeBag(System.Collections.Generic.IEnumerable<T>! collection) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.CopyTo(T[]! array, int index) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator.Current.get -> T
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.ToArray() -> T[]!
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.TryPeek(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeBag<T>.TryTake(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.AddOrUpdate(TKey key, System.Func<TKey, TValue>! addValueFactory, System.Func<TKey, TValue, TValue>! updateValueFactory) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.AddOrUpdate(TKey key, TValue addValue, System.Func<TKey, TValue, TValue>! updateValueFactory) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.AddOrUpdate<TArg>(TKey key, System.Func<TKey, TArg, TValue>! addValueFactory, System.Func<TKey, TValue, TArg, TValue>! updateValueFactory, TArg factoryArgument) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(int concurrencyLevel, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>! collection, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(int concurrencyLevel, int capacity) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ConcurrentTreeDictionary(int concurrencyLevel, int capacity, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ContainsKey(TKey key) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator.Current.get -> System.Collections.Generic.KeyValuePair<TKey, TValue>
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.GetOrAdd(TKey key, System.Func<TKey, TValue>! valueFactory) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.GetOrAdd(TKey key, TValue value) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.GetOrAdd<TArg>(TKey key, System.Func<TKey, TArg, TValue>! valueFactory, TArg factoryArgument) -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Contains(TKey item) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Current.get -> TKey
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.KeyCollection() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection.Remove(TKey item) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Keys.get -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.KeyCollection
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ToArray() -> System.Collections.Generic.KeyValuePair<TKey, TValue>[]!
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.TryAdd(TKey key, TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.TryRemove(TKey key, out TValue value) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.TryUpdate(TKey key, TValue newValue, TValue comparisonValue) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Contains(TValue item) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Current.get -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection.ValueCollection() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.Values.get -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.ValueCollection
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.this[TKey key].get -> TValue
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeDictionary<TKey, TValue>.this[TKey key].set -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.ConcurrentTreeQueue() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.ConcurrentTreeQueue(System.Collections.Generic.IEnumerable<T>! collection) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.CopyTo(T[]! array, int index) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enqueue(T item) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator.Current.get -> T
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.ToArray() -> T[]!
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.TryDequeue(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeQueue<T>.TryPeek(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Clear() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.ConcurrentTreeStack() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.ConcurrentTreeStack(System.Collections.Generic.IEnumerable<T>! collection) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.CopyTo(T[]! array, int index) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Count.get -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator.Current.get -> T
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator.Dispose() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator.Enumerator() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator.MoveNext() -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator.Reset() -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.GetEnumerator() -> TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Enumerator
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.IsEmpty.get -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.Push(T item) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.PushRange(T[]! items) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.PushRange(T[]! items, int startIndex, int count) -> void
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.ToArray() -> T[]!
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.TryPeek(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.TryPop(out T result) -> bool
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.TryPopRange(T[]! items) -> int
+TunnelVisionLabs.Collections.Trees.Concurrent.ConcurrentTreeStack<T>.TryPopRange(T[]! items, int startIndex, int count) -> int
